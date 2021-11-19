@@ -1,17 +1,14 @@
 #include "Zombie.h"
 #include <iostream>
 
-Zombie::Zombie(int health, int speed, int damage, sf::Vector2u size) {
+
+Zombie::Zombie(int health, int speed, int damage, sf::Vector2u size, sf::Vector2f pos) {
     this->health = health;
     this->speed = speed;
     this->damage = damage;
 
-    /* sf::Vector2f newSize;
-     newSize.x =(float)size.x / 1600;
-     newSize.y = (float)size.y / 900;
-     this->shape.setScale(newSize);
-     this->shape.setFillColor(sf::Color(100, 250, 50));*/
-
+    random = rand();
+    std::cout << random << std::endl;
     sf::Texture texture;
     texture.loadFromFile("");
     this->sprite.setTexture(texture);
@@ -22,6 +19,9 @@ Zombie::Zombie(int health, int speed, int damage, sf::Vector2u size) {
     this->sprite.setTextureRect(sf::IntRect(0, 0, 30, 30));
     this->sprite.setScale((float)size.x / 1600, (float)size.y / 900);
     this->sprite.setColor(sf::Color(240, 5, 5));
+    pos.x += random;
+    pos.y += random;
+    this->sprite.setPosition(10.f, 10.f);
 }
 
 void Zombie::getMove(Player* p1) {
@@ -31,7 +31,7 @@ void Zombie::getMove(Player* p1) {
         this->sprite.move(1.f, 0.f);
     }
     if (v2.x > v1.x) {
-        this->sprite.move(-1.f, 0.f);
+        this->sprite.move(-1.f, 0.f); 
     }
     if (v2.y < v1.y) {
         this->sprite.move(0.f, 1.f);

@@ -13,19 +13,36 @@ Gun::Gun(sf::Vector2f pos, sf::Vector2u size) {
         std::cout << "Error occured" << std::endl;
     }
     this->sprite.setTextureRect(sf::IntRect(0, 0, 30, 30));
-    this->sprite.setScale((float)size.x / 1600, (float)size.y / 900);
-    this->sprite.setColor(sf::Color(24, 219, 34));
-    this->sprite.setOrigin(this->sprite.getGlobalBounds().width / 2, this->sprite.getGlobalBounds().height / 2);
+    this->sprite.setScale((float)size.x / 1600, (float)size.y / 1600);
+    this->sprite.setColor(sf::Color(138, 86, 3));
+    this->sprite.setPosition(pos);
+    this->shots = new vector<Bullet*>();
+    this->shottimer = 0;
+} 
+
+void Gun::run(sf::Vector2f pos, float rotation) {
+    this->shottimer++;
+    this->sprite.setPosition(pos);
+    this->sprite.setRotation(rotation);
+    for (std::vector<Bullet*>::iterator it = this->shots->begin(); it != this->shots->end(); ++it) {
+        if (*it != nullptr) {
+            (*it)->updatePosition();
+        }
+    }
+     
 }
 
-void Gun::run(Player* p1) {
-
+void Gun::fire(sf::Vector2f go) {
+    if (this->shottimer % 6 == 0) {
+        sf::Vector2f v = this->sprite.getPosition();
+        this->shots->push_back(new Bullet(v, go, this->size));
+    }
 }
 
-void Gun::fire() {
-	sf::Vector2i gP = sf::Mouse::getPosition();
-    sf::Vector2f v = this->sprite.getPosition();
-	this->shots.push_back(new Bullet(v, gP,this->size));
+sf::Sprite Gun::getSprite() {
+    return this->sprite;
 }
 
-void Gun::
+vector<Bullet*>* Gun::getShots() {
+    return this->shots;
+}

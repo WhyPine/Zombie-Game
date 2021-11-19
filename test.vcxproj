@@ -160,6 +160,9 @@
   <ItemGroup>
     <Image Include="skeleton-attack_0.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Font Include="NexaRustSans-Black.otf" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
