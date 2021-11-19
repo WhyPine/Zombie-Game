@@ -6,12 +6,8 @@ Bullet::Bullet(sf::Vector2f start, sf::Vector2f go, sf::Vector2u size) {
     this->damage = 5;
     this->projS = 10;
     sf::Texture texture;
-    texture.loadFromFile("skeleton-attack_0.png");
+    texture.loadFromFile("zombie0.png");
     this->sprite.setTexture(texture);
-    if (!texture.loadFromFile("image.png", sf::IntRect(10, 10, 32, 32)))
-    {
-        std::cout << "Error occured" << std::endl;
-    }
     this->sprite.setTextureRect(sf::IntRect(0, 0, 30, 30));
     this->sprite.setScale((float)size.x / 16000, (float)size.y / 9000);
     this->sprite.setColor(sf::Color(179, 170, 4));

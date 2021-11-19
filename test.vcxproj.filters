@@ -46,7 +46,13 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="skeleton-attack_0.png">
+    <Image Include="dragonFrames.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="survivor\Top_Down_Survivor\handgun\move\survivor-move_handgun_0.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="zombie0.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

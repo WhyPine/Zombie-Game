@@ -158,7 +158,9 @@
     <ClInclude Include="Zombie.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="skeleton-attack_0.png" />
+    <Image Include="dragonFrames.png" />
+    <Image Include="zombie0.png" />
+    <Image Include="survivor\Top_Down_Survivor\handgun\move\survivor-move_handgun_0.png" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="NexaRustSans-Black.otf" />

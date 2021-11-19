@@ -10,8 +10,7 @@ private:
 	double damageP;
 	sf::Sprite sprite; 
 	Gun* gun; 
-
-
+	sf::Texture* texture = new sf::Texture;
 public:
 	Player(int health, double speed, double damageP, sf::Vector2u size);
 	void checkMove(sf::RenderWindow& window);

@@ -7,16 +7,10 @@ Player::Player(int health, double speed, double damageP, sf::Vector2u size) {
 	this->speed = speed;
 	this->damageP = damageP;
     this->sprite.setPosition(0.f, 10.f);
-    sf::Texture texture;
-    texture.loadFromFile("skeleton-attack_0.png");
-    this->sprite.setTexture(texture);
-    if (!texture.loadFromFile("skeleton-attack_0.png", sf::IntRect(10, 10, 32, 32)))
-    {
-        std::cout << "Error occured - Player" << std::endl;
-    }
-    this->sprite.setTextureRect(sf::IntRect(0, 0, 30, 30));
-    this->sprite.setScale((float)size.x / 1600, (float)size.y / 900);
-    this->sprite.setColor(sf::Color(24, 219, 34));
+    this->texture->loadFromFile("survivor-move_handgun_0.png");
+    this->sprite.setTexture(*(this->texture));
+    this->sprite.setTextureRect(sf::IntRect(39, 39, 250, 200));
+    this->sprite.setScale((float)size.x / 6400, (float)size.y / 3600);
     this->sprite.setOrigin(this->sprite.getGlobalBounds().width / 2, this->sprite.getGlobalBounds().height / 2);
     this->gun = new Gun(this->sprite.getPosition(), size); 
 }

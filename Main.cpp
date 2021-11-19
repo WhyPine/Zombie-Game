@@ -39,7 +39,6 @@ int main()
         loadFont = false;
     }
     sf::Text textDisplay;
-    
     while (window.isOpen())
     {
         //Checks for changes in events
@@ -50,7 +49,7 @@ int main()
         p1->checkMove(window);
         for (std::vector<Zombie*>::iterator it = zombies.begin(); it != zombies.end(); ++it) {
             if (*it != nullptr) {
-                (*it)->getMove(p1);
+                (*it)->getMove(p1, p1->getPosition());
             }
         }
         //re-draws objects so it looks good
