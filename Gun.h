@@ -8,6 +8,7 @@ using std::vector;
 class Gun
 {
 private:
+	int reload;
 	int shottimer;
 	int power;
 	int projS;

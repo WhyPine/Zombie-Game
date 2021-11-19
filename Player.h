@@ -18,5 +18,7 @@ public:
 	sf::Vector2f getPosition();
 	sf::Sprite getGunSprite();
 	Gun* getGun();
+	int getHealth();
+	void setHealth(int health);
 };
 

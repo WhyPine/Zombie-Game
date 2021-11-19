@@ -68,3 +68,7 @@ void Zombie::getMove(Player* p1, sf::Vector2f pos) {
 sf::Sprite Zombie::getSprite() {
     return this->sprite;
 }
+
+int Zombie::getDamage() {
+    return this->damage;
+}

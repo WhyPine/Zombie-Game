@@ -15,5 +15,6 @@ public:
 	Zombie(int health, int speed, int damage, sf::Vector2u size, sf::Vector2f pos);
 	void getMove(Player* p1, sf::Vector2f pos);
 	sf::Sprite getSprite();
+	int getDamage();
 };
 

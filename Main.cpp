@@ -65,6 +65,18 @@ int main()
         {
             window.draw(zombies[i]->getSprite());
         }
+        //sf::FloatRect player = p1->getSprite().getLocalBounds();
+        for (std::vector<Zombie*>::iterator it = zombies.begin(); it != zombies.end(); ++it) {
+            if (*it != nullptr) {
+                //sf::FloatRect zombie = (*it)->getSprite().getLocalBounds();
+                //std::cout << player.width << ": " << zombie.width << std::endl;
+                //sf::Vector2f zPos = 
+                if ((*it)->getSprite().getGlobalBounds().intersects(p1->getSprite().getGlobalBounds())) {
+                    p1->setHealth(p1->getHealth() - (*it)->getDamage());
+                    std::cout << p1->getHealth() << std::endl;
+                }
+            }
+        }
         //Zombies alive checker
         if (zombies.size() == 0) 
         {
