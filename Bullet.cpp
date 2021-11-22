@@ -5,6 +5,7 @@
 Bullet::Bullet(sf::Vector2f start, sf::Vector2f go, sf::Vector2u size) {
     this->damage = 5;
     this->projS = 10;
+    this->health = 1;
     sf::Texture texture;
     texture.loadFromFile("zombie0.png");
     this->sprite.setTexture(texture);
@@ -15,15 +16,12 @@ Bullet::Bullet(sf::Vector2f start, sf::Vector2f go, sf::Vector2u size) {
     this->go = go;
 }
 
+Bullet::~Bullet() {
+
+}
+
 void Bullet::updatePosition() {
-    /*float x;
-    float y;
-    std::cout << this->result;
-    this->result = this->result * (3.141592653589) / 180;
-    std::cout << this->result;
-    x = cosf(this->result);
-    y = sinf(this->result);*/
-    //std::cout << go.x << ": " << go.y << std::endl;
+
     float z = sqrtf(go.x * go.x + go.y * go.y);
     for (int i = 0; i < this->projS; i++) {
         this->sprite.move(1.f * (go.x / z), 0.f);
@@ -31,28 +29,20 @@ void Bullet::updatePosition() {
     for (int i = 0; i < this->projS; i++) {
         this->sprite.move(0.f, 1.f * (go.y / z));
     }
-   /*if () {
-        for (int i = 0; i < this->projS ; i++) {
-            this->sprite.move(-1.f * x, 0.f);
-        }
-    }
-    else {
-        for (int i = 0; i < this->projS; i++) {
-            this->sprite.move(1.f * x, 0.f);
-        }
-    }
-   if (this->result > 0 && this->result < 180) {
-        for (int i = 0; i < this->projS; i++) {
-            this->sprite.move(0.f, 1.f * y);
-        }
-    }
-    else {
-        for (int i = 0; i < this->projS; i++) {
-            this->sprite.move(0.f, -1.f  * y);
-        }
-    }*/
 }
 
 sf::Sprite Bullet::getSprite() {
     return this->sprite;
+}
+
+int Bullet::getHealth() {
+    return this->health;
+}
+
+int Bullet::getDamage() {
+    return this->damage;
+}
+
+void Bullet::setHealth(int value) {
+    this->health += value;
 }

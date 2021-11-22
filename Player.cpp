@@ -23,19 +23,17 @@ void Player::checkMove(sf::RenderWindow& window) {
 
     p.x = gP.x - v.x;
     p.y = gP.y - v.y;
-    //std::cout << p.x << ": " << p.y << std::endl;
+
     long float result;
     long float param;
     if (p.x > 0) {
         param = p.y / p.x;
         result = atanf(param) * 180 / (3.141592653589793);
-        //std::cout << result << std::endl;
         result -= 360;
     }
     else if (p.x < 0) {
         param = p.y / p.x;
         result = atanf(param) * 180 / (3.141592653589793);
-        //std::cout << result << std::endl;
         result += 180;
     }
     else {
@@ -46,8 +44,6 @@ void Player::checkMove(sf::RenderWindow& window) {
             result = 90;
         }
     }
-   // std::cout << result;
-    //float result = ((float)atan(param)) * 180 / (3.141592653589793);
 
     this->sprite.setRotation(result);
 
@@ -64,14 +60,17 @@ void Player::checkMove(sf::RenderWindow& window) {
         for (int i = 0; i < 3; i++) this->sprite.move(0.f, -1.f);
     }
     this->gun->run(this->sprite.getPosition(), this->sprite.getRotation());
-    //window.clear();
-    //window.draw(this->gun->getSprite());
-    //window.display();
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-       this->gun->fire(p); 
+    if (!this->gun->getReload() <= 0) {
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+            this->gun->fire(p);
+            this->gun->changeReload(-1);
+        }
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R)) {
+        this->gun->changeReload(30);
     }
 
-} //leave everything commented except the Gun* gun; does it still error? Yeah Ill ss i can see the error list
+}
 
 sf::Sprite Player::getSprite() {
     return this->sprite;

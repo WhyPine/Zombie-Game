@@ -6,7 +6,7 @@ Zombie::Zombie(int health, int speed, int damage, sf::Vector2u size, sf::Vector2
     this->health = health;
     this->speed = speed;
     this->damage = damage;
-
+    this->reload = 0;
     random = rand();
     std::cout << random << std::endl;
     this->texture->loadFromFile("zombie0.png");
@@ -17,6 +17,10 @@ Zombie::Zombie(int health, int speed, int damage, sf::Vector2u size, sf::Vector2
     pos.x += random;
     pos.y += random;
     this->sprite.setPosition(10.f, 10.f);
+}
+
+Zombie::~Zombie() {
+    //delete(this->texture);
 }
 
 void Zombie::getMove(Player* p1, sf::Vector2f pos) {
@@ -63,6 +67,7 @@ void Zombie::getMove(Player* p1, sf::Vector2f pos) {
         }
     }
     this->sprite.setRotation(result);
+    this->reload++;
 }
 
 sf::Sprite Zombie::getSprite() {
@@ -71,4 +76,16 @@ sf::Sprite Zombie::getSprite() {
 
 int Zombie::getDamage() {
     return this->damage;
+}
+
+int Zombie::getReload() {
+    return this->reload % 64;
+}
+
+int Zombie::getHealth() {
+    return this->health;
+}
+
+void Zombie::setHealth(int health) {
+    this->health = health;
 }

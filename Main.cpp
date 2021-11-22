@@ -8,6 +8,8 @@
 using std::vector;
 using std::string;
 
+clock_t start = 0;
+time_t end = 0;
 int rounds = 1;
 vector<Zombie*> zombies;
 
@@ -49,7 +51,9 @@ int main()
         p1->checkMove(window);
         for (std::vector<Zombie*>::iterator it = zombies.begin(); it != zombies.end(); ++it) {
             if (*it != nullptr) {
-                (*it)->getMove(p1, p1->getPosition());
+                if (!(*it)->getSprite().getGlobalBounds().intersects((*it + 1)->getSprite().getGlobalBounds())) {
+                    (*it)->getMove(p1, p1->getPosition());
+                }
             }
         }
         //re-draws objects so it looks good
@@ -65,17 +69,37 @@ int main()
         {
             window.draw(zombies[i]->getSprite());
         }
-        //sf::FloatRect player = p1->getSprite().getLocalBounds();
-        for (std::vector<Zombie*>::iterator it = zombies.begin(); it != zombies.end(); ++it) {
-            if (*it != nullptr) {
-                //sf::FloatRect zombie = (*it)->getSprite().getLocalBounds();
-                //std::cout << player.width << ": " << zombie.width << std::endl;
-                //sf::Vector2f zPos = 
-                if ((*it)->getSprite().getGlobalBounds().intersects(p1->getSprite().getGlobalBounds())) {
-                    p1->setHealth(p1->getHealth() - (*it)->getDamage());
-                    std::cout << p1->getHealth() << std::endl;
+
+        for (int j = 0; j < p1->getGun()->getShots()->size(); j++) {
+            if (p1->getGun()->getShots()->at(j) != nullptr) {
+                for (int i = 0; i < zombies.size(); i++) {
+                    if (zombies[i] != nullptr ) {
+                        if (j > 0) {
+                            if (p1->getGun()->getShots()->at(j)->getSprite().getGlobalBounds().intersects(zombies[i]->getSprite().getGlobalBounds())) {
+                                zombies[i]->setHealth(zombies[i]->getHealth() - p1->getGun()->getShots()->at(j)->getDamage());
+                                p1->getGun()->getShots()->at(j)->setHealth(-1);
+                                std::cout << zombies[i]->getHealth() << std::endl;
+                                if (zombies[i]->getHealth() <= 0) {
+                                    zombies.erase(zombies.begin() + i);
+                                }
+                                if (p1->getGun()->getShots()->at(j)->getHealth() <= 0) {
+                                    p1->getGun()->getShots()->erase(p1->getGun()->getShots()->begin() + j);
+                                    j--;
+                                }
+                            }
+                        }
+                    }
+                }
+                for (int k = 0; k < zombies.size(); k++) {
+                    if (zombies[k]->getSprite().getGlobalBounds().intersects(p1->getSprite().getGlobalBounds()) && zombies[k]->getReload() == 0) {
+                        p1->setHealth(p1->getHealth() - zombies[k]->getDamage());
+                        std::cout << p1->getHealth() << std::endl;
+                    }
                 }
             }
+        }
+        if (clock() - start >= 3) {
+            window.draw(textDisplay);
         }
         //Zombies alive checker
         if (zombies.size() == 0) 
@@ -83,11 +107,13 @@ int main()
             rounds++;
             if(loadFont)
             {
+                start = clock();
                 textDisplay.setFont(font);
                 textDisplay.setString("Round " + rounds);
-                textDisplay.setCharacterSize(100);
+                //textDisplay.setCharacterSize(100);
                 textDisplay.setFillColor(sf::Color::Red);
                 textDisplay.setStyle(sf::Text::Bold);
+                textDisplay.setPosition(window.getSize().x / 2, window.getSize().y / 2);
                 //textDisplay.setPosition(sf::vector newVector())
                 window.draw(textDisplay);
             }

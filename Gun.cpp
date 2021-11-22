@@ -5,6 +5,7 @@ Gun::Gun(sf::Vector2f pos, sf::Vector2u size) {
 	this->power = 5;
 	this->projS = 10;
     this->size = size;
+    this->reload = 30;
     sf::Texture texture;
     texture.loadFromFile("skeleton-attack_0.png");
     this->sprite.setTexture(texture);
@@ -45,4 +46,12 @@ sf::Sprite Gun::getSprite() {
 
 vector<Bullet*>* Gun::getShots() {
     return this->shots;
+}
+
+int Gun::getReload() {
+    return this->reload;
+}
+
+void Gun::changeReload(int add) {
+    this->reload += add;
 }

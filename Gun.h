@@ -21,5 +21,7 @@ public:
 	void fire(sf::Vector2f go);
 	sf::Sprite getSprite();
 	vector<Bullet*>* getShots();
+	int getReload();
+	void changeReload(int add);
 };
 
