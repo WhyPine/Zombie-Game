@@ -23,5 +23,6 @@ public:
 	vector<Bullet*>* getShots();
 	int getReload();
 	void changeReload(int add);
+	void setReload(int value);
 };
 

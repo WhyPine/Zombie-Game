@@ -21,5 +21,6 @@ public:
 	int getReload();
 	int getHealth();
 	void setHealth(int health);
+	void attack(Player* p1);
 };
 

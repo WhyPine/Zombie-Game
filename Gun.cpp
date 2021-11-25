@@ -55,3 +55,7 @@ int Gun::getReload() {
 void Gun::changeReload(int add) {
     this->reload += add;
 }
+
+void Gun::setReload(int value) {
+    this->reload = value;
+}

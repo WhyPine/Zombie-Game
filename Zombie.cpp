@@ -1,22 +1,21 @@
 #include "Zombie.h"
 #include <iostream>
 #include <math.h>
+#include <Windows.h>
 
 Zombie::Zombie(int health, int speed, int damage, sf::Vector2u size, sf::Vector2f pos) {
     this->health = health;
     this->speed = speed;
     this->damage = damage;
     this->reload = 0;
-    random = rand();
-    std::cout << random << std::endl;
+    random = rand() & 100;
+    //std::cout << random << std::endl;
     this->texture->loadFromFile("zombie0.png");
     this->sprite.setTexture(*(this->texture));
     this->sprite.setTextureRect(sf::IntRect(10, 80, 240, 270));
     this->sprite.setScale((float)size.x / 7200, (float)size.y / 4400);
     //this->sprite.setOrigin(this->sprite.getGlobalBounds().width / 2, this->sprite.getGlobalBounds().height / 2);
-    pos.x += random;
-    pos.y += random;
-    this->sprite.setPosition(10.f, 10.f);
+    this->sprite.setPosition(pos.x + random, pos.y + random);
 }
 
 Zombie::~Zombie() {
@@ -88,4 +87,12 @@ int Zombie::getHealth() {
 
 void Zombie::setHealth(int health) {
     this->health = health;
+}
+
+void Zombie::attack(Player* p1) {
+    Sleep(1500);
+    if (this->sprite.getGlobalBounds().intersects(p1->getSprite().getGlobalBounds())) {
+        p1->setHealth(p1->getHealth() - this->getDamage());
+        std::cout << p1->getHealth() << std::endl;
+    }
 }

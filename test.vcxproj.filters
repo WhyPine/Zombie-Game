@@ -30,6 +30,9 @@
     <ClCompile Include="Bullet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Play.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player.h">
@@ -44,6 +47,9 @@
     <ClInclude Include="Bullet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Play.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="dragonFrames.png">
@@ -53,6 +59,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="zombie0.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="play.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

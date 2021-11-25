@@ -1,12 +1,15 @@
 #include "Player.h"
 #include <iostream>
 #include <math.h>
+#include <Windows.h> 
+
 
 Player::Player(int health, double speed, double damageP, sf::Vector2u size) {
 	this->health = health;
 	this->speed = speed;
 	this->damageP = damageP;
-    this->sprite.setPosition(0.f, 10.f);
+    this->canshoot = true;
+    this->sprite.setPosition(500.f, 500.f);
     this->texture->loadFromFile("survivor-move_handgun_0.png");
     this->sprite.setTexture(*(this->texture));
     this->sprite.setTextureRect(sf::IntRect(39, 39, 250, 200));
@@ -15,9 +18,8 @@ Player::Player(int health, double speed, double damageP, sf::Vector2u size) {
     this->gun = new Gun(this->sprite.getPosition(), size); 
 }
 
-void Player::checkMove(sf::RenderWindow& window) {
+void Player::checkMove(sf::Vector2i gP) {
 
-    sf::Vector2i gP = sf::Mouse::getPosition(window);
     sf::Vector2f v = this->sprite.getPosition();
     sf::Vector2f p;
 
@@ -60,15 +62,16 @@ void Player::checkMove(sf::RenderWindow& window) {
         for (int i = 0; i < 3; i++) this->sprite.move(0.f, -1.f);
     }
     this->gun->run(this->sprite.getPosition(), this->sprite.getRotation());
-    if (!this->gun->getReload() <= 0) {
+    if (this->gun->getReload() > 0 && canshoot) {
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
             this->gun->fire(p);
             this->gun->changeReload(-1);
         }
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R)) {
+    /*if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R)) {
+        std::thread t1(this->gun->changeReload(30));
         this->gun->changeReload(30);
-    }
+    }*/
 
 }
 
@@ -94,4 +97,10 @@ int Player::getHealth() {
 
 void Player::setHealth(int health) {
     this->health = health;
+}
+
+void Player::reload(int value) {
+    Sleep(2000);
+    this->gun->changeReload(30);
+    this->canshoot = true;
 }
