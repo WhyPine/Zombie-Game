@@ -37,6 +37,7 @@ void Gun::fire(sf::Vector2f go) {
     if (this->shottimer % 6 == 0) {
         sf::Vector2f v = this->sprite.getPosition();
         this->shots->push_back(new Bullet(v, go, this->size));
+        this->reload--;
     }
 }
 

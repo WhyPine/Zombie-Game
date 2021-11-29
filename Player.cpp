@@ -65,7 +65,6 @@ void Player::checkMove(sf::Vector2i gP) {
     if (this->gun->getReload() > 0 && canshoot) {
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
             this->gun->fire(p);
-            this->gun->changeReload(-1);
         }
     }
     /*if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R)) {

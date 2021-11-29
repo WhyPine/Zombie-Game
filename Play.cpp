@@ -2,11 +2,14 @@
 #include "Play.h"
 
 clock_t start = 0;
+int roundCountTimer = 0;
+int reloadDelayTimer = 0;
 time_t end = 0;
 int rounds = 0;
 vector<Zombie*> zombies;
 sf::Vector2f pasPos;
 sf::Sprite backdrop;
+bool displayMenu = true;
 
 void makeTrue(sf::Vector2i& gP, Player* p1) {
     if (p1->getPosition().x >= 1280) {
@@ -35,10 +38,15 @@ void movement(sf::RenderWindow& window, Player* p1) {
     makeTrue(gP, p1);
     p1->checkMove(gP);
     int x = zombies.size() - 1;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R)) {
-        p1->canshoot = false;
-        std::thread t1(&Player::reload, p1, 30);
-        t1.detach();
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R)) 
+    {
+        if (clock() - reloadDelayTimer > 2000) //fixed spam reload bug
+        {
+            reloadDelayTimer = clock();
+            p1->canshoot = false;
+            std::thread t1(&Player::reload, p1, 30);
+            t1.detach();
+        }
     }
     for (int z = 0; z < x; z++) {
         if (zombies[z] != nullptr) {
@@ -160,22 +168,34 @@ void run(sf::RenderWindow& window, sf::View& view){
         //Zombies alive checker
         if (zombies.size() == 0)
         {
-            rounds++;
-            std::cout << "Rounds " << rounds << std::endl;
+           // bool displayMenu = true;
+            if (displayMenu && (clock() - roundCountTimer) > 1000)
+            {
+                roundCountTimer = clock();
+                displayMenu = false;
+                rounds++;
+            }
             if (loadFont)
             {
-                start = clock();
-                //textDisplay.setFont(font);
-                textDisplay.setString("Round " + rounds);
-                //textDisplay.setCharacterSize(100);
+                //start = clock();
+                textDisplay.setFont(font);
+                string display = "Round " + std::to_string(rounds);
+                textDisplay.setString(display);
+                textDisplay.setCharacterSize(100);
                 textDisplay.setFillColor(sf::Color::Red);
                 textDisplay.setStyle(sf::Text::Bold);
+                textDisplay.setOrigin(textDisplay.getLocalBounds().width / 2, textDisplay.getLocalBounds().height / 2);
                 textDisplay.setPosition(window.getSize().x / 2, window.getSize().y / 2);
-                //textDisplay.setPosition(sf::vector newVector())
                 window.draw(textDisplay);
             }
-            std::thread t1(spawnZombies, window.getSize());
-            t1.detach();
+            if (clock() - roundCountTimer > 3000) // 3 seconds
+            {
+                std::thread t1(spawnZombies, window.getSize());
+                t1.detach();
+                displayMenu = true;
+                std::cout << "Round " << rounds << std::endl;
+                roundCountTimer = clock();
+            }
         }
         //window.setView(view);
         window.display();
