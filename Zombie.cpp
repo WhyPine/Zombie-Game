@@ -58,12 +58,7 @@ void Zombie::getMove(Player* p1, sf::Vector2f pos) {
         result += 180;
     }
     else {
-        if (p.y <= 0) {
-            result = 270;
-        }
-        else {
-            result = 90;
-        }
+        result = this->sprite.getRotation();
     }
     this->sprite.setRotation(result);
     this->reload++;

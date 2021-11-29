@@ -14,3 +14,4 @@ using std::string;
 	void run(sf::RenderWindow& window, sf::View& view);
 	void movement(sf::RenderWindow& window, Player* p1);
 	void drawing(sf::RenderWindow& window, Player* p1);
+	void makeTrue(sf::Vector2i& gP, Player* p1);

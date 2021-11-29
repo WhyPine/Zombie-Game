@@ -6,6 +6,16 @@ time_t end = 0;
 int rounds = 0;
 vector<Zombie*> zombies;
 sf::Vector2f pasPos;
+sf::Sprite backdrop;
+
+void makeTrue(sf::Vector2i& gP, Player* p1) {
+    if (p1->getPosition().x >= 1280) {
+        gP.x += 1280;
+    }
+    if (p1->getPosition().y >= 720) {
+        gP.y += 720;
+    }
+}
 
 void spawnZombies(sf::Vector2u size) {
     for (int i = 0; i < 3 * rounds + 5; i++) {
@@ -22,6 +32,7 @@ void spawnZombies(sf::Vector2u size) {
 void movement(sf::RenderWindow& window, Player* p1) {
     //Moves things around the window
     sf::Vector2i gP = sf::Mouse::getPosition(window);
+    makeTrue(gP, p1);
     p1->checkMove(gP);
     int x = zombies.size() - 1;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R)) {
@@ -46,6 +57,7 @@ void movement(sf::RenderWindow& window, Player* p1) {
 
 void drawing(sf::RenderWindow& window, Player* p1) {
     window.clear();
+    window.draw(backdrop);
     window.draw(p1->getSprite());
     for (std::vector<Bullet*>::iterator it = p1->getGun()->getShots()->begin(); it != p1->getGun()->getShots()->end(); ++it) {
         if (*it != nullptr) {
@@ -91,7 +103,9 @@ void drawing(sf::RenderWindow& window, Player* p1) {
 }
 
 void run(sf::RenderWindow& window, sf::View& view){
-    sf::Sprite background;
+    sf::Texture tex;
+    tex.loadFromFile("firstMap.png");
+    backdrop.setTexture(tex);
     sf::Vector2f v;
     v.x = 1000.f;
     v.y = 200.f;
@@ -118,6 +132,18 @@ void run(sf::RenderWindow& window, sf::View& view){
         sf::Event event;
         window.pollEvent(event);
         if (event.type == sf::Event::Closed) window.close();
+        if (p1->getPosition().x < 1280 && p1->getPosition().y > 720) {
+            view.setCenter(640,  1080);
+        }
+        else if (p1->getPosition().x > 1280 && p1->getPosition().y < 720) {
+            view.setCenter(1920, 360);
+        }
+        else if (p1->getPosition().x > 1280 && p1->getPosition().y > 720) {
+            view.setCenter(1920, 1080);
+        }
+        else if (p1->getPosition().x < 1280 && p1->getPosition().y < 720) {
+            view.setCenter(640, 360);
+        }
         /*while (p1->getPosition().x < view.getSize().x) {
             view.move(-1.f, 0.f);
         }*/
