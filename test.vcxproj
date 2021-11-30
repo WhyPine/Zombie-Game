@@ -162,11 +162,13 @@
   <ItemGroup>
     <Image Include="dragonFrames.png" />
     <Image Include="play.png" />
+    <Image Include="rifle.png" />
+    <Image Include="skeleton-attack_0.png" />
     <Image Include="zombie0.png" />
     <Image Include="survivor\Top_Down_Survivor\handgun\move\survivor-move_handgun_0.png" />
   </ItemGroup>
   <ItemGroup>
-    <Font Include="NexaRustSans-Black.otf" />
+    <Font Include="shlop rg.ttf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

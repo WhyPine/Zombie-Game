@@ -5,7 +5,8 @@
 
 
 Player::Player(int health, double speed, double damageP, sf::Vector2u size) {
-	this->health = health;
+    this->health = health;
+    this->maxHealth = health;
 	this->speed = speed;
 	this->damageP = damageP;
     this->canshoot = true;
@@ -14,8 +15,10 @@ Player::Player(int health, double speed, double damageP, sf::Vector2u size) {
     this->sprite.setTexture(*(this->texture));
     this->sprite.setTextureRect(sf::IntRect(39, 39, 250, 200));
     this->sprite.setScale((float)size.x / 6400, (float)size.y / 3600);
-    this->sprite.setOrigin(this->sprite.getGlobalBounds().width / 2, this->sprite.getGlobalBounds().height / 2);
+    this->sprite.setOrigin(this->sprite.getLocalBounds().width / 2, this->sprite.getLocalBounds().height / 2);
     this->gun = new Gun(this->sprite.getPosition(), size); 
+    this->regenTimer = 0;
+    this->regenDelay = 3;
 }
 
 void Player::checkMove(sf::Vector2i gP) {
@@ -72,6 +75,16 @@ void Player::checkMove(sf::Vector2i gP) {
         this->gun->changeReload(30);
     }*/
 
+    //regenerating health
+    if (this->health < this->maxHealth) {
+        if (clock() - this->regenTimer > this->regenDelay * 1000) {
+            this->health+=2;
+            this->regenTimer = clock();
+        }
+        if (this->health > this->maxHealth) this->health = this->maxHealth;
+    }
+
+
 }
 
 sf::Sprite Player::getSprite() {
@@ -96,10 +109,15 @@ int Player::getHealth() {
 
 void Player::setHealth(int health) {
     this->health = health;
+    this->regenTimer = clock();
 }
 
 void Player::reload(int value) {
-    Sleep(2000);
+    Sleep(1500);
     this->gun->changeReload(30);
     this->canshoot = true;
+}
+
+int Player::getMaxHealth() {
+    return this->maxHealth;
 }

@@ -14,7 +14,7 @@ Zombie::Zombie(int health, int speed, int damage, sf::Vector2u size, sf::Vector2
     this->sprite.setTexture(*(this->texture));
     this->sprite.setTextureRect(sf::IntRect(10, 80, 240, 270));
     this->sprite.setScale((float)size.x / 7200, (float)size.y / 4400);
-    //this->sprite.setOrigin(this->sprite.getGlobalBounds().width / 2, this->sprite.getGlobalBounds().height / 2);
+    this->sprite.setOrigin(this->sprite.getLocalBounds().width / 2, this->sprite.getLocalBounds().height / 2);
     this->sprite.setPosition(pos.x + random, pos.y + random);
 }
 
@@ -25,6 +25,16 @@ Zombie::~Zombie() {
 void Zombie::getMove(Player* p1, sf::Vector2f pos) {
     sf::Vector2f v1 = p1->getPosition();
     sf::Vector2f v2 = this->sprite.getPosition();
+    sf::Vector2f go = v1 - v2;
+    float z = sqrtf(go.x * go.x + go.y * go.y);
+    int randomMovement = (rand() % 100)+1;
+    if (randomMovement % 2 == 0) randomMovement = -1 * randomMovement;
+    for (int i = 0; i < 2; i++)
+    {
+        this->sprite.move((1.f * ((go.x / z))+(double)randomMovement/200), (1.f * ((go.y / z))+(double)randomMovement/200));
+    }
+   
+   /* this->sprite.move()
     if (v2.x < v1.x) {
         this->sprite.move(1.f, 0.f);
     }
@@ -36,7 +46,7 @@ void Zombie::getMove(Player* p1, sf::Vector2f pos) {
     }
     if (v2.y > v1.y) {
         this->sprite.move(0.f, -1.f);
-    }
+    }*/
     sf::Vector2f v = this->sprite.getPosition();
     sf::Vector2f p;
 

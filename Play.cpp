@@ -20,11 +20,62 @@ void makeTrue(sf::Vector2i& gP, Player* p1) {
     }
 }
 
-void spawnZombies(sf::Vector2u size) {
+void spawnZombies(sf::Vector2u size, Player* p1) {
     for (int i = 0; i < 3 * rounds + 5; i++) {
         sf::Vector2f v;
-        v.x = 1000.f;
-        v.y = 200.f;
+        int x = rand();
+        if (p1->getPosition().x < 1280 && p1->getPosition().y > 720) //bottom left
+        {
+            if (x % 2 == 0)
+            {
+                v.x = 35 * 32;
+                v.y = 28 * 32;
+            }
+            else
+            {
+                v.x = 12 * 32;
+                v.y = 41 * 32;
+            }
+        }
+        else if (p1->getPosition().x > 1280 && p1->getPosition().y < 720) //top right
+        {
+            if (x % 2 == 0)
+            {
+                v.x = 58 * 32;
+                v.y = 5 * 32;
+            }
+            else
+            {
+                v.x = 70 * 32;
+                v.y = 3 * 32;
+            }
+        }
+        else if (p1->getPosition().x > 1280 && p1->getPosition().y > 720) //bottom right
+        {
+            if (x % 2 == 0)
+            {
+                v.x = (40+5) * 32;
+                v.y = (23+4) * 32;
+            }
+            else
+            {
+                v.x = (40+33) * 32;
+                v.y = (23+8) * 32;
+            }
+        }
+        else if (p1->getPosition().x < 1280 && p1->getPosition().y < 720) //top left
+        {
+            if (x % 2 == 0)
+            {
+                v.x = 5 * 32;
+                v.y = 4 * 32;
+            }
+            else
+            {
+                v.x = 35 * 32;
+                v.y = 17 * 32;
+            }
+        }
         zombies.push_back(new Zombie(20, 1, 1, size, v));
         std::cout << "Zombie " <<  i << std::endl;
         Sleep(500);
@@ -40,7 +91,7 @@ void movement(sf::RenderWindow& window, Player* p1) {
     int x = zombies.size() - 1;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R)) 
     {
-        if (clock() - reloadDelayTimer > 2000) //fixed spam reload bug
+        if (clock() - reloadDelayTimer > 2000 && p1->getGun()->getReload() < 30) //fixed spam reload bug
         {
             reloadDelayTimer = clock();
             p1->canshoot = false;
@@ -60,6 +111,37 @@ void movement(sf::RenderWindow& window, Player* p1) {
     }
     else if (x == 0) {
         zombies[0]->getMove(p1, p1->getPosition());
+    }
+}
+
+void displayGUI(Player* p1, sf::RenderWindow& window)
+{
+    if (p1->getMaxHealth() > 0) {
+        sf::RectangleShape healthBack(sf::Vector2f(300, 30));
+        healthBack.setFillColor(sf::Color(50, 50, 50));
+        sf::RectangleShape healthFront(sf::Vector2f(300 * p1->getHealth() / p1->getMaxHealth(), 30));
+        healthFront.setFillColor(sf::Color(230, 45, 45));
+        int xPos = 0;
+        int yPos = 670;
+        if (p1->getPosition().x >= 1280) xPos += 1280;
+        if (p1->getPosition().y >= 720) yPos += 720;
+        healthBack.setPosition(xPos, yPos);
+        healthFront.setPosition(xPos, yPos);
+
+        sf::Text ammoCount;
+        sf::Font font;
+        font.loadFromFile("shlop rg.ttf");
+        ammoCount.setFont(font);
+        string ammo = std::to_string(p1->getGun()->getReload()) + "/30";
+        ammoCount.setString(ammo);
+        ammoCount.setCharacterSize(50);
+        ammoCount.setFillColor(sf::Color::White);
+        ammoCount.setPosition(xPos + 1150, yPos-10);
+        ammoCount.setOutlineColor(sf::Color::Black);
+   
+        window.draw(ammoCount);
+        window.draw(healthBack);
+        window.draw(healthFront);
     }
 }
 
@@ -108,6 +190,7 @@ void drawing(sf::RenderWindow& window, Player* p1) {
             }
         }
     }
+    displayGUI(p1, window);
 }
 
 void run(sf::RenderWindow& window, sf::View& view){
@@ -128,7 +211,7 @@ void run(sf::RenderWindow& window, sf::View& view){
     //Loading Font
     sf::Font font;
     bool loadFont = true;
-    if (!font.loadFromFile("NexaRustSans-Black.otf"))
+    if (!font.loadFromFile("shlop rg.ttf"))
     {
         std::cout << "Font Read Error" << std::endl;
         loadFont = false;
@@ -177,20 +260,18 @@ void run(sf::RenderWindow& window, sf::View& view){
             }
             if (loadFont)
             {
-                //start = clock();
                 textDisplay.setFont(font);
                 string display = "Round " + std::to_string(rounds);
                 textDisplay.setString(display);
                 textDisplay.setCharacterSize(100);
-                textDisplay.setFillColor(sf::Color::Red);
-                textDisplay.setStyle(sf::Text::Bold);
+                textDisplay.setFillColor(sf::Color(94, 1, 6));
                 textDisplay.setOrigin(textDisplay.getLocalBounds().width / 2, textDisplay.getLocalBounds().height / 2);
-                textDisplay.setPosition(window.getSize().x / 2, window.getSize().y / 2);
+                textDisplay.setPosition(view.getCenter().x, view.getCenter().y-300);
                 window.draw(textDisplay);
             }
             if (clock() - roundCountTimer > 3000) // 3 seconds
             {
-                std::thread t1(spawnZombies, window.getSize());
+                std::thread t1(spawnZombies, window.getSize(), p1);
                 t1.detach();
                 displayMenu = true;
                 std::cout << "Round " << rounds << std::endl;
