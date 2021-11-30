@@ -10,6 +10,7 @@ vector<Zombie*> zombies;
 sf::Vector2f pasPos;
 sf::Sprite backdrop;
 bool displayMenu = true;
+vector<wall> walls;
 
 void makeTrue(sf::Vector2i& gP, Player* p1) {
     if (p1->getPosition().x >= 1280) {
@@ -88,6 +89,37 @@ void movement(sf::RenderWindow& window, Player* p1) {
     sf::Vector2i gP = sf::Mouse::getPosition(window);
     makeTrue(gP, p1);
     p1->checkMove(gP);
+    sf::Vector2f v;
+    for (auto& wall : walls) {
+        sf::FloatRect player = p1->getSprite().getGlobalBounds();
+        sf::FloatRect wbounds = wall.getWall();
+        if (wbounds.intersects(player)) {
+            if (player.left < wbounds.left + wbounds.width) { // right
+                std::cout << "Right";
+                v.x = wbounds.left + wbounds.width + player.width / 2;
+                v.y = p1->getPosition().y;
+                p1->setPosition(v);
+            }
+            if (player.left + player.width > wbounds.left) { //left
+                std::cout << "Left";
+                v.x = wbounds.left - player.width;
+                v.y = p1->getPosition().y;
+                p1->setPosition(v);
+            }
+            if (player.top < wbounds.top + wbounds.height) { //bottom
+                std::cout << "Bottom";
+                v.x = p1->getPosition().x;
+                v.y = wbounds.top + wbounds.height + player.height;
+                p1->setPosition(v);
+            }
+            if (player.top + player.height > wbounds.top) { //top
+                std::cout << "Top";
+                v.x = p1->getPosition().x;
+                v.y = wbounds.top - player.height;
+                p1->setPosition(v);
+            }
+        }
+    }
     int x = zombies.size() - 1;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R)) 
     {
@@ -206,7 +238,15 @@ void run(sf::RenderWindow& window, sf::View& view){
     z.y = 500.f;
     Player* p1 = new Player(20, 1, 1, window.getSize());
     p1->getSprite().setPosition((float)z.x, (float)z.y);
-   // sf::View view1(sf::Vector2f(window.getSize().x / 2, window.getSize().y), sf::Vector2f(1280.f, 720.f));
+    wall* w = new wall(-32, 0, 32, 1440);
+    wall* x = new wall(2560, 0, 32, 1440);
+    wall* y = new wall(0, -32, 2560, 32);
+    wall* b = new wall(0, 1440, 2560, 32);
+    walls.push_back(*w);
+    walls.push_back(*x);
+    walls.push_back(*y);
+    walls.push_back(*b);
+    // sf::View view1(sf::Vector2f(window.getSize().x / 2, window.getSize().y), sf::Vector2f(1280.f, 720.f));
     //window.setView(view1);
     //Loading Font
     sf::Font font;

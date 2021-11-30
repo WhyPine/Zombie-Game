@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <time.h>
 #include "Windows.h"
+#include "wall.h"
 
 using std::vector;
 using std::string;

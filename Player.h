@@ -27,5 +27,6 @@ public:
 	int getHealth();
 	void setHealth(int health);
 	void reload(int value);
+	void setPosition(sf::Vector2f v);
 };
 
