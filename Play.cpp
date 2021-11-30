@@ -120,7 +120,9 @@ void movement(sf::RenderWindow& window, Player* p1) {
                 v.y = wbounds.top + wbounds.height + player.height / 2;
                 p1->setPosition(v);
             }
-            for (int i = 0; i < zombies.size(); i++) {
+        }
+        for (int i = 0; i < zombies.size(); i++) {
+            if (wall.getWall().intersects(zombies[i]->getSprite().getGlobalBounds())) {
                 sf::FloatRect zbounds = zombies[i]->getSprite().getGlobalBounds();
                 if (zbounds.left < wbounds.left && zbounds.left + zbounds.width < wbounds.left + wbounds.width && zbounds.top < wbounds.top + wbounds.height && zbounds.top + zbounds.height > wbounds.top) { // right
                     v.x = wbounds.left - zbounds.width / 2;
