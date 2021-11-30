@@ -145,13 +145,13 @@ void movement(sf::RenderWindow& window, Player* p1) {
             }
         }
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R)) 
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R))
     {
-        if (clock() - reloadDelayTimer > 2000 && p1->getGun()->getReload() < 30) //fixed spam reload bug
+        if (clock() - reloadDelayTimer > 2000 && p1->getGun()->getReload() < p1->getGun()->getMaxReload()) //fixed spam reload bug
         {
             reloadDelayTimer = clock();
             p1->canshoot = false;
-            std::thread t1(&Player::reload, p1, 30);
+            std::thread t1(&Player::reload, p1, p1->getGun()->getMaxReload());
             t1.detach();
         }
     }
