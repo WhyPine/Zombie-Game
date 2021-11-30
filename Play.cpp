@@ -10,7 +10,18 @@ vector<Zombie*> zombies;
 sf::Vector2f pasPos;
 sf::Sprite backdrop;
 bool displayMenu = true;
-vector<wall> walls;
+vector<wall*> walls;
+
+void loadMap() {
+    wall* w = new wall(-32, -32, 32, 1504);
+    walls.push_back(w);
+    w = new wall(2560, -32, 32, 1504);
+    walls.push_back(w);
+    w = new wall(-32, -32, 2624, 32);
+    walls.push_back(w);
+    w = new wall(-32, 1440, 2624, 32);
+    walls.push_back(w);
+}
 
 void makeTrue(sf::Vector2i& gP, Player* p1) {
     if (p1->getPosition().x >= 1280) {
@@ -94,7 +105,7 @@ void movement(sf::RenderWindow& window, Player* p1) {
     sf::Vector2f v;
     for (auto& wall : walls) {
         sf::FloatRect player = p1->getSprite().getGlobalBounds();
-        sf::FloatRect wbounds = wall.getWall();
+        sf::FloatRect wbounds = wall->getWall();
         if (wbounds.intersects(player)) {
             if (player.left < wbounds.left && player.left + player.width < wbounds.left + wbounds.width && player.top < wbounds.top + wbounds.height && player.top + player.height > wbounds.top) { // right
                 //std::cout << "Left";
@@ -122,7 +133,7 @@ void movement(sf::RenderWindow& window, Player* p1) {
             }
         }
         for (int i = 0; i < zombies.size(); i++) {
-            if (wall.getWall().intersects(zombies[i]->getSprite().getGlobalBounds())) {
+            if (wall->getWall().intersects(zombies[i]->getSprite().getGlobalBounds())) {
                 sf::FloatRect zbounds = zombies[i]->getSprite().getGlobalBounds();
                 if (zbounds.left < wbounds.left && zbounds.left + zbounds.width < wbounds.left + wbounds.width && zbounds.top < wbounds.top + wbounds.height && zbounds.top + zbounds.height > wbounds.top) { // right
                     v.x = wbounds.left - zbounds.width / 2;
@@ -251,15 +262,15 @@ void run(sf::RenderWindow& window, sf::View& view){
     z.y = 500.f;
     Player* p1 = new Player(20, 1, 1, window.getSize());
     p1->getSprite().setPosition((float)z.x, (float)z.y);
-    wall* w = new wall(-32, -32, 32, 1504);
-    wall* x = new wall(2560, -32, 32, 1504);
-    wall* y = new wall(-32, -32, 2624, 32);
-    wall* b = new wall(-32, 1440, 2624, 32);
-    //wall* a = new wall(500, 500, 32, 32);
-    walls.push_back(*w);
-    walls.push_back(*x);
-    walls.push_back(*y);
-    walls.push_back(*b);
+    //wall* w = new wall(-32, -32, 32, 1504);
+    //wall* x = new wall(2560, -32, 32, 1504);
+    //wall* y = new wall(-32, -32, 2624, 32);
+    //wall* b = new wall(-32, 1440, 2624, 32);
+    ////wall* a = new wall(500, 500, 32, 32);
+    //walls.push_back(*w);
+    //walls.push_back(*x);
+    //walls.push_back(*y);
+    //walls.push_back(*b);
     //walls.push_back(*a);
     // sf::View view1(sf::Vector2f(window.getSize().x / 2, window.getSize().y), sf::Vector2f(1280.f, 720.f));
     //window.setView(view1);
