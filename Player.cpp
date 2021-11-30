@@ -16,7 +16,7 @@ Player::Player(int health, double speed, double damageP, sf::Vector2u size) {
     this->sprite.setTextureRect(sf::IntRect(39, 39, 250, 200));
     this->sprite.setScale((float)size.x / 6400, (float)size.y / 3600);
     this->sprite.setOrigin(this->sprite.getLocalBounds().width / 2, this->sprite.getLocalBounds().height / 2);
-    this->gun = new Gun(this->sprite.getPosition(), size); 
+    this->gun = new Shotgun(this->sprite.getPosition(), size); 
     this->regenTimer = 0;
     this->regenDelay = 3;
     this->money = 0;
@@ -115,12 +115,17 @@ void Player::setHealth(int health) {
 
 void Player::reload(int value) {
     Sleep(1500);
-    this->gun->changeReload(30);
+    this->gun->changeReload(this->gun->getMaxReload());
     this->canshoot = true;
 }
 
 int Player::getMaxHealth() {
     return this->maxHealth;
+}
+
+void Player::setPosition(sf::Vector2f v) {
+    this->sprite.setPosition(v);
+}
 }
 
 void Player::setMoney(int newMoney) {

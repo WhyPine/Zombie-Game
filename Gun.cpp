@@ -6,6 +6,7 @@ Gun::Gun(sf::Vector2f pos, sf::Vector2u size) {
 	this->projS = 10;
     this->size = size;
     this->reload = 30;
+    this->maxReload = 30;
     
     //texture.loadFromFile("rifle.png");
     
@@ -40,10 +41,11 @@ void Gun::run(sf::Vector2f pos, float rotation) {
 }
 
 void Gun::fire(sf::Vector2f go) {
-    if (this->shottimer % 6 == 0) {
+    if (this->shottimer > 6) {
         sf::Vector2f v = this->sprite.getPosition();
         this->shots->push_back(new Bullet(v, go, this->size));
         this->reload--;
+        shottimer = 0;
     }
 }
 
@@ -65,4 +67,9 @@ void Gun::changeReload(int add) {
 
 void Gun::setReload(int value) {
     this->reload = value;
+}
+
+int Gun::getMaxReload()
+{
+    return 30;
 }

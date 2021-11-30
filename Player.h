@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "Gun.h"
+#include "Shotgun.h"
 #include <thread>
 
 class Player : public sf::CircleShape, sf::Sprite
@@ -35,5 +36,6 @@ public:
 	void setStrength(double newStrength);
 	double getSpeed();
 	void setSpeed(double newSpeed);
+	void setPosition(sf::Vector2f v);
 };
 
