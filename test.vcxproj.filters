@@ -82,6 +82,15 @@
     <Image Include="rifle.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="healthbtn.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="strengthbutton.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="speedbtn.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Font Include="shlop rg.ttf">

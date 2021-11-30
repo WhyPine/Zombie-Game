@@ -194,10 +194,102 @@ void displayGUI(Player* p1, sf::RenderWindow& window)
         ammoCount.setFillColor(sf::Color::White);
         ammoCount.setPosition(xPos + 1150, yPos-10);
         ammoCount.setOutlineColor(sf::Color::Black);
-   
+
+        sf::Text ammoAlert;
+        string alert = "Press R to Reload!";
+        ammoAlert.setFont(font);
+        ammoAlert.setString(alert);
+        ammoAlert.setCharacterSize(40);
+        ammoAlert.setFillColor(sf::Color::Red);
+        ammoAlert.setPosition(xPos + 1000, yPos - 40);
+        ammoAlert.setOutlineColor(sf::Color::Black);
+
+        sf::Text moneyCount;
+        string moneyString = "Money $: " + std::to_string(p1->getMoney());
+        moneyCount.setFont(font);
+        moneyCount.setString(moneyString);
+        moneyCount.setCharacterSize(30);
+        moneyCount.setFillColor(sf::Color::White);
+        moneyCount.setPosition(xPos + 10, yPos - 40);
+        moneyCount.setOutlineColor(sf::Color::Black);
+
+        if (p1->getGun()->getReload() < 2) {
+            window.draw(ammoAlert);
+        }
+        window.draw(moneyCount);
         window.draw(ammoCount);
         window.draw(healthBack);
         window.draw(healthFront);
+       
+
+        /*if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::M))
+        {
+            displaySkillPointMenu(p1, window);
+        }*/
+        
+       
+    }
+}
+
+//void displaySkillPointMenu(Player* p1, sf::RenderWindow& window) {
+//    /*
+//    int maxHealth;
+//    double speed;
+//    double damageP;*/
+//    sf::RectangleShape skillpointBack(sf::Vector2f(100, 300));
+//    skillpointBack.setFillColor(sf::Color(50, 50, 50));
+//    skillpointBack.setPosition(10, 20);
+//
+//    sf::Sprite healthbtn;
+//    sf::Texture healthTex;
+//    healthTex.loadFromFile("healthbtn.png");
+//    healthbtn.setTexture(healthTex);
+//    
+//    //playbutton.setScale(Menu.getSize().x / 1600, Menu.getSize().y / 900);
+//    //playbutton.setOrigin(playbutton.get)
+//    healthbtn.setPosition(15,25);
+//    sf::Vector2i gP = sf::Mouse::getPosition(window);
+//    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (healthbtn.getGlobalBounds().contains(gP.x, gP.y)) && p1->getSkillPoints() > 10) {
+//        p1->setMaxHealth(p1->getMaxHealth() + 2);
+//    }
+//
+//    sf::Sprite strengthbtn;
+//    sf::Texture strengthTex;
+//    strengthTex.loadFromFile("strengthbutton.png");
+//    strengthbtn.setTexture(strengthTex);
+//
+//    //playbutton.setScale(Menu.getSize().x / 1600, Menu.getSize().y / 900);
+//    //playbutton.setOrigin(playbutton.get)
+//    strengthbtn.setPosition(15, 130);
+//   
+//    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (strengthbtn.getGlobalBounds().contains(gP.x, gP.y)) && p1->getSkillPoints() > 10) {
+//        p1->setStrength(p1->getStrength() + .1);
+//    }
+//
+//    sf::Sprite speedbtn;
+//    sf::Texture speedTex;
+//    speedTex.loadFromFile("speedbtn.png");
+//    speedbtn.setTexture(speedTex);
+//
+//    //playbutton.setScale(Menu.getSize().x / 1600, Menu.getSize().y / 900);
+//    //playbutton.setOrigin(playbutton.get)
+//    speedbtn.setPosition(15, 235);
+//   
+//    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (speedbtn.getGlobalBounds().contains(gP.x, gP.y)) && p1->getSkillPoints() > 10) {
+//        p1->setSpeed(p1->getSpeed() + .1);
+//    }
+//
+//    window.draw(skillpointBack);
+//    window.draw(healthbtn);
+//    window.draw(strengthbtn);
+//    window.draw(speedbtn);
+//}
+
+void dropMoney(Player* p1, sf::RenderWindow& window) {
+    int randDecide = rand() % 3;
+    if (randDecide == 0) {
+        int points = rand() % 3;
+        p1->setMoney(p1->getMoney() + points);
     }
 }
 
@@ -226,6 +318,7 @@ void drawing(sf::RenderWindow& window, Player* p1) {
                             std::cout << zombies[i]->getHealth() << std::endl;
                             if (zombies[i]->getHealth() <= 0) {
                                 zombies.erase(zombies.begin() + i);
+                                dropMoney(p1, window);
                                 //i--;
                             }
                             if (p1->getGun()->getShots()->at(j)->getHealth() <= 0) {
@@ -246,6 +339,8 @@ void drawing(sf::RenderWindow& window, Player* p1) {
             }
         }
     }
+   
+    
     displayGUI(p1, window);
 }
 

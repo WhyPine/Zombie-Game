@@ -1,34 +1,25 @@
 #include "Shotgun.h"
+#include <iostream>
 
 void Shotgun::fire(sf::Vector2f go)
 {
     if (this->shottimer > 30) {
         sf::Vector2f v = this->sprite.getPosition();
-        int xMultiplier = 1, yMultiplier = 1;
-        int xUnit; int yUnit;
-        if (go.x > v.x) { // if shooting top right of player
-            xMultiplier = -1;
+        sf::Vector2f temp;
+        temp.x = go.x;
+        temp.y = go.y; 
+        go.x = cos(-15 * 3.141592653 / 180) * temp.x - sin(-15 * 3.141592653 / 180) * temp.y;
+        go.y = sin(-15 * 3.141592653 / 180) * temp.x + cos(-15 * 3.141592653 / 180) * temp.y;
+        temp.x = go.x;
+        temp.y = go.y;
+        for (int x = 0; x < 7; x++) {
+            go.x = cos(3 * 3.141592653 / 180) * temp.x - sin(3 * 3.141592653 / 180) * temp.y;
+            go.y = sin(3 * 3.141592653 / 180) * temp.x + cos(3 * 3.141592653 / 180) * temp.y;
+            this->shots->push_back(new Bullet(v, go, this->size));
+            temp.x = go.x;
+            temp.y = go.y;
         }
-        if (go.y > v.y) {
-            yMultiplier = -1;
-        }
-        xUnit = ((go.x - v.x) / sqrt((go.x - v.x) * (go.x - v.x) + (go.y - v.y) * (go.y - v.y)));
-        yUnit = ((go.y - v.y) / sqrt((go.x - v.x) * (go.x - v.x) + (go.y - v.y) * (go.y - v.y)));
-        go.x = (xUnit + cos(-10 * 3.141592653 / 180)) * go.x;
-        go.y = (yUnit + cos(-10 * 3.141592653 / 180)) * go.y;
-        this->shots->push_back(new Bullet(v, go, this->size));
-        go.x = (xUnit + cos(-5 * 3.141592653 / 180)) * go.x;
-        go.y = (yUnit + cos(-5 * 3.141592653 / 180)) * go.y;
-        this->shots->push_back(new Bullet(v, go, this->size));
-        go.x = (xUnit + cos(0 * 3.141592653 / 180)) * go.x;
-        go.y = (yUnit + cos(0 * 3.141592653 / 180)) * go.y;
-        this->shots->push_back(new Bullet(v, go, this->size));
-        go.x = (xUnit + cos(5 * 3.141592653 / 180)) * go.x;
-        go.y = (yUnit + cos(5 * 3.141592653 / 180)) * go.y;
-        this->shots->push_back(new Bullet(v, go, this->size));
-        go.x = (xUnit + cos(10 * 3.141592653 / 180)) * go.x;
-        go.y = (yUnit + cos(10 * 3.141592653 / 180)) * go.y;
-        this->shots->push_back(new Bullet(v, go, this->size));
+        std::cout << std::endl;
         this->reload--;
         this->shottimer = 0;
     }
