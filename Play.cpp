@@ -25,56 +25,44 @@ void spawnZombies(sf::Vector2u size, Player* p1) {
     for (int i = 0; i < 3 * rounds + 5; i++) {
         sf::Vector2f v;
         int x = rand();
-        if (p1->getPosition().x < 1280 && p1->getPosition().y > 720) //bottom left
-        {
-            if (x % 2 == 0)
-            {
-                v.x = 35 * 32;
-                v.y = 28 * 32;
+        if (p1->getPosition().x < 1280 && p1->getPosition().y > 720) { //bottom left
+            if (x % 2 == 0){
+                v.x = 0 * 32;
+                v.y = 43 * 32;
             }
-            else
-            {
-                v.x = 12 * 32;
-                v.y = 41 * 32;
+            else {
+                v.x = 32 * 32;
+                v.y = 44 * 32;
             }
         }
-        else if (p1->getPosition().x > 1280 && p1->getPosition().y < 720) //top right
-        {
-            if (x % 2 == 0)
-            {
+        else if (p1->getPosition().x > 1280 && p1->getPosition().y < 720) { //top right
+            if (x % 2 == 0) {
                 v.x = 58 * 32;
                 v.y = 5 * 32;
             }
-            else
-            {
+            else {
                 v.x = 70 * 32;
                 v.y = 3 * 32;
             }
         }
-        else if (p1->getPosition().x > 1280 && p1->getPosition().y > 720) //bottom right
-        {
-            if (x % 2 == 0)
-            {
+        else if (p1->getPosition().x > 1280 && p1->getPosition().y > 720) { //bottom right
+            if (x % 2 == 0) {
                 v.x = (40+5) * 32;
                 v.y = (23+4) * 32;
             }
-            else
-            {
+            else {
                 v.x = (40+33) * 32;
                 v.y = (23+8) * 32;
             }
         }
-        else if (p1->getPosition().x < 1280 && p1->getPosition().y < 720) //top left
-        {
-            if (x % 2 == 0)
-            {
-                v.x = 5 * 32;
-                v.y = 4 * 32;
+        else if (p1->getPosition().x < 1280 && p1->getPosition().y < 720) { //top left
+            if (x % 2 == 0){
+                v.x = 16 * 32;
+                v.y = 0 * 32;
             }
-            else
-            {
-                v.x = 35 * 32;
-                v.y = 17 * 32;
+            else{
+                v.x = 0 * 32;
+                v.y = 10 * 32;
             }
         }
         zombies.push_back(new Zombie(20, 1, 1, size, v));
@@ -297,6 +285,7 @@ void run(sf::RenderWindow& window, sf::View& view){
                 roundCountTimer = clock();
                 displayMenu = false;
                 rounds++;
+                p1->setHealth(p1->getHealth() + ((p1->getMaxHealth() - p1->getHealth())/2));
             }
             if (loadFont)
             {
@@ -305,6 +294,8 @@ void run(sf::RenderWindow& window, sf::View& view){
                 textDisplay.setString(display);
                 textDisplay.setCharacterSize(100);
                 textDisplay.setFillColor(sf::Color(94, 1, 6));
+                textDisplay.setOutlineColor(sf::Color::Black);
+                textDisplay.setOutlineThickness(4);
                 textDisplay.setOrigin(textDisplay.getLocalBounds().width / 2, textDisplay.getLocalBounds().height / 2);
                 textDisplay.setPosition(view.getCenter().x, view.getCenter().y-300);
                 window.draw(textDisplay);
@@ -317,6 +308,30 @@ void run(sf::RenderWindow& window, sf::View& view){
                 std::cout << "Round " << rounds << std::endl;
                 roundCountTimer = clock();
             }
+        }
+        if (p1->getHealth() < 1)
+        {
+            textDisplay.setFont(font);
+            textDisplay.setString("YOU DIED!");
+            textDisplay.setCharacterSize(400);
+            textDisplay.setFillColor(sf::Color(94, 1, 6));
+            textDisplay.setOutlineColor(sf::Color::Black);
+            textDisplay.setOutlineThickness(5);
+            textDisplay.setOrigin(textDisplay.getLocalBounds().width/2, textDisplay.getLocalBounds().height/2);
+            if (p1->getPosition().x < 1280 && p1->getPosition().y > 720) {//bottom left
+                textDisplay.setPosition(1280 / 2, 720 + 720 / 2);
+            }
+            else if (p1->getPosition().x > 1280 && p1->getPosition().y < 720) {//top right
+                textDisplay.setPosition(1280 + 1280 / 2, 720 / 2);
+            }
+            else if (p1->getPosition().x > 1280 && p1->getPosition().y > 720) {//bottom right
+                textDisplay.setPosition(1280 + 1280 / 2, 720 + 720 / 2);
+            }
+            else if (p1->getPosition().x < 1280 && p1->getPosition().y < 720) {//top left
+                textDisplay.setPosition(1280 / 2, 720 / 2);
+            }
+            window.draw(textDisplay);
+
         }
         //window.setView(view);
         window.display();
