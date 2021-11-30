@@ -245,7 +245,7 @@ void run(sf::RenderWindow& window, sf::View& view){
                 roundCountTimer = clock();
                 displayMenu = false;
                 rounds++;
-                p1->setHealth(p1->getMaxHealth());
+                p1->setHealth(p1->getHealth() + ((p1->getMaxHealth() - p1->getHealth())/2));
             }
             if (loadFont)
             {
