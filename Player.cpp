@@ -126,7 +126,7 @@ int Player::getMaxHealth() {
 void Player::setPosition(sf::Vector2f v) {
     this->sprite.setPosition(v);
 }
-}
+
 
 void Player::setMoney(int newMoney) {
     this->money = newMoney;
