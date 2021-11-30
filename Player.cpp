@@ -121,3 +121,7 @@ void Player::reload(int value) {
 int Player::getMaxHealth() {
     return this->maxHealth;
 }
+
+void Player::setPosition(sf::Vector2f v) {
+    this->sprite.setPosition(v);
+}

@@ -99,16 +99,20 @@ void Zombie::setHealth(int health) {
 }
 
 void Zombie::attack(Player* p1) {
-    Sleep(0.5);
+    Sleep(900);
     double size = 0.75;
     //makes the collision box for the player change size by a factor of size
-    sf::FloatRect pSafeZone = p1->getSprite().getGlobalBounds();
+    /*sf::FloatRect pSafeZone = p1->getSprite().getGlobalBounds();
     pSafeZone.top += ((pSafeZone.height / 2) - (pSafeZone.height * size / 2));
     pSafeZone.left += ((pSafeZone.width / 2) - (pSafeZone.width * size / 2));
     pSafeZone.height = pSafeZone.height * size;
-    pSafeZone.width = pSafeZone.width * size;
-    if (this->sprite.getGlobalBounds().intersects(pSafeZone)) {
+    pSafeZone.width = pSafeZone.width * size;*/
+    if (this->sprite.getGlobalBounds().intersects(p1->getSprite().getGlobalBounds())) {
         p1->setHealth(p1->getHealth() - this->getDamage());
         std::cout << p1->getHealth() << std::endl;
     }
+}
+
+void Zombie::setPosition(sf::Vector2f v) {
+    this->sprite.setPosition(v);
 }

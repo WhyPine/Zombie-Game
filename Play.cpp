@@ -10,6 +10,7 @@ vector<Zombie*> zombies;
 sf::Vector2f pasPos;
 sf::Sprite backdrop;
 bool displayMenu = true;
+vector<wall> walls;
 
 void makeTrue(sf::Vector2i& gP, Player* p1) {
     if (p1->getPosition().x >= 1280) {
@@ -77,17 +78,7 @@ void movement(sf::RenderWindow& window, Player* p1) {
     makeTrue(gP, p1);
     p1->checkMove(gP);
     int x = zombies.size() - 1;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R)) 
-    {
-        if (clock() - reloadDelayTimer > 2000 && p1->getGun()->getReload() < p1->getGun()->getMaxReload()) //fixed spam reload bug
-        {
-            reloadDelayTimer = clock();
-            p1->canshoot = false;
-            std::thread t1(&Player::reload, p1, p1->getGun()->getMaxReload());
-            t1.detach();
-        }
-    }
-    for (int z = 0; z < x; z++) {
+    for (int z = 0; z < x - 1; z++) {
         if (zombies[z] != nullptr) {
             if (zombies[z]->getSprite().getGlobalBounds().intersects(zombies[z + 1]->getSprite().getGlobalBounds()) != true) {
                 zombies[z]->getMove(p1, p1->getPosition());
@@ -99,6 +90,70 @@ void movement(sf::RenderWindow& window, Player* p1) {
     }
     else if (x == 0) {
         zombies[0]->getMove(p1, p1->getPosition());
+    }
+    sf::Vector2f v;
+    for (auto& wall : walls) {
+        sf::FloatRect player = p1->getSprite().getGlobalBounds();
+        sf::FloatRect wbounds = wall.getWall();
+        if (wbounds.intersects(player)) {
+            if (player.left < wbounds.left && player.left + player.width < wbounds.left + wbounds.width && player.top < wbounds.top + wbounds.height && player.top + player.height > wbounds.top) { // right
+                //std::cout << "Left";
+                v.x = wbounds.left - player.width / 2;
+                v.y = p1->getPosition().y;
+                p1->setPosition(v);
+            }
+            else if (player.left > wbounds.left && player.left + player.width > wbounds.left + wbounds.width && player.top < wbounds.top + wbounds.height && player.top + player.height > wbounds.top) { //left
+                //std::cout << "Right";
+                v.x = wbounds.left + wbounds.width + player.width / 2;
+                v.y = p1->getPosition().y;
+                p1->setPosition(v);
+            }
+            else if (player.top < wbounds.top  && player.top + player.height < wbounds.top + wbounds.height && player.left < wbounds.left + wbounds.width && player.left + player.width > wbounds.left) { //bottom
+                //std::cout << "Top";
+                v.x = p1->getPosition().x;
+                v.y = wbounds.top - player.height / 2;
+                p1->setPosition(v);
+            }
+            else if (player.top > wbounds.top && player.top + player.height > wbounds.top + wbounds.height && player.left < wbounds.left + wbounds.width && player.left + player.width > wbounds.left) { //top
+                //std::cout << "Bottom";
+                v.x = p1->getPosition().x;
+                v.y = wbounds.top + wbounds.height + player.height / 2;
+                p1->setPosition(v);
+            }
+            for (int i = 0; i < zombies.size(); i++) {
+                sf::FloatRect zbounds = zombies[i]->getSprite().getGlobalBounds();
+                if (zbounds.left < wbounds.left && zbounds.left + zbounds.width < wbounds.left + wbounds.width && zbounds.top < wbounds.top + wbounds.height && zbounds.top + zbounds.height > wbounds.top) { // right
+                    v.x = wbounds.left - zbounds.width / 2;
+                    v.y = zombies[i]->getSprite().getPosition().y;
+                    zombies[i]->setPosition(v);
+                }
+                else if (zbounds.left > wbounds.left && zbounds.left + zbounds.width > wbounds.left + wbounds.width && zbounds.top < wbounds.top + wbounds.height && zbounds.top + zbounds.height > wbounds.top) { //left
+                    v.x = wbounds.left + wbounds.width + zbounds.width / 2;
+                    v.y = zombies[i]->getSprite().getPosition().y;
+                    zombies[i]->setPosition(v);
+                }
+                else if (zbounds.top < wbounds.top && zbounds.top + zbounds.height < wbounds.top + wbounds.height && zbounds.left < wbounds.left + wbounds.width && zbounds.left + zbounds.width > wbounds.left) { //bottom
+                    v.x = zombies[i]->getSprite().getPosition().x;
+                    v.y = wbounds.top - zbounds.height / 2;
+                    zombies[i]->setPosition(v);
+                }
+                else if (zbounds.top > wbounds.top && zbounds.top + zbounds.height > wbounds.top + wbounds.height && zbounds.left < wbounds.left + wbounds.width && zbounds.left + zbounds.width > wbounds.left) { //top
+                    v.x = zombies[i]->getSprite().getPosition().x;
+                    v.y = wbounds.top + wbounds.height + zbounds.height / 2;
+                    zombies[i]->setPosition(v);
+                }
+            }
+        }
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R)) 
+    {
+        if (clock() - reloadDelayTimer > 2000 && p1->getGun()->getReload() < 30) //fixed spam reload bug
+        {
+            reloadDelayTimer = clock();
+            p1->canshoot = false;
+            std::thread t1(&Player::reload, p1, 30);
+            t1.detach();
+        }
     }
 }
 
@@ -183,7 +238,7 @@ void drawing(sf::RenderWindow& window, Player* p1) {
 
 void run(sf::RenderWindow& window, sf::View& view){
     sf::Texture tex;
-    tex.loadFromFile("firstMap.png");
+    tex.loadFromFile("mapv2.png");
     backdrop.setTexture(tex);
     sf::Vector2f v;
     v.x = 1000.f;
@@ -194,7 +249,17 @@ void run(sf::RenderWindow& window, sf::View& view){
     z.y = 500.f;
     Player* p1 = new Player(20, 1, 1, window.getSize());
     p1->getSprite().setPosition((float)z.x, (float)z.y);
-   // sf::View view1(sf::Vector2f(window.getSize().x / 2, window.getSize().y), sf::Vector2f(1280.f, 720.f));
+    wall* w = new wall(-32, -32, 32, 1504);
+    wall* x = new wall(2560, -32, 32, 1504);
+    wall* y = new wall(-32, -32, 2624, 32);
+    wall* b = new wall(-32, 1440, 2624, 32);
+    //wall* a = new wall(500, 500, 32, 32);
+    walls.push_back(*w);
+    walls.push_back(*x);
+    walls.push_back(*y);
+    walls.push_back(*b);
+    //walls.push_back(*a);
+    // sf::View view1(sf::Vector2f(window.getSize().x / 2, window.getSize().y), sf::Vector2f(1280.f, 720.f));
     //window.setView(view1);
     //Loading Font
     sf::Font font;
