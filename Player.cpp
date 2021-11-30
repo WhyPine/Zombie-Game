@@ -19,6 +19,7 @@ Player::Player(int health, double speed, double damageP, sf::Vector2u size) {
     this->gun = new Shotgun(this->sprite.getPosition(), size); 
     this->regenTimer = 0;
     this->regenDelay = 3;
+    this->money = 0;
 }
 
 void Player::checkMove(sf::Vector2i gP) {
@@ -124,4 +125,30 @@ int Player::getMaxHealth() {
 
 void Player::setPosition(sf::Vector2f v) {
     this->sprite.setPosition(v);
+}
+}
+
+void Player::setMoney(int newMoney) {
+    this->money = newMoney;
+}
+
+int Player::getMoney() {
+    return this->money;
+}
+
+void Player::setMaxHealth(int newMaxHealth) {
+    this->maxHealth = newMaxHealth;
+}
+
+double Player::getStrength() {
+    return this->damageP;
+}
+void Player::setStrength(double newStrength) {
+    this->damageP = newStrength;
+}
+double Player::getSpeed() {
+    return this->speed;
+}
+void Player::setSpeed(double newSpeed) {
+    this->speed = newSpeed;
 }
