@@ -79,11 +79,11 @@ void movement(sf::RenderWindow& window, Player* p1) {
     int x = zombies.size() - 1;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R)) 
     {
-        if (clock() - reloadDelayTimer > 2000 && p1->getGun()->getReload() < 30) //fixed spam reload bug
+        if (clock() - reloadDelayTimer > 2000 && p1->getGun()->getReload() < p1->getGun()->getMaxReload()) //fixed spam reload bug
         {
             reloadDelayTimer = clock();
             p1->canshoot = false;
-            std::thread t1(&Player::reload, p1, 30);
+            std::thread t1(&Player::reload, p1, p1->getGun()->getMaxReload());
             t1.detach();
         }
     }
@@ -120,7 +120,7 @@ void displayGUI(Player* p1, sf::RenderWindow& window)
         sf::Font font;
         font.loadFromFile("shlop rg.ttf");
         ammoCount.setFont(font);
-        string ammo = std::to_string(p1->getGun()->getReload()) + "/30";
+        string ammo = std::to_string(p1->getGun()->getReload()) + "/" + std::to_string(p1->getGun()->getMaxReload());
         ammoCount.setString(ammo);
         ammoCount.setCharacterSize(50);
         ammoCount.setFillColor(sf::Color::White);
@@ -236,17 +236,19 @@ void run(sf::RenderWindow& window, sf::View& view){
         //re-draws objects so it looks good      
         drawing(window, p1);
 
-        //Zombies alive checker
+        //Round counter & advancer
         if (zombies.size() == 0)
         {
-           // bool displayMenu = true;
+            //advances round and heals player
             if (displayMenu && (clock() - roundCountTimer) > 1000)
             {
                 roundCountTimer = clock();
                 displayMenu = false;
                 rounds++;
                 p1->setHealth(p1->getHealth() + ((p1->getMaxHealth() - p1->getHealth())/2));
+                if (p1->getHealth() > p1->getMaxHealth()) p1->setHealth(p1->getMaxHealth());
             }
+            //displays round counter on screen
             if (loadFont)
             {
                 textDisplay.setFont(font);
@@ -260,6 +262,7 @@ void run(sf::RenderWindow& window, sf::View& view){
                 textDisplay.setPosition(view.getCenter().x, view.getCenter().y-300);
                 window.draw(textDisplay);
             }
+            //after 3 seconds, starts next round
             if (clock() - roundCountTimer > 3000) // 3 seconds
             {
                 std::thread t1(spawnZombies, window.getSize(), p1);
@@ -269,6 +272,7 @@ void run(sf::RenderWindow& window, sf::View& view){
                 roundCountTimer = clock();
             }
         }
+        //DEATH MESSAGE
         if (p1->getHealth() < 1)
         {
             textDisplay.setFont(font);

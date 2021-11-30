@@ -7,7 +7,8 @@ using std::vector;
 
 class Gun
 {
-private:
+protected:
+	int maxReload;
 	int reload;
 	int shottimer;
 	int power;
@@ -16,9 +17,10 @@ private:
 	sf::Sprite sprite;
 	sf::Vector2u size;
 public:
+	virtual int getMaxReload();
 	Gun(sf::Vector2f pos, sf::Vector2u size);
 	void run(sf::Vector2f pos, float rotation);
-	void fire(sf::Vector2f go);
+	virtual void fire(sf::Vector2f go);
 	sf::Sprite getSprite();
 	vector<Bullet*>* getShots();
 	int getReload();

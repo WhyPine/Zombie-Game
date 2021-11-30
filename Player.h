@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "Gun.h"
+#include "Shotgun.h"
 #include <thread>
 
 class Player : public sf::CircleShape, sf::Sprite
