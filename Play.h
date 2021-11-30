@@ -16,3 +16,5 @@ using std::string;
 	void drawing(sf::RenderWindow& window, Player* p1);
 	void makeTrue(sf::Vector2i& gP, Player* p1);
 	void displayGUI(Player* p1, sf::RenderWindow& window);
+	//void displaySkillPointMenu(Player* p1, sf::RenderWindow& window);
+	void dropMoney(Player* p1, sf::RenderWindow& window);

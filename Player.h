@@ -12,6 +12,7 @@ private:
 	int regenDelay;
 	double speed;
 	double damageP;
+	int money;
 	sf::Sprite sprite; 
 	Gun* gun; 
 	sf::Texture* texture = new sf::Texture;
@@ -27,5 +28,12 @@ public:
 	int getHealth();
 	void setHealth(int health);
 	void reload(int value);
+	int getMoney();
+	void setMoney(int newMoney);
+	void setMaxHealth(int newMaxHealth);
+	double getStrength();
+	void setStrength(double newStrength);
+	double getSpeed();
+	void setSpeed(double newSpeed);
 };
 
