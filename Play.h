@@ -8,6 +8,7 @@
 #include <time.h>
 #include "Windows.h"
 #include "wall.h"
+#include "Door.h"
 
 using std::vector;
 using std::string;
