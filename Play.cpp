@@ -11,6 +11,7 @@ sf::Vector2f pasPos;
 sf::Sprite backdrop;
 bool displayMenu = true;
 vector<wall*> walls;
+std::mutex mtx;
 vector<Door*> doors;
 
 void loadWalls() {
@@ -389,7 +390,6 @@ void movement(sf::RenderWindow& window, Player* p1) {
                 }
             }
         }
-
         for (int j = 0; j < p1->getGun()->getShots()->size(); j++) {
             if (walls[x]->getWall().intersects(p1->getGun()->getShots()->at(j)->getSprite().getGlobalBounds())) {
                 p1->getGun()->getShots()->erase(p1->getGun()->getShots()->begin() + j);
@@ -690,76 +690,42 @@ void displayGUI(Player* p1, sf::RenderWindow& window, sf::Font& font, int zombie
         window.draw(moneyCount);
         window.draw(ammoCount);
         window.draw(healthBack);
-        window.draw(healthFront);
-       
-
-        /*if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::M))
-        {
-            displaySkillPointMenu(p1, window);
-        }*/
-        
-       
+        window.draw(healthFront);         
     }
 }
 
-//void displaySkillPointMenu(Player* p1, sf::RenderWindow& window) {
-//    /*
-//    int maxHealth;
-//    double speed;
-//    double damageP;*/
-//    sf::RectangleShape skillpointBack(sf::Vector2f(100, 300));
-//    skillpointBack.setFillColor(sf::Color(50, 50, 50));
-//    skillpointBack.setPosition(10, 20);
-//
-//    sf::Sprite healthbtn;
-//    sf::Texture healthTex;
-//    healthTex.loadFromFile("healthbtn.png");
-//    healthbtn.setTexture(healthTex);
-//    
-//    //playbutton.setScale(Menu.getSize().x / 1600, Menu.getSize().y / 900);
-//    //playbutton.setOrigin(playbutton.get)
-//    healthbtn.setPosition(15,25);
-//    sf::Vector2i gP = sf::Mouse::getPosition(window);
-//    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (healthbtn.getGlobalBounds().contains(gP.x, gP.y)) && p1->getSkillPoints() > 10) {
-//        p1->setMaxHealth(p1->getMaxHealth() + 2);
-//    }
-//
-//    sf::Sprite strengthbtn;
-//    sf::Texture strengthTex;
-//    strengthTex.loadFromFile("strengthbutton.png");
-//    strengthbtn.setTexture(strengthTex);
-//
-//    //playbutton.setScale(Menu.getSize().x / 1600, Menu.getSize().y / 900);
-//    //playbutton.setOrigin(playbutton.get)
-//    strengthbtn.setPosition(15, 130);
-//   
-//    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (strengthbtn.getGlobalBounds().contains(gP.x, gP.y)) && p1->getSkillPoints() > 10) {
-//        p1->setStrength(p1->getStrength() + .1);
-//    }
-//
-//    sf::Sprite speedbtn;
-//    sf::Texture speedTex;
-//    speedTex.loadFromFile("speedbtn.png");
-//    speedbtn.setTexture(speedTex);
-//
-//    //playbutton.setScale(Menu.getSize().x / 1600, Menu.getSize().y / 900);
-//    //playbutton.setOrigin(playbutton.get)
-//    speedbtn.setPosition(15, 235);
-//   
-//    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (speedbtn.getGlobalBounds().contains(gP.x, gP.y)) && p1->getSkillPoints() > 10) {
-//        p1->setSpeed(p1->getSpeed() + .1);
-//    }
-//
-//    window.draw(skillpointBack);
-//    window.draw(healthbtn);
-//    window.draw(strengthbtn);
-//    window.draw(speedbtn);
-//}
-
-void dropMoney(Player* p1, sf::RenderWindow& window) {
-    int moneys = rand() % 3 + 1;
-    p1->setMoney(p1->getMoney() + moneys);
+void dropMoney(Player* p1) {
+    int points = rand() % 7 + 1;
+    p1->setMoney(p1->getMoney() + points);
 }
+
+void bullets(Player* p1) {
+    for (int j = 0; j < p1->getGun()->getShots()->size(); j++) {
+        if (p1->getGun()->getShots()->at(j) != nullptr) {
+            for (int i = 0; i < zombies.size(); i++) {
+                if (zombies[i] != nullptr) {
+                    if (j > 0) {
+                        if (p1->getGun()->getShots()->at(j)->getSprite().getGlobalBounds().intersects(zombies[i]->getSprite().getGlobalBounds())) {
+                            zombies[i]->setHealth(zombies[i]->getHealth() - p1->getGun()->getShots()->at(j)->getDamage());
+                            p1->getGun()->getShots()->at(j)->setHealth(-1);
+                            std::cout << zombies[i]->getHealth() << std::endl;
+                            if (zombies[i]->getHealth() <= 0) {
+                                zombies.erase(zombies.begin() + i);
+                                dropMoney(p1);
+                                i--;
+                            }
+                            if (p1->getGun()->getShots()->at(j)->getHealth() <= 0) {
+                                p1->getGun()->getShots()->erase(p1->getGun()->getShots()->begin() + j);
+                                j--;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 
 void drawing(sf::RenderWindow& window, Player* p1, sf::Font& font) {
     window.clear();
@@ -777,30 +743,6 @@ void drawing(sf::RenderWindow& window, Player* p1, sf::Font& font) {
             window.draw(zombies[i]->getSprite());
         }
     }
-    for (int j = 0; j < p1->getGun()->getShots()->size(); j++) {
-        if (p1->getGun()->getShots()->at(j) != nullptr) {
-            for (int i = 0; i < zombies.size(); i++) {
-                if (zombies[i] != nullptr) {
-                    if (j > 0) {
-                        if (p1->getGun()->getShots()->at(j)->getSprite().getGlobalBounds().intersects(zombies[i]->getSprite().getGlobalBounds())) {
-                            zombies[i]->setHealth(zombies[i]->getHealth() - p1->getGun()->getShots()->at(j)->getDamage());
-                            p1->getGun()->getShots()->at(j)->setHealth(-1);
-                            std::cout << zombies[i]->getHealth() << std::endl;
-                            if (zombies[i]->getHealth() <= 0) {
-                                zombies.erase(zombies.begin() + i);
-                                dropMoney(p1, window);
-                                i--;
-                            }
-                            if (p1->getGun()->getShots()->at(j)->getHealth() <= 0) {
-                                p1->getGun()->getShots()->erase(p1->getGun()->getShots()->begin() + j);
-                                j--;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
     for (int k = 0; k < zombies.size(); k++) {
         if (zombies[k] != nullptr) {
             if (zombies[k]->getSprite().getGlobalBounds().intersects(p1->getSprite().getGlobalBounds()) && zombies[k]->getReload() == 0) {
@@ -809,7 +751,9 @@ void drawing(sf::RenderWindow& window, Player* p1, sf::Font& font) {
             }
         }
     }
-    
+
+    //std::thread gui(displayGUI, p1, std::ref(window), std::ref(font), zombies.size());
+    //gui.detach();
     displayGUI(p1, window, font, zombies.size());
 }
 
@@ -851,7 +795,18 @@ void run(sf::RenderWindow& window, sf::View& view){
         else if (p1->getPosition().x < 1280 && p1->getPosition().y < 720) {
             view.setCenter(640, 360);
         }
+        
+        std::thread bull(bullets, p1);
+        bull.join();
+
+        //std::thread move(movement, std::ref(window), p1);
+        //move.join();
+
+        //std::thread draw(drawing, std::ref(window), p1, std::ref(font));
+        //draw.join();
+
         window.setView(view);
+
         movement(window, p1);
 
         //re-draws objects so it looks good      
@@ -863,9 +818,8 @@ void run(sf::RenderWindow& window, sf::View& view){
         //Round counter & advancer
         if (zombies.size() == 0)
         {
-            //advances round and heals player
-            if (displayMenu && (clock() - roundCountTimer) > 1000)
-            {
+            //advances rou
+            if (displayMenu && (clock() - roundCountTimer) > 1000) {
                 roundCountTimer = clock();
                 displayMenu = false;
                 rounds++;
@@ -922,6 +876,8 @@ void run(sf::RenderWindow& window, sf::View& view){
 
         }
         //window.setView(view);
+        //move.join();
+        //draw.join();
         window.display();
     }
 }
