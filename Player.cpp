@@ -14,8 +14,8 @@ Player::Player(int health, double speed, double damageP, sf::Vector2u size) {
     this->texture->loadFromFile("survivor-move_handgun_0.png");
     this->sprite.setTexture(*(this->texture));
     this->sprite.setTextureRect(sf::IntRect(39, 39, 250, 200));
-    this->sprite.setScale((float)size.x / 6400, (float)size.y / 3600);
     this->sprite.setOrigin(this->sprite.getLocalBounds().width / 2, this->sprite.getLocalBounds().height / 2);
+    this->sprite.setScale((float)size.x / 6400, (float)size.y / 3600);
     this->gun = new Shotgun(this->sprite.getPosition(), size); 
     this->regenTimer = 0;
     this->regenDelay = 3;

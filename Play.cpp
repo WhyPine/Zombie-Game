@@ -160,7 +160,7 @@ void movement(sf::RenderWindow& window, Player* p1) {
     makeTrue(gP, p1);
     p1->checkMove(gP);
     int x = zombies.size() - 1;
-    for (int z = 0; z < x - 1; z++) {
+    for (int z = 0; z < x; z++) {
         if (zombies[z] != nullptr) {
             if (zombies[z]->getSprite().getGlobalBounds().intersects(zombies[z + 1]->getSprite().getGlobalBounds()) != true) {
                 zombies[z]->getMove(p1, p1->getPosition());
@@ -181,50 +181,52 @@ void movement(sf::RenderWindow& window, Player* p1) {
             if (player.top < wbounds.top && player.top + player.height < wbounds.top + wbounds.height && player.left < wbounds.left + wbounds.width && player.left + player.width > wbounds.left) { //bottom
                 std::cout << "Top";
                 v.x = p1->getPosition().x;
-                v.y = wbounds.top - player.height / 2;
+                v.y = wbounds.top - player.height / 2 - 2.f;
                 p1->setPosition(v);
             }
             else if (player.top > wbounds.top && player.top + player.height > wbounds.top + wbounds.height && player.left < wbounds.left + wbounds.width && player.left + player.width > wbounds.left) { //top
                 std::cout << "Bottom";
                 v.x = p1->getPosition().x;
-                v.y = wbounds.top + wbounds.height + player.height / 2;
+                v.y = wbounds.top + wbounds.height + player.height / 2 + 2.f;
                 p1->setPosition(v);
             }
-            else if (player.left < wbounds.left && player.left + player.width < wbounds.left + wbounds.width && player.top < wbounds.top + wbounds.height && player.top + player.height > wbounds.top) { // right
+            if (player.left < wbounds.left && player.left + player.width < wbounds.left + wbounds.width && player.top < wbounds.top + wbounds.height && player.top + player.height > wbounds.top) { // right
                 std::cout << "Left";
-                v.x = wbounds.left - player.width / 2;
+                v.x = wbounds.left - player.width / 2 - 2.f;
                 v.y = p1->getPosition().y;
                 p1->setPosition(v);
             }
             else if (player.left > wbounds.left && player.left + player.width > wbounds.left + wbounds.width && player.top < wbounds.top + wbounds.height && player.top + player.height > wbounds.top) { //left
                 std::cout << "Right";
-                v.x = wbounds.left + wbounds.width + player.width / 2;
+                v.x = wbounds.left + wbounds.width + player.width / 2 + 2.f;
                 v.y = p1->getPosition().y;
                 p1->setPosition(v);
             }
         }
         for (int i = 0; i < zombies.size(); i++) {
-            if (walls[x]->getWall().intersects(zombies[i]->getSprite().getGlobalBounds())) {
-                sf::FloatRect zbounds = zombies[i]->getSprite().getGlobalBounds();
-                if (zbounds.left < wbounds.left && zbounds.left + zbounds.width < wbounds.left + wbounds.width && zbounds.top < wbounds.top + wbounds.height && zbounds.top + zbounds.height > wbounds.top) { // right
-                    v.x = wbounds.left - zbounds.width / 2;
-                    v.y = zombies[i]->getSprite().getPosition().y;
-                    zombies[i]->setPosition(v);
-                }
-                else if (zbounds.left > wbounds.left && zbounds.left + zbounds.width > wbounds.left + wbounds.width && zbounds.top < wbounds.top + wbounds.height && zbounds.top + zbounds.height > wbounds.top) { //left
-                    v.x = wbounds.left + wbounds.width + zbounds.width / 2;
-                    v.y = zombies[i]->getSprite().getPosition().y;
-                    zombies[i]->setPosition(v);
-                }
-                else if (zbounds.top < wbounds.top && zbounds.top + zbounds.height < wbounds.top + wbounds.height && zbounds.left < wbounds.left + wbounds.width && zbounds.left + zbounds.width > wbounds.left) { //bottom
-                    v.x = zombies[i]->getSprite().getPosition().x;
-                    v.y = wbounds.top - zbounds.height / 2;
-                    zombies[i]->setPosition(v);
-                }
-                else if (zbounds.top > wbounds.top && zbounds.top + zbounds.height > wbounds.top + wbounds.height && zbounds.left < wbounds.left + wbounds.width && zbounds.left + zbounds.width > wbounds.left) { //top
-                    v.x = zombies[i]->getSprite().getPosition().x;
-                    v.y = wbounds.top + wbounds.height + zbounds.height / 2;
-                    zombies[i]->setPosition(v);
+            if (zombies[i] != nullptr) {
+                if (walls[x]->getWall().intersects(zombies[i]->getSprite().getGlobalBounds())) {
+                    sf::FloatRect zbounds = zombies[i]->getSprite().getGlobalBounds();
+                    if (zbounds.left < wbounds.left && zbounds.left + zbounds.width < wbounds.left + wbounds.width && zbounds.top < wbounds.top + wbounds.height && zbounds.top + zbounds.height > wbounds.top) { // right
+                        v.x = wbounds.left - zbounds.width / 2;
+                        v.y = zombies[i]->getSprite().getPosition().y;
+                        zombies[i]->setPosition(v);
+                    }
+                    else if (zbounds.left > wbounds.left && zbounds.left + zbounds.width > wbounds.left + wbounds.width && zbounds.top < wbounds.top + wbounds.height && zbounds.top + zbounds.height > wbounds.top) { //left
+                        v.x = wbounds.left + wbounds.width + zbounds.width / 2;
+                        v.y = zombies[i]->getSprite().getPosition().y;
+                        zombies[i]->setPosition(v);
+                    }
+                    else if (zbounds.top < wbounds.top && zbounds.top + zbounds.height < wbounds.top + wbounds.height && zbounds.left < wbounds.left + wbounds.width && zbounds.left + zbounds.width > wbounds.left) { //bottom
+                        v.x = zombies[i]->getSprite().getPosition().x;
+                        v.y = wbounds.top - zbounds.height / 2;
+                        zombies[i]->setPosition(v);
+                    }
+                    else if (zbounds.top > wbounds.top && zbounds.top + zbounds.height > wbounds.top + wbounds.height && zbounds.left < wbounds.left + wbounds.width && zbounds.left + zbounds.width > wbounds.left) { //top
+                        v.x = zombies[i]->getSprite().getPosition().x;
+                        v.y = wbounds.top + wbounds.height + zbounds.height / 2;
+                        zombies[i]->setPosition(v);
+                    }
                 }
             }
         }
