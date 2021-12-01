@@ -178,25 +178,49 @@ void movement(sf::RenderWindow& window, Player* p1) {
         sf::FloatRect player = p1->getSprite().getGlobalBounds();
         sf::FloatRect wbounds = walls[x]->getWall();
         if (wbounds.intersects(player)) {
-            if (player.top < wbounds.top && player.top + player.height < wbounds.top + wbounds.height && player.left < wbounds.left + wbounds.width && player.left + player.width > wbounds.left) { //bottom
+            //if (player.top < wbounds.top && player.top + player.height < wbounds.top + wbounds.height /*&& player.left < wbounds.left + wbounds.width && player.left + player.width > wbounds.left*/) { //bottom
+            //    std::cout << "Top";
+            //    v.x = p1->getPosition().x;
+            //    v.y = wbounds.top - player.height / 2 - 2.f;
+            //    p1->setPosition(v);
+            //}
+            //else if (player.top > wbounds.top && player.top + player.height > wbounds.top + wbounds.height /*&& player.left < wbounds.left + wbounds.width && player.left + player.width > wbounds.left*/) { //top
+            //    std::cout << "Bottom";
+            //    v.x = p1->getPosition().x;
+            //    v.y = wbounds.top + wbounds.height + player.height / 2 + 2.f;
+            //    p1->setPosition(v);
+            //}
+            //else if (player.left < wbounds.left && player.left + player.width < wbounds.left + wbounds.width/* && player.top < wbounds.top + wbounds.height && player.top + player.height > wbounds.top*/) { // right
+            //    std::cout << "Left";
+            //    v.x = wbounds.left - player.width / 2 - 2.f;
+            //    v.y = p1->getPosition().y;
+            //    p1->setPosition(v);
+            //}
+            //else if (player.left > wbounds.left && player.left + player.width > wbounds.left + wbounds.width /*&& player.top < wbounds.top + wbounds.height && player.top + player.height > wbounds.top*/) { //left
+            //    std::cout << "Right";
+            //    v.x = wbounds.left + wbounds.width + player.width / 2 + 2.f;
+            //    v.y = p1->getPosition().y;
+            //    p1->setPosition(v);
+            //}
+            if (player.top + player.height > wbounds.top && player.top < wbounds.top && player.left < wbounds.left + wbounds.width && player.left + player.width > wbounds.left) { //bottom
                 std::cout << "Top";
                 v.x = p1->getPosition().x;
                 v.y = wbounds.top - player.height / 2 - 2.f;
                 p1->setPosition(v);
             }
-            else if (player.top > wbounds.top && player.top + player.height > wbounds.top + wbounds.height && player.left < wbounds.left + wbounds.width && player.left + player.width > wbounds.left) { //top
+            else if (player.top < wbounds.top + wbounds.height && player.top + player.height > wbounds.top + wbounds.height && player.left < wbounds.left + wbounds.width && player.left + player.width > wbounds.left) { //top
                 std::cout << "Bottom";
                 v.x = p1->getPosition().x;
                 v.y = wbounds.top + wbounds.height + player.height / 2 + 2.f;
                 p1->setPosition(v);
             }
-            if (player.left < wbounds.left && player.left + player.width < wbounds.left + wbounds.width && player.top < wbounds.top + wbounds.height && player.top + player.height > wbounds.top) { // right
+            else if (player.left + player.width > wbounds.left && player.left < wbounds.left && player.top < wbounds.top + wbounds.height && player.top + player.height > wbounds.top) { // right
                 std::cout << "Left";
                 v.x = wbounds.left - player.width / 2 - 2.f;
                 v.y = p1->getPosition().y;
                 p1->setPosition(v);
             }
-            else if (player.left > wbounds.left && player.left + player.width > wbounds.left + wbounds.width && player.top < wbounds.top + wbounds.height && player.top + player.height > wbounds.top) { //left
+            else if (player.left < wbounds.left + wbounds.width && player.left + player.width > wbounds.left + wbounds.width && player.top < wbounds.top + wbounds.height && player.top + player.height > wbounds.top) { //left
                 std::cout << "Right";
                 v.x = wbounds.left + wbounds.width + player.width / 2 + 2.f;
                 v.y = p1->getPosition().y;
