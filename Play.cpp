@@ -47,22 +47,22 @@ void loadWalls() {
     walls.push_back(new wall(800.f, 416.f, 32.f, 384.f));
     walls.push_back(new wall(128.f, 704.f, 704.f, 96.f));
 
-    //The Lab(Right Side)
+    //The Lab(Right Side) GOOD
      walls.push_back(new wall(2112.f, -32.f, 480.f, 64.f));
      walls.push_back(new wall(2112.f, 160.f, 320.f, 32.f));
      walls.push_back(new wall(2112.f, 160.f, 32.f, 256.f));
      walls.push_back(new wall(2016.f, 384.f, 128.f, 32.f));
-     walls.push_back(new wall(2016.f, 384.f, 192.f, 32.f));
+     walls.push_back(new wall(2016.f, 384.f, 32.f, 224.f));
     
      walls.push_back(new wall(2368.f, 320.f, 224.f, 32.f));
      walls.push_back(new wall(2368.f, 320.f, 32.f, 128.f));
      walls.push_back(new wall(2240.f, 288.f, 32.f, 192.f));
-     walls.push_back(new wall(2400.f, 576.f, 32.f, 704.f));
+     walls.push_back(new wall(2400.f, 576.f, 32.f, 736.f));
      walls.push_back(new wall(2016.f, 576.f, 384.f, 32.f));
 
-    //Hospital (bottom left)
+    //Hospital (bottom left) GOOD
     walls.push_back(new wall(1280.f, 704.f, 1152.f, 32.f));
-    walls.push_back(new wall(1632.f, 768.f, 32.f, 384.f));
+    walls.push_back(new wall(1632.f, 704.f, 32.f, 384.f));
     walls.push_back(new wall(1792.f, 832.f, 480.f, 32.f));
     walls.push_back(new wall(1792.f, 1024.f, 96.f, 32.f));
 
@@ -71,23 +71,23 @@ void loadWalls() {
     walls.push_back(new wall(1632.f, 1216.f, 32.f, 96.f));
     walls.push_back(new wall(1856.f, 960.f, 32.f, 256.f));
 
-    walls.push_back(new wall(1920.f, 1120.f, 352.f, 32.f));
+    walls.push_back(new wall(1856.f, 1120.f, 352.f, 32.f));
     walls.push_back(new wall(2016.f, 960.f, 192.f, 32.f));
     walls.push_back(new wall(2176.f, 992.f, 96.f, 32.f));
     walls.push_back(new wall(2176.f, 960.f, 32.f, 192.f));
     
-    //Military Base (Top Right - to the left)
-    walls.push_back(new wall(1728.f, -32.f, 224.f, 32.f));
+    //Military Base (Top Right - to the left) GOOD
+    walls.push_back(new wall(1728.f, -32.f, 224.f, 64.f));
     walls.push_back(new wall(1728.f, -32.f, 32.f, 288.f));
     walls.push_back(new wall(1920.f, -32.f, 32.f, 288.f));
     walls.push_back(new wall(1408.f, -32.f, 32.f, 288.f));
     walls.push_back(new wall(1600.f, -32.f, 32.f, 288.f));
-    walls.push_back(new wall(1408.f, -32.f, 224.f, 32.f));
+    walls.push_back(new wall(1408.f, -32.f, 224.f, 64.f));
 
-    walls.push_back(new wall(1408.f, 384.f, 32.f, 96.f));
+    walls.push_back(new wall(1408.f, 384.f, 32.f, 256.f));
     walls.push_back(new wall(1600.f, 384.f, 32.f, 160.f));
     walls.push_back(new wall(1728.f, 384.f, 32.f, 160.f));
-    walls.push_back(new wall(16000.f, 512.f, 160.f, 32.f));
+    walls.push_back(new wall(1600.f, 512.f, 160.f, 32.f));
     walls.push_back(new wall(1920.f, 384.f, 32.f, 256.f));
     walls.push_back(new wall(1408.f, 608.f, 544.f, 32.f));
 
@@ -133,8 +133,8 @@ void spawnZombies(sf::Vector2u size, Player* p1) {
                 v.y = (23+4) * 32;
             }
             else {
-                v.x = (40+33) * 32;
-                v.y = (23+8) * 32;
+                v.x = (40+31) * 32;
+                v.y = (23+13) * 32;
             }
         }
         else if (p1->getPosition().x < 1280 && p1->getPosition().y < 720) { //top left
@@ -160,7 +160,7 @@ void movement(sf::RenderWindow& window, Player* p1) {
     makeTrue(gP, p1);
     p1->checkMove(gP);
     int x = zombies.size() - 1;
-    for (int z = 0; z < x - 1; z++) {
+    for (int z = 0; z < x; z++) {
         if (zombies[z] != nullptr) {
             if (zombies[z]->getSprite().getGlobalBounds().intersects(zombies[z + 1]->getSprite().getGlobalBounds()) != true) {
                 zombies[z]->getMove(p1, p1->getPosition());
@@ -178,53 +178,79 @@ void movement(sf::RenderWindow& window, Player* p1) {
         sf::FloatRect player = p1->getSprite().getGlobalBounds();
         sf::FloatRect wbounds = walls[x]->getWall();
         if (wbounds.intersects(player)) {
-            if (player.top < wbounds.top && player.top + player.height < wbounds.top + wbounds.height && player.left < wbounds.left + wbounds.width && player.left + player.width > wbounds.left) { //bottom
+            //if (player.top < wbounds.top && player.top + player.height < wbounds.top + wbounds.height /*&& player.left < wbounds.left + wbounds.width && player.left + player.width > wbounds.left*/) { //bottom
+            //    std::cout << "Top";
+            //    v.x = p1->getPosition().x;
+            //    v.y = wbounds.top - player.height / 2 - 2.f;
+            //    p1->setPosition(v);
+            //}
+            //else if (player.top > wbounds.top && player.top + player.height > wbounds.top + wbounds.height /*&& player.left < wbounds.left + wbounds.width && player.left + player.width > wbounds.left*/) { //top
+            //    std::cout << "Bottom";
+            //    v.x = p1->getPosition().x;
+            //    v.y = wbounds.top + wbounds.height + player.height / 2 + 2.f;
+            //    p1->setPosition(v);
+            //}
+            //else if (player.left < wbounds.left && player.left + player.width < wbounds.left + wbounds.width/* && player.top < wbounds.top + wbounds.height && player.top + player.height > wbounds.top*/) { // right
+            //    std::cout << "Left";
+            //    v.x = wbounds.left - player.width / 2 - 2.f;
+            //    v.y = p1->getPosition().y;
+            //    p1->setPosition(v);
+            //}
+            //else if (player.left > wbounds.left && player.left + player.width > wbounds.left + wbounds.width /*&& player.top < wbounds.top + wbounds.height && player.top + player.height > wbounds.top*/) { //left
+            //    std::cout << "Right";
+            //    v.x = wbounds.left + wbounds.width + player.width / 2 + 2.f;
+            //    v.y = p1->getPosition().y;
+            //    p1->setPosition(v);
+            //}
+            if (player.top + player.height > wbounds.top && player.top < wbounds.top && player.left < wbounds.left + wbounds.width && player.left + player.width > wbounds.left) { //bottom
                 std::cout << "Top";
                 v.x = p1->getPosition().x;
-                v.y = wbounds.top - player.height / 2;
+                v.y = wbounds.top - player.height / 2 - 2.f;
                 p1->setPosition(v);
             }
-            else if (player.top > wbounds.top && player.top + player.height > wbounds.top + wbounds.height && player.left < wbounds.left + wbounds.width && player.left + player.width > wbounds.left) { //top
+            else if (player.top < wbounds.top + wbounds.height && player.top + player.height > wbounds.top + wbounds.height && player.left < wbounds.left + wbounds.width && player.left + player.width > wbounds.left) { //top
                 std::cout << "Bottom";
                 v.x = p1->getPosition().x;
-                v.y = wbounds.top + wbounds.height + player.height / 2;
+                v.y = wbounds.top + wbounds.height + player.height / 2 + 2.f;
                 p1->setPosition(v);
             }
-            else if (player.left < wbounds.left && player.left + player.width < wbounds.left + wbounds.width && player.top < wbounds.top + wbounds.height && player.top + player.height > wbounds.top) { // right
+            else if (player.left + player.width > wbounds.left && player.left < wbounds.left && player.top < wbounds.top + wbounds.height && player.top + player.height > wbounds.top) { // right
                 std::cout << "Left";
-                v.x = wbounds.left - player.width / 2;
+                v.x = wbounds.left - player.width / 2 - 2.f;
                 v.y = p1->getPosition().y;
                 p1->setPosition(v);
             }
-            else if (player.left > wbounds.left && player.left + player.width > wbounds.left + wbounds.width && player.top < wbounds.top + wbounds.height && player.top + player.height > wbounds.top) { //left
+            else if (player.left < wbounds.left + wbounds.width && player.left + player.width > wbounds.left + wbounds.width && player.top < wbounds.top + wbounds.height && player.top + player.height > wbounds.top) { //left
                 std::cout << "Right";
-                v.x = wbounds.left + wbounds.width + player.width / 2;
+                v.x = wbounds.left + wbounds.width + player.width / 2 + 2.f;
                 v.y = p1->getPosition().y;
                 p1->setPosition(v);
             }
         }
         for (int i = 0; i < zombies.size(); i++) {
-            if (walls[x]->getWall().intersects(zombies[i]->getSprite().getGlobalBounds())) {
-                sf::FloatRect zbounds = zombies[i]->getSprite().getGlobalBounds();
-                if (zbounds.left < wbounds.left && zbounds.left + zbounds.width < wbounds.left + wbounds.width && zbounds.top < wbounds.top + wbounds.height && zbounds.top + zbounds.height > wbounds.top) { // right
-                    v.x = wbounds.left - zbounds.width / 2;
-                    v.y = zombies[i]->getSprite().getPosition().y;
-                    zombies[i]->setPosition(v);
-                }
-                else if (zbounds.left > wbounds.left && zbounds.left + zbounds.width > wbounds.left + wbounds.width && zbounds.top < wbounds.top + wbounds.height && zbounds.top + zbounds.height > wbounds.top) { //left
-                    v.x = wbounds.left + wbounds.width + zbounds.width / 2;
-                    v.y = zombies[i]->getSprite().getPosition().y;
-                    zombies[i]->setPosition(v);
-                }
-                else if (zbounds.top < wbounds.top && zbounds.top + zbounds.height < wbounds.top + wbounds.height && zbounds.left < wbounds.left + wbounds.width && zbounds.left + zbounds.width > wbounds.left) { //bottom
-                    v.x = zombies[i]->getSprite().getPosition().x;
-                    v.y = wbounds.top - zbounds.height / 2;
-                    zombies[i]->setPosition(v);
-                }
-                else if (zbounds.top > wbounds.top && zbounds.top + zbounds.height > wbounds.top + wbounds.height && zbounds.left < wbounds.left + wbounds.width && zbounds.left + zbounds.width > wbounds.left) { //top
-                    v.x = zombies[i]->getSprite().getPosition().x;
-                    v.y = wbounds.top + wbounds.height + zbounds.height / 2;
-                    zombies[i]->setPosition(v);
+            if (zombies[i] != nullptr) {
+                if (walls[x]->getWall().intersects(zombies[i]->getSprite().getGlobalBounds())) {
+                    sf::FloatRect zbounds = zombies[i]->getSprite().getGlobalBounds();
+                    if (zbounds.left < wbounds.left && zbounds.left + zbounds.width < wbounds.left + wbounds.width && zbounds.top < wbounds.top + wbounds.height && zbounds.top + zbounds.height > wbounds.top) { // right
+                        v.x = wbounds.left - zbounds.width / 2;
+                        v.y = zombies[i]->getSprite().getPosition().y;
+                        zombies[i]->setPosition(v);
+                    }
+                    else if (zbounds.left > wbounds.left && zbounds.left + zbounds.width > wbounds.left + wbounds.width && zbounds.top < wbounds.top + wbounds.height && zbounds.top + zbounds.height > wbounds.top) { //left
+                        v.x = wbounds.left + wbounds.width + zbounds.width / 2;
+                        v.y = zombies[i]->getSprite().getPosition().y;
+                        zombies[i]->setPosition(v);
+                    }
+                    else if (zbounds.top < wbounds.top && zbounds.top + zbounds.height < wbounds.top + wbounds.height && zbounds.left < wbounds.left + wbounds.width && zbounds.left + zbounds.width > wbounds.left) { //bottom
+                        v.x = zombies[i]->getSprite().getPosition().x;
+                        v.y = wbounds.top - zbounds.height / 2;
+                        zombies[i]->setPosition(v);
+                    }
+                    else if (zbounds.top > wbounds.top && zbounds.top + zbounds.height > wbounds.top + wbounds.height && zbounds.left < wbounds.left + wbounds.width && zbounds.left + zbounds.width > wbounds.left) { //top
+                        v.x = zombies[i]->getSprite().getPosition().x;
+                        v.y = wbounds.top + wbounds.height + zbounds.height / 2;
+                        zombies[i]->setPosition(v);
+                    }
                 }
             }
         }
@@ -246,7 +272,7 @@ void movement(sf::RenderWindow& window, Player* p1) {
     }
 }
 
-void displayGUI(Player* p1, sf::RenderWindow& window)
+void displayGUI(Player* p1, sf::RenderWindow& window, sf::Font& font)
 {
     if (p1->getMaxHealth() > 0) {
         sf::RectangleShape healthBack(sf::Vector2f(300, 30));
@@ -261,8 +287,6 @@ void displayGUI(Player* p1, sf::RenderWindow& window)
         healthFront.setPosition(xPos, yPos);
 
         sf::Text ammoCount;
-        sf::Font font;
-        font.loadFromFile("shlop rg.ttf");
         ammoCount.setFont(font);
         string ammo = std::to_string(p1->getGun()->getReload()) + "/" + std::to_string(p1->getGun()->getMaxReload());
         ammoCount.setString(ammo);
@@ -271,16 +295,6 @@ void displayGUI(Player* p1, sf::RenderWindow& window)
         ammoCount.setPosition(xPos + 1150, yPos-10);
         ammoCount.setOutlineColor(sf::Color::Black);
         ammoCount.setOutlineThickness(3);
-
-        sf::Text ammoAlert;
-        string alert = "Press R to Reload!";
-        ammoAlert.setFont(font);
-        ammoAlert.setString(alert);
-        ammoAlert.setCharacterSize(40);
-        ammoAlert.setFillColor(sf::Color(94, 1, 6));
-        ammoAlert.setPosition(xPos + 1010, yPos - 50);
-        ammoAlert.setOutlineColor(sf::Color::Black);
-        ammoAlert.setOutlineThickness(3);
 
         sf::Text moneyCount;
         string moneyString = "Money $: " + std::to_string(p1->getMoney());
@@ -292,7 +306,16 @@ void displayGUI(Player* p1, sf::RenderWindow& window)
         moneyCount.setOutlineColor(sf::Color::Black);
         moneyCount.setOutlineThickness(3);
 
-        if (p1->getGun()->getReload() < 2) {
+        if ((double)p1->getGun()->getReload() / (double)p1->getGun()->getMaxReload() <= 0.35) {
+            sf::Text ammoAlert;
+            string alert = "Press R to Reload!";
+            ammoAlert.setFont(font);
+            ammoAlert.setString(alert);
+            ammoAlert.setCharacterSize(40);
+            ammoAlert.setFillColor(sf::Color(94, 1, 6));
+            ammoAlert.setPosition(xPos + 1010, yPos - 50);
+            ammoAlert.setOutlineColor(sf::Color::Black);
+            ammoAlert.setOutlineThickness(3);
             window.draw(ammoAlert);
         }
         window.draw(moneyCount);
@@ -372,7 +395,7 @@ void dropMoney(Player* p1, sf::RenderWindow& window) {
     }
 }
 
-void drawing(sf::RenderWindow& window, Player* p1) {
+void drawing(sf::RenderWindow& window, Player* p1, sf::Font& font) {
     window.clear();
     window.draw(backdrop);
     window.draw(p1->getSprite());
@@ -384,7 +407,9 @@ void drawing(sf::RenderWindow& window, Player* p1) {
     window.draw(p1->getGunSprite());
     for (int i = 0; i < zombies.size(); i++)
     {
-        window.draw(zombies[i]->getSprite());
+        if (zombies[i] != nullptr) {
+            window.draw(zombies[i]->getSprite());
+        }
     }
     for (int j = 0; j < p1->getGun()->getShots()->size(); j++) {
         if (p1->getGun()->getShots()->at(j) != nullptr) {
@@ -398,7 +423,7 @@ void drawing(sf::RenderWindow& window, Player* p1) {
                             if (zombies[i]->getHealth() <= 0) {
                                 zombies.erase(zombies.begin() + i);
                                 dropMoney(p1, window);
-                                //i--;
+                                i--;
                             }
                             if (p1->getGun()->getShots()->at(j)->getHealth() <= 0) {
                                 p1->getGun()->getShots()->erase(p1->getGun()->getShots()->begin() + j);
@@ -408,19 +433,20 @@ void drawing(sf::RenderWindow& window, Player* p1) {
                     }
                 }
             }
-            for (int k = 0; k < zombies.size(); k++) {
-                if (zombies[k]->getSprite().getGlobalBounds().intersects(p1->getSprite().getGlobalBounds()) && zombies[k]->getReload() == 0) {
-                    std::thread t2(&Zombie::attack, zombies[k], p1);
-                    t2.detach();
-                    //p1->setHealth(p1->getHealth() - zombies[k]->getDamage());
-                    //std::cout << p1->getHealth() << std::endl;
-                }
+        }
+    }
+    for (int k = 0; k < zombies.size(); k++) {
+        if (zombies[k] != nullptr) {
+            if (zombies[k]->getSprite().getGlobalBounds().intersects(p1->getSprite().getGlobalBounds()) && zombies[k]->getReload() == 0) {
+                std::thread t2(&Zombie::attack, zombies[k], p1);
+                t2.detach();
+                //p1->setHealth(p1->getHealth() - zombies[k]->getDamage());
+                //std::cout << p1->getHealth() << std::endl;
             }
         }
     }
-   
     
-    displayGUI(p1, window);
+    displayGUI(p1, window, font);
 }
 
 void run(sf::RenderWindow& window, sf::View& view){
@@ -428,27 +454,11 @@ void run(sf::RenderWindow& window, sf::View& view){
     tex.loadFromFile("mapv2.png");
     backdrop.setTexture(tex);
     sf::Vector2f v;
-    v.x = 1000.f;
-    v.y = 200.f;
+    v.x = 32*40.f;
+    v.y = 32*10.f;
     zombies.push_back(new Zombie(20, 1, 1, window.getSize(), v));
-    sf::Vector2f z;
-    z.x = 500.f;
-    z.y = 500.f;
     Player* p1 = new Player(20, 1, 1, window.getSize());
-    p1->getSprite().setPosition((float)z.x, (float)z.y);
     loadWalls();
-    //wall* w = new wall(-32, -32, 32, 1504);
-    //wall* x = new wall(2560, -32, 32, 1504);
-    //wall* y = new wall(-32, -32, 2624, 32);
-    //wall* b = new wall(-32, 1440, 2624, 32);
-    ////wall* a = new wall(500, 500, 32, 32);
-    //walls.push_back(*w);
-    //walls.push_back(*x);
-    //walls.push_back(*y);
-    //walls.push_back(*b);
-    //walls.push_back(*a);
-    // sf::View view1(sf::Vector2f(window.getSize().x / 2, window.getSize().y), sf::Vector2f(1280.f, 720.f));
-    //window.setView(view1);
     //Loading Font
     sf::Font font;
     bool loadFont = true;
@@ -487,7 +497,7 @@ void run(sf::RenderWindow& window, sf::View& view){
         movement(window, p1);
 
         //re-draws objects so it looks good      
-        drawing(window, p1);
+        drawing(window, p1, font);
 
         //Round counter & advancer
         if (zombies.size() == 0)
@@ -500,10 +510,6 @@ void run(sf::RenderWindow& window, sf::View& view){
                 rounds++;
                 p1->setHealth(p1->getHealth() + ((p1->getMaxHealth() - p1->getHealth())/2));
                 if (p1->getHealth() > p1->getMaxHealth()) p1->setHealth(p1->getMaxHealth());
-            }
-            //displays round counter on screen
-            if (loadFont)
-            {
                 textDisplay.setFont(font);
                 string display = "Round " + std::to_string(rounds);
                 textDisplay.setString(display);
@@ -512,7 +518,11 @@ void run(sf::RenderWindow& window, sf::View& view){
                 textDisplay.setOutlineColor(sf::Color::Black);
                 textDisplay.setOutlineThickness(3);
                 textDisplay.setOrigin(textDisplay.getLocalBounds().width / 2, textDisplay.getLocalBounds().height / 2);
-                textDisplay.setPosition(view.getCenter().x, view.getCenter().y-300);
+                textDisplay.setPosition(view.getCenter().x, view.getCenter().y - 300);
+            }
+            //displays round counter on screen
+            if (loadFont)
+            {
                 window.draw(textDisplay);
             }
             //after 3 seconds, starts next round
