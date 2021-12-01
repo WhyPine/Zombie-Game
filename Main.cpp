@@ -36,6 +36,9 @@ int main()
     while (Menu.isOpen()) {
         sf::Event event;
         Menu.pollEvent(event);
+        background1.move(.003, 0.f);
+        background2.move(.003, 0.f);
+        background3.move(.003, 0.f);
         sf::Vector2i gP = sf::Mouse::getPosition(Menu);
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left) &&  (playbutton.getGlobalBounds().contains(gP.x, gP.y))) {
             sf::RenderWindow window(sf::VideoMode(1280, 720), "Horde Shooter");
@@ -50,6 +53,8 @@ int main()
         }
         Menu.clear();
         Menu.draw(background1);
+        Menu.draw(background2);
+        Menu.draw(background3);
         Menu.draw(playbutton);
         Menu.display();
     }

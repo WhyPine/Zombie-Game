@@ -1,6 +1,7 @@
 #pragma once
 #include "Player.h"
 #include "Zombie.h"
+#include "RunnerZombie.h"
 #include <vector>
 #include <iostream>
 #include <cstdlib>

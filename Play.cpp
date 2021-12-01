@@ -117,6 +117,7 @@ void makeTrue(sf::Vector2i& gP, Player* p1) {
 
 void spawnZombies(sf::Vector2u size, Player* p1) {
     for (int i = 0; i < 3 * rounds + 5; i++) {
+
         sf::Vector2f v;
         int x = rand();
         if (p1->getPosition().x < 1280 && p1->getPosition().y > 720) { //bottom left
@@ -155,10 +156,10 @@ void spawnZombies(sf::Vector2u size, Player* p1) {
                 v.y = 1 * 32;
             }
             else{
-                v.x = 1 * 32;
                 v.y = 10 * 32;
             }
         }
+                v.x = 1 * 32;
         zombies.push_back(new Zombie(20, 1, 1, size, v));
         //std::cout << "Zombie " <<  i << std::endl;
         Sleep(500);

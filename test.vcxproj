@@ -156,6 +156,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Play.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="RunnerZombie.cpp" />
     <ClCompile Include="Shotgun.cpp" />
     <ClCompile Include="wall.cpp" />
     <ClCompile Include="Zombie.cpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="Gun.h" />
     <ClInclude Include="Play.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="RunnerZombie.h" />
     <ClInclude Include="wall.h" />
     <ClInclude Include="Shotgun.h" />
     <ClInclude Include="Zombie.h" />
@@ -179,6 +181,7 @@
     <Image Include="strengthbutton.png" />
     <Image Include="zombie0.png" />
     <Image Include="survivor\Top_Down_Survivor\handgun\move\survivor-move_handgun_0.png" />
+    <Image Include="zombie2.png" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="shlop rg.ttf" />

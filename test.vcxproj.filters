@@ -39,6 +39,9 @@
     <ClCompile Include="wall.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="RunnerZombie.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player.h">
@@ -60,6 +63,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="wall.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RunnerZombie.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -89,6 +95,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="speedbtn.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="zombie2.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
