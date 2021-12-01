@@ -53,16 +53,16 @@ void Player::checkMove(sf::Vector2i gP) {
 
     this->sprite.setRotation(result);
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D) && right) {
         for (int i = 0; i < 3; i++) this->sprite.move(1.f, 0.f);
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A) && left) {
         for (int i = 0; i < 3; i++) this->sprite.move(-1.f, 0.f);
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S) && down) {
         for (int i = 0; i < 3; i++) this->sprite.move(0.f, 1.f);
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) && up) {
         for (int i = 0; i < 3; i++) this->sprite.move(0.f, -1.f);
     }
     this->gun->run(this->sprite.getPosition(), this->sprite.getRotation());

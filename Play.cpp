@@ -156,9 +156,9 @@ void spawnZombies(sf::Vector2u size, Player* p1) {
 
 void movement(sf::RenderWindow& window, Player* p1) {
     //Moves things around the window
-    sf::Vector2i gP = sf::Mouse::getPosition(window);
+    /*sf::Vector2i gP = sf::Mouse::getPosition(window);
     makeTrue(gP, p1);
-    p1->checkMove(gP);
+    p1->checkMove(gP);*/
     int x = zombies.size() - 1;
     for (int z = 0; z < x; z++) {
         if (zombies[z] != nullptr) {
@@ -174,8 +174,14 @@ void movement(sf::RenderWindow& window, Player* p1) {
         zombies[0]->getMove(p1, p1->getPosition());
     }
     sf::Vector2f v;
+    p1->up = true;
+    p1->down = true;
+    p1->left = true;
+    p1->right = true;
     for (int x = 0; x < walls.size(); x++) {
         sf::FloatRect player = p1->getSprite().getGlobalBounds();
+        /*player.width = 50.f;
+        player.height = 50.f;*/
         sf::FloatRect wbounds = walls[x]->getWall();
         if (wbounds.intersects(player)) {
             //if (player.top < wbounds.top && player.top + player.height < wbounds.top + wbounds.height /*&& player.left < wbounds.left + wbounds.width && player.left + player.width > wbounds.left*/) { //bottom
@@ -205,26 +211,30 @@ void movement(sf::RenderWindow& window, Player* p1) {
             if (player.top + player.height > wbounds.top && player.top < wbounds.top && player.left < wbounds.left + wbounds.width && player.left + player.width > wbounds.left) { //bottom
                 std::cout << "Top";
                 v.x = p1->getPosition().x;
-                v.y = wbounds.top - player.height / 2 - 2.f;
+                v.y = wbounds.top - player.height / 2;
                 p1->setPosition(v);
+                p1->down = false;
             }
             else if (player.top < wbounds.top + wbounds.height && player.top + player.height > wbounds.top + wbounds.height && player.left < wbounds.left + wbounds.width && player.left + player.width > wbounds.left) { //top
                 std::cout << "Bottom";
                 v.x = p1->getPosition().x;
-                v.y = wbounds.top + wbounds.height + player.height / 2 + 2.f;
+                v.y = wbounds.top + wbounds.height + player.height / 2;
                 p1->setPosition(v);
+                p1->up = false;
             }
-            else if (player.left + player.width > wbounds.left && player.left < wbounds.left && player.top < wbounds.top + wbounds.height && player.top + player.height > wbounds.top) { // right
+            if (player.left + player.width > wbounds.left && player.left < wbounds.left && player.top < wbounds.top + wbounds.height && player.top + player.height > wbounds.top) { // right
                 std::cout << "Left";
-                v.x = wbounds.left - player.width / 2 - 2.f;
+                v.x = wbounds.left - player.width / 2;
                 v.y = p1->getPosition().y;
                 p1->setPosition(v);
+                p1->right = false;
             }
             else if (player.left < wbounds.left + wbounds.width && player.left + player.width > wbounds.left + wbounds.width && player.top < wbounds.top + wbounds.height && player.top + player.height > wbounds.top) { //left
                 std::cout << "Right";
-                v.x = wbounds.left + wbounds.width + player.width / 2 + 2.f;
+                v.x = wbounds.left + wbounds.width + player.width / 2;
                 v.y = p1->getPosition().y;
                 p1->setPosition(v);
+                p1->left = false;
             }
         }
         for (int i = 0; i < zombies.size(); i++) {
@@ -254,12 +264,16 @@ void movement(sf::RenderWindow& window, Player* p1) {
                 }
             }
         }
+
         for (int j = 0; j < p1->getGun()->getShots()->size(); j++) {
             if (walls[x]->getWall().intersects(p1->getGun()->getShots()->at(j)->getSprite().getGlobalBounds())) {
                 p1->getGun()->getShots()->erase(p1->getGun()->getShots()->begin() + j);
             }
         }
     }
+    sf::Vector2i gP = sf::Mouse::getPosition(window);
+    makeTrue(gP, p1);
+    p1->checkMove(gP);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R))
     {
         if (clock() - reloadDelayTimer > 2000 && p1->getGun()->getReload() < p1->getGun()->getMaxReload()) //fixed spam reload bug
