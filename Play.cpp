@@ -58,7 +58,7 @@ void loadWalls() {
      walls.push_back(new wall(2368.f, 320.f, 32.f, 128.f));
      walls.push_back(new wall(2240.f, 288.f, 32.f, 192.f));
      walls.push_back(new wall(2400.f, 576.f, 32.f, 736.f));
-     walls.push_back(new wall(2016.f, 576.f, 384.f, 32.f));
+     walls.push_back(new wall(2016.f, 576.f, 416.f, 32.f));
 
     //Hospital (bottom left) GOOD
     walls.push_back(new wall(1280.f, 704.f, 1152.f, 32.f));
@@ -91,6 +91,18 @@ void loadWalls() {
     walls.push_back(new wall(1920.f, 384.f, 32.f, 256.f));
     walls.push_back(new wall(1408.f, 608.f, 544.f, 32.f));
 
+    //The Garden GOOD
+    walls.push_back(new wall(128.f, 800.f, 96.f, 256.f));
+    walls.push_back(new wall(128.f, 1056.f, 32.f, 64.f));
+    walls.push_back(new wall(-32.f, 1248.f, 192.f, 32.f));
+    walls.push_back(new wall(288.f, 1152.f, 288.f, 64.f));
+    walls.push_back(new wall(512.f, 1152.f, 64.f, 192.f));
+
+    walls.push_back(new wall(448.f, 896.f, 64.f, 160.f));
+    walls.push_back(new wall(448.f, 992.f, 544.f, 64.f));
+    walls.push_back(new wall(928.f, 992.f, 64.f, 352.f));
+    walls.push_back(new wall(1184.f, 736.f, 128.f, 320.f));
+    walls.push_back(new wall(1248.f, 1184.f, 64.f, 128.f));
 
 }
 
@@ -109,7 +121,7 @@ void spawnZombies(sf::Vector2u size, Player* p1) {
         int x = rand();
         if (p1->getPosition().x < 1280 && p1->getPosition().y > 720) { //bottom left
             if (x % 2 == 0){
-                v.x = 0 * 32;
+                v.x = 1 * 32;
                 v.y = 43 * 32;
             }
             else {
@@ -140,10 +152,10 @@ void spawnZombies(sf::Vector2u size, Player* p1) {
         else if (p1->getPosition().x < 1280 && p1->getPosition().y < 720) { //top left
             if (x % 2 == 0){
                 v.x = 16 * 32;
-                v.y = 0 * 32;
+                v.y = 1 * 32;
             }
             else{
-                v.x = 0 * 32;
+                v.x = 1 * 32;
                 v.y = 10 * 32;
             }
         }
@@ -287,9 +299,9 @@ void movement(sf::RenderWindow& window, Player* p1) {
     }
 }
 
-void displayGUI(Player* p1, sf::RenderWindow& window, sf::Font& font)
+void displayGUI(Player* p1, sf::RenderWindow& window, sf::Font& font, int zombies)
 {
-    if (p1->getMaxHealth() > 0) {
+    if (p1->getHealth() > 0) {
         sf::RectangleShape healthBack(sf::Vector2f(300, 30));
         healthBack.setFillColor(sf::Color(50, 50, 50));
         sf::RectangleShape healthFront(sf::Vector2f(300 * p1->getHealth() / p1->getMaxHealth(), 30));
@@ -321,6 +333,16 @@ void displayGUI(Player* p1, sf::RenderWindow& window, sf::Font& font)
         moneyCount.setOutlineColor(sf::Color::Black);
         moneyCount.setOutlineThickness(3);
 
+        sf::Text zombieCount;
+        string zombieString = std::to_string(zombies) + " Left";
+        zombieCount.setFont(font);
+        zombieCount.setString(zombieString);
+        zombieCount.setCharacterSize(30);
+        zombieCount.setFillColor(sf::Color::White);
+        zombieCount.setPosition(xPos + 1180, yPos - 650);
+        zombieCount.setOutlineColor(sf::Color::Black);
+        zombieCount.setOutlineThickness(3);
+
         if ((double)p1->getGun()->getReload() / (double)p1->getGun()->getMaxReload() <= 0.35) {
             sf::Text ammoAlert;
             string alert = "Press R to Reload!";
@@ -333,6 +355,7 @@ void displayGUI(Player* p1, sf::RenderWindow& window, sf::Font& font)
             ammoAlert.setOutlineThickness(3);
             window.draw(ammoAlert);
         }
+        window.draw(zombieCount);
         window.draw(moneyCount);
         window.draw(ammoCount);
         window.draw(healthBack);
@@ -461,7 +484,7 @@ void drawing(sf::RenderWindow& window, Player* p1, sf::Font& font) {
         }
     }
     
-    displayGUI(p1, window, font);
+    displayGUI(p1, window, font, zombies.size());
 }
 
 void run(sf::RenderWindow& window, sf::View& view){
