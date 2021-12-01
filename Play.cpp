@@ -272,7 +272,7 @@ void movement(sf::RenderWindow& window, Player* p1) {
     }
 }
 
-void displayGUI(Player* p1, sf::RenderWindow& window)
+void displayGUI(Player* p1, sf::RenderWindow& window, sf::Font& font)
 {
     if (p1->getMaxHealth() > 0) {
         sf::RectangleShape healthBack(sf::Vector2f(300, 30));
@@ -287,8 +287,6 @@ void displayGUI(Player* p1, sf::RenderWindow& window)
         healthFront.setPosition(xPos, yPos);
 
         sf::Text ammoCount;
-        sf::Font font;
-        font.loadFromFile("shlop rg.ttf");
         ammoCount.setFont(font);
         string ammo = std::to_string(p1->getGun()->getReload()) + "/" + std::to_string(p1->getGun()->getMaxReload());
         ammoCount.setString(ammo);
@@ -397,7 +395,7 @@ void dropMoney(Player* p1, sf::RenderWindow& window) {
     }
 }
 
-void drawing(sf::RenderWindow& window, Player* p1) {
+void drawing(sf::RenderWindow& window, Player* p1, sf::Font& font) {
     window.clear();
     window.draw(backdrop);
     window.draw(p1->getSprite());
@@ -448,7 +446,7 @@ void drawing(sf::RenderWindow& window, Player* p1) {
         }
     }
     
-    displayGUI(p1, window);
+    displayGUI(p1, window, font);
 }
 
 void run(sf::RenderWindow& window, sf::View& view){
@@ -499,7 +497,7 @@ void run(sf::RenderWindow& window, sf::View& view){
         movement(window, p1);
 
         //re-draws objects so it looks good      
-        drawing(window, p1);
+        drawing(window, p1, font);
 
         //Round counter & advancer
         if (zombies.size() == 0)
@@ -512,10 +510,6 @@ void run(sf::RenderWindow& window, sf::View& view){
                 rounds++;
                 p1->setHealth(p1->getHealth() + ((p1->getMaxHealth() - p1->getHealth())/2));
                 if (p1->getHealth() > p1->getMaxHealth()) p1->setHealth(p1->getMaxHealth());
-            }
-            //displays round counter on screen
-            if (loadFont)
-            {
                 textDisplay.setFont(font);
                 string display = "Round " + std::to_string(rounds);
                 textDisplay.setString(display);
@@ -524,7 +518,11 @@ void run(sf::RenderWindow& window, sf::View& view){
                 textDisplay.setOutlineColor(sf::Color::Black);
                 textDisplay.setOutlineThickness(3);
                 textDisplay.setOrigin(textDisplay.getLocalBounds().width / 2, textDisplay.getLocalBounds().height / 2);
-                textDisplay.setPosition(view.getCenter().x, view.getCenter().y-300);
+                textDisplay.setPosition(view.getCenter().x, view.getCenter().y - 300);
+            }
+            //displays round counter on screen
+            if (loadFont)
+            {
                 window.draw(textDisplay);
             }
             //after 3 seconds, starts next round

@@ -83,7 +83,7 @@ int Zombie::getDamage() {
 
 int Zombie::getReload() {
     int result = 1;
-    if (clock() - reload > 750) {
+    if (clock() - reload > 950) {
         result = 0;
         this->reload = clock();
     }
