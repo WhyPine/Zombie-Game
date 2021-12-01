@@ -11,6 +11,7 @@ sf::Vector2f pasPos;
 sf::Sprite backdrop;
 bool displayMenu = true;
 vector<wall*> walls;
+std::mutex mtx;
 
 void loadWalls() {
     //boundaries
@@ -169,9 +170,6 @@ void spawnZombies(sf::Vector2u size, Player* p1) {
 
 void movement(sf::RenderWindow& window, Player* p1) {
     //Moves things around the window
-    /*sf::Vector2i gP = sf::Mouse::getPosition(window);
-    makeTrue(gP, p1);
-    p1->checkMove(gP);*/
     int x = zombies.size() - 1;
     for (int z = 0; z < x; z++) {
         if (zombies[z] != nullptr) {
@@ -207,7 +205,7 @@ void movement(sf::RenderWindow& window, Player* p1) {
         if (wbounds.intersects(player)) {
             if (p1->getPosition().y < y1 && p1->getPosition().x < x1) {
                 //top left
-                std::cout << "TopLeft ";
+                //std::cout << "TopLeft ";
                 if (y2 - p1->getPosition().y > x2 - p1->getPosition().x) {
                     //closer to x side
                     v.x = wbounds.left - playerSize/2;
@@ -221,13 +219,13 @@ void movement(sf::RenderWindow& window, Player* p1) {
             }
             else if (p1->getPosition().y < y1 && p1->getPosition().x >= x1 && p1->getPosition().x <= x2) {
                 //top middle
-                std::cout << "Top ";
+                //std::cout << "Top ";
                 v.x = p1->getPosition().x;
                 v.y = wbounds.top - playerSize/2;
             }
             else if (p1->getPosition().y < y1 && p1->getPosition().x > x2) {
                 //top right
-                std::cout << "TopRight ";
+                //std::cout << "TopRight ";
                 if (y2 - p1->getPosition().y > x2 - p1->getPosition().x) {
                     //closer to x side
                     v.x = wbounds.left + wbounds.width + playerSize/2;
@@ -241,13 +239,13 @@ void movement(sf::RenderWindow& window, Player* p1) {
             }
             else if (p1->getPosition().y >= y1 && p1->getPosition().y <= y2 && p1->getPosition().x > x2) {
                 //mid right
-                std::cout << " Right";
+                //std::cout << " Right";
                 v.x = wbounds.left + wbounds.width + playerSize/2;
                 v.y = p1->getPosition().y;
             }
             else if (p1->getPosition().y > y2 && p1->getPosition().x > x2) {
                 //bottom right
-                std::cout << "BotRight ";
+                //std::cout << "BotRight ";
                 if (y2 - p1->getPosition().y > x2 - p1->getPosition().x) {
                     //closer to x side
                     v.x = wbounds.left + wbounds.width + playerSize/2;
@@ -261,13 +259,13 @@ void movement(sf::RenderWindow& window, Player* p1) {
             }
             else if (p1->getPosition().y > y2 && p1->getPosition().x >= x1 && p1->getPosition().x <= x2) {
                 //bottom middle
-                std::cout << "Bottom ";
+                //std::cout << "Bottom ";
                 v.x = p1->getPosition().x;
                 v.y = wbounds.top + wbounds.height + playerSize/2;
             }
             else if (p1->getPosition().y > y2 && p1->getPosition().x < x1) {
                 //bottom left
-                std::cout << "BotLeft ";
+                //std::cout << "BotLeft ";
                 if (y2 - p1->getPosition().y > x2 - p1->getPosition().x) {
                     //closer to x side
                     v.x = wbounds.left - playerSize/2;
@@ -281,64 +279,11 @@ void movement(sf::RenderWindow& window, Player* p1) {
             }
             else if (p1->getPosition().y >= y1 && p1->getPosition().y <= y2 && p1->getPosition().x < x1) {
                 //mid left
-                std::cout << " Left";
+                //std::cout << " Left";
                 v.x = wbounds.left - playerSize/2;
                 v.y = p1->getPosition().y;
             }
             p1->setPosition(v);
-
-            //if (player.top < wbounds.top && player.top + player.height < wbounds.top + wbounds.height /*&& player.left < wbounds.left + wbounds.width && player.left + player.width > wbounds.left*/) { //bottom
-            //    std::cout << "Top";
-            //    v.x = p1->getPosition().x;
-            //    v.y = wbounds.top - player.height / 2 - 2.f;
-            //    p1->setPosition(v);
-            //}
-            //else if (player.top > wbounds.top && player.top + player.height > wbounds.top + wbounds.height /*&& player.left < wbounds.left + wbounds.width && player.left + player.width > wbounds.left*/) { //top
-            //    std::cout << "Bottom";
-            //    v.x = p1->getPosition().x;
-            //    v.y = wbounds.top + wbounds.height + player.height / 2 + 2.f;
-            //    p1->setPosition(v);
-            //}
-            //else if (player.left < wbounds.left && player.left + player.width < wbounds.left + wbounds.width/* && player.top < wbounds.top + wbounds.height && player.top + player.height > wbounds.top*/) { // right
-            //    std::cout << "Left";
-            //    v.x = wbounds.left - player.width / 2 - 2.f;
-            //    v.y = p1->getPosition().y;
-            //    p1->setPosition(v);
-            //}
-            //else if (player.left > wbounds.left && player.left + player.width > wbounds.left + wbounds.width /*&& player.top < wbounds.top + wbounds.height && player.top + player.height > wbounds.top*/) { //left
-            //    std::cout << "Right";
-            //    v.x = wbounds.left + wbounds.width + player.width / 2 + 2.f;
-            //    v.y = p1->getPosition().y;
-            //    p1->setPosition(v);
-            //}
-            //if (player.top + player.height > wbounds.top && player.top < wbounds.top && player.left < wbounds.left + wbounds.width && player.left + player.width > wbounds.left) { //bottom
-            //    std::cout << "Top";
-            //    v.x = p1->getPosition().x;
-            //    v.y = wbounds.top - player.height / 2;
-            //    p1->setPosition(v);
-            //    p1->down = false;
-            //}
-            //else if (player.top < wbounds.top + wbounds.height && player.top + player.height > wbounds.top + wbounds.height && player.left < wbounds.left + wbounds.width && player.left + player.width > wbounds.left) { //top
-            //    std::cout << "Bottom";
-            //    v.x = p1->getPosition().x;
-            //    v.y = wbounds.top + wbounds.height + player.height / 2;
-            //    p1->setPosition(v);
-            //    p1->up = false;
-            //}
-            //if (player.left + player.width > wbounds.left && player.left < wbounds.left && player.top < wbounds.top + wbounds.height && player.top + player.height > wbounds.top) { // right
-            //    std::cout << "Left";
-            //    v.x = wbounds.left - player.width / 2;
-            //    v.y = p1->getPosition().y;
-            //    p1->setPosition(v);
-            //    p1->right = false;
-            //}
-            //else if (player.left < wbounds.left + wbounds.width && player.left + player.width > wbounds.left + wbounds.width && player.top < wbounds.top + wbounds.height && player.top + player.height > wbounds.top) { //left
-            //    std::cout << "Right";
-            //    v.x = wbounds.left + wbounds.width + player.width / 2;
-            //    v.y = p1->getPosition().y;
-            //    p1->setPosition(v);
-            //    p1->left = false;
-            //}
         }
         for (int i = 0; i < zombies.size(); i++) {
             if (zombies[i] != nullptr) {
@@ -351,7 +296,7 @@ void movement(sf::RenderWindow& window, Player* p1) {
                 if (wbounds.intersects(zbounds)) {
                     if (zombies[i]->getSprite().getPosition().y < y1 && zombies[i]->getSprite().getPosition().x < x1) {
                         //top left
-                        std::cout << "TopLeft ";
+                        //std::cout << "TopLeft ";
                         if (y2 - zombies[i]->getSprite().getPosition().y > x2 - zombies[i]->getSprite().getPosition().x) {
                             //closer to x side
                             v.x = wbounds.left - zombieSize / 2;
@@ -365,13 +310,13 @@ void movement(sf::RenderWindow& window, Player* p1) {
                     }
                     else if (zombies[i]->getSprite().getPosition().y < y1 && zombies[i]->getSprite().getPosition().x >= x1 && zombies[i]->getSprite().getPosition().x <= x2) {
                         //top middle
-                        std::cout << "Top ";
+                        //std::cout << "Top ";
                         v.x = zombies[i]->getSprite().getPosition().x;
                         v.y = wbounds.top - zombieSize / 2;
                     }
                     else if (zombies[i]->getSprite().getPosition().y < y1 && zombies[i]->getSprite().getPosition().x > x2) {
                         //top right
-                        std::cout << "TopRight ";
+                        //std::cout << "TopRight ";
                         if (y2 - zombies[i]->getSprite().getPosition().y > x2 - zombies[i]->getSprite().getPosition().x) {
                             //closer to x side
                             v.x = wbounds.left + wbounds.width + zombieSize / 2;
@@ -385,13 +330,13 @@ void movement(sf::RenderWindow& window, Player* p1) {
                     }
                     else if (zombies[i]->getSprite().getPosition().y >= y1 && zombies[i]->getSprite().getPosition().y <= y2 && zombies[i]->getSprite().getPosition().x > x2) {
                         //mid right
-                        std::cout << " Right";
+                        //std::cout << " Right";
                         v.x = wbounds.left + wbounds.width + zombieSize / 2;
                         v.y = zombies[i]->getSprite().getPosition().y;
                     }
                     else if (zombies[i]->getSprite().getPosition().y > y2 && zombies[i]->getSprite().getPosition().x > x2) {
                         //bottom right
-                        std::cout << "BotRight ";
+                        //std::cout << "BotRight ";
                         if (y2 - zombies[i]->getSprite().getPosition().y > x2 - zombies[i]->getSprite().getPosition().x) {
                             //closer to x side
                             v.x = wbounds.left + wbounds.width + zombieSize / 2;
@@ -405,13 +350,13 @@ void movement(sf::RenderWindow& window, Player* p1) {
                     }
                     else if (zombies[i]->getSprite().getPosition().y > y2 && zombies[i]->getSprite().getPosition().x >= x1 && zombies[i]->getSprite().getPosition().x <= x2) {
                         //bottom middle
-                        std::cout << "Bottom ";
+                        //std::cout << "Bottom ";
                         v.x = zombies[i]->getSprite().getPosition().x;
                         v.y = wbounds.top + wbounds.height + zombieSize / 2;
                     }
                     else if (zombies[i]->getSprite().getPosition().y > y2 && zombies[i]->getSprite().getPosition().x < x1) {
                         //bottom left
-                        std::cout << "BotLeft ";
+                        //std::cout << "BotLeft ";
                         if (y2 - zombies[i]->getSprite().getPosition().y > x2 - zombies[i]->getSprite().getPosition().x) {
                             //closer to x side
                             v.x = wbounds.left - zombieSize / 2;
@@ -425,36 +370,14 @@ void movement(sf::RenderWindow& window, Player* p1) {
                     }
                     else if (zombies[i]->getSprite().getPosition().y >= y1 && zombies[i]->getSprite().getPosition().y <= y2 && zombies[i]->getSprite().getPosition().x < x1) {
                         //mid left
-                        std::cout << " Left";
+                        //std::cout << " Left";
                         v.x = wbounds.left - zombieSize / 2;
                         v.y = zombies[i]->getSprite().getPosition().y;
                     }
                     zombies[i]->setPosition(v);
-
-                    //if (zbounds.left < wbounds.left && zbounds.left + zbounds.width < wbounds.left + wbounds.width && zbounds.top < wbounds.top + wbounds.height && zbounds.top + zbounds.height > wbounds.top) { // right
-                    //    v.x = wbounds.left - zbounds.width / 2;
-                    //    v.y = zombies[i]->getSprite().getPosition().y;
-                    //    zombies[i]->setPosition(v);
-                    //}
-                    //else if (zbounds.left > wbounds.left && zbounds.left + zbounds.width > wbounds.left + wbounds.width && zbounds.top < wbounds.top + wbounds.height && zbounds.top + zbounds.height > wbounds.top) { //left
-                    //    v.x = wbounds.left + wbounds.width + zbounds.width / 2;
-                    //    v.y = zombies[i]->getSprite().getPosition().y;
-                    //    zombies[i]->setPosition(v);
-                    //}
-                    //else if (zbounds.top < wbounds.top && zbounds.top + zbounds.height < wbounds.top + wbounds.height && zbounds.left < wbounds.left + wbounds.width && zbounds.left + zbounds.width > wbounds.left) { //bottom
-                    //    v.x = zombies[i]->getSprite().getPosition().x;
-                    //    v.y = wbounds.top - zbounds.height / 2;
-                    //    zombies[i]->setPosition(v);
-                    //}
-                    //else if (zbounds.top > wbounds.top && zbounds.top + zbounds.height > wbounds.top + wbounds.height && zbounds.left < wbounds.left + wbounds.width && zbounds.left + zbounds.width > wbounds.left) { //top
-                    //    v.x = zombies[i]->getSprite().getPosition().x;
-                    //    v.y = wbounds.top + wbounds.height + zbounds.height / 2;
-                    //    zombies[i]->setPosition(v);
-                    //}
                 }
             }
         }
-
         for (int j = 0; j < p1->getGun()->getShots()->size(); j++) {
             if (walls[x]->getWall().intersects(p1->getGun()->getShots()->at(j)->getSprite().getGlobalBounds())) {
                 p1->getGun()->getShots()->erase(p1->getGun()->getShots()->begin() + j);
@@ -536,79 +459,42 @@ void displayGUI(Player* p1, sf::RenderWindow& window, sf::Font& font, int zombie
         window.draw(moneyCount);
         window.draw(ammoCount);
         window.draw(healthBack);
-        window.draw(healthFront);
-       
-
-        /*if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::M))
-        {
-            displaySkillPointMenu(p1, window);
-        }*/
-        
-       
+        window.draw(healthFront);         
     }
 }
 
-//void displaySkillPointMenu(Player* p1, sf::RenderWindow& window) {
-//    /*
-//    int maxHealth;
-//    double speed;
-//    double damageP;*/
-//    sf::RectangleShape skillpointBack(sf::Vector2f(100, 300));
-//    skillpointBack.setFillColor(sf::Color(50, 50, 50));
-//    skillpointBack.setPosition(10, 20);
-//
-//    sf::Sprite healthbtn;
-//    sf::Texture healthTex;
-//    healthTex.loadFromFile("healthbtn.png");
-//    healthbtn.setTexture(healthTex);
-//    
-//    //playbutton.setScale(Menu.getSize().x / 1600, Menu.getSize().y / 900);
-//    //playbutton.setOrigin(playbutton.get)
-//    healthbtn.setPosition(15,25);
-//    sf::Vector2i gP = sf::Mouse::getPosition(window);
-//    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (healthbtn.getGlobalBounds().contains(gP.x, gP.y)) && p1->getSkillPoints() > 10) {
-//        p1->setMaxHealth(p1->getMaxHealth() + 2);
-//    }
-//
-//    sf::Sprite strengthbtn;
-//    sf::Texture strengthTex;
-//    strengthTex.loadFromFile("strengthbutton.png");
-//    strengthbtn.setTexture(strengthTex);
-//
-//    //playbutton.setScale(Menu.getSize().x / 1600, Menu.getSize().y / 900);
-//    //playbutton.setOrigin(playbutton.get)
-//    strengthbtn.setPosition(15, 130);
-//   
-//    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (strengthbtn.getGlobalBounds().contains(gP.x, gP.y)) && p1->getSkillPoints() > 10) {
-//        p1->setStrength(p1->getStrength() + .1);
-//    }
-//
-//    sf::Sprite speedbtn;
-//    sf::Texture speedTex;
-//    speedTex.loadFromFile("speedbtn.png");
-//    speedbtn.setTexture(speedTex);
-//
-//    //playbutton.setScale(Menu.getSize().x / 1600, Menu.getSize().y / 900);
-//    //playbutton.setOrigin(playbutton.get)
-//    speedbtn.setPosition(15, 235);
-//   
-//    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (speedbtn.getGlobalBounds().contains(gP.x, gP.y)) && p1->getSkillPoints() > 10) {
-//        p1->setSpeed(p1->getSpeed() + .1);
-//    }
-//
-//    window.draw(skillpointBack);
-//    window.draw(healthbtn);
-//    window.draw(strengthbtn);
-//    window.draw(speedbtn);
-//}
+void dropMoney(Player* p1) {
+    int points = rand() % 7 + 1;
+    p1->setMoney(p1->getMoney() + points);
+}
 
-void dropMoney(Player* p1, sf::RenderWindow& window) {
-    int randDecide = rand() % 3;
-    if (randDecide == 0) {
-        int points = rand() % 3;
-        p1->setMoney(p1->getMoney() + points);
+void bullets(Player* p1) {
+    for (int j = 0; j < p1->getGun()->getShots()->size(); j++) {
+        if (p1->getGun()->getShots()->at(j) != nullptr) {
+            for (int i = 0; i < zombies.size(); i++) {
+                if (zombies[i] != nullptr) {
+                    if (j > 0) {
+                        if (p1->getGun()->getShots()->at(j)->getSprite().getGlobalBounds().intersects(zombies[i]->getSprite().getGlobalBounds())) {
+                            zombies[i]->setHealth(zombies[i]->getHealth() - p1->getGun()->getShots()->at(j)->getDamage());
+                            p1->getGun()->getShots()->at(j)->setHealth(-1);
+                            std::cout << zombies[i]->getHealth() << std::endl;
+                            if (zombies[i]->getHealth() <= 0) {
+                                zombies.erase(zombies.begin() + i);
+                                dropMoney(p1);
+                                i--;
+                            }
+                            if (p1->getGun()->getShots()->at(j)->getHealth() <= 0) {
+                                p1->getGun()->getShots()->erase(p1->getGun()->getShots()->begin() + j);
+                                j--;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
+
 
 void drawing(sf::RenderWindow& window, Player* p1, sf::Font& font) {
     window.clear();
@@ -626,41 +512,17 @@ void drawing(sf::RenderWindow& window, Player* p1, sf::Font& font) {
             window.draw(zombies[i]->getSprite());
         }
     }
-    for (int j = 0; j < p1->getGun()->getShots()->size(); j++) {
-        if (p1->getGun()->getShots()->at(j) != nullptr) {
-            for (int i = 0; i < zombies.size(); i++) {
-                if (zombies[i] != nullptr) {
-                    if (j > 0) {
-                        if (p1->getGun()->getShots()->at(j)->getSprite().getGlobalBounds().intersects(zombies[i]->getSprite().getGlobalBounds())) {
-                            zombies[i]->setHealth(zombies[i]->getHealth() - p1->getGun()->getShots()->at(j)->getDamage());
-                            p1->getGun()->getShots()->at(j)->setHealth(-1);
-                            std::cout << zombies[i]->getHealth() << std::endl;
-                            if (zombies[i]->getHealth() <= 0) {
-                                zombies.erase(zombies.begin() + i);
-                                dropMoney(p1, window);
-                                i--;
-                            }
-                            if (p1->getGun()->getShots()->at(j)->getHealth() <= 0) {
-                                p1->getGun()->getShots()->erase(p1->getGun()->getShots()->begin() + j);
-                                j--;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
     for (int k = 0; k < zombies.size(); k++) {
         if (zombies[k] != nullptr) {
             if (zombies[k]->getSprite().getGlobalBounds().intersects(p1->getSprite().getGlobalBounds()) && zombies[k]->getReload() == 0) {
                 std::thread t2(&Zombie::attack, zombies[k], p1);
                 t2.detach();
-                //p1->setHealth(p1->getHealth() - zombies[k]->getDamage());
-                //std::cout << p1->getHealth() << std::endl;
             }
         }
     }
-    
+
+    //std::thread gui(displayGUI, p1, std::ref(window), std::ref(font), zombies.size());
+    //gui.detach();
     displayGUI(p1, window, font, zombies.size());
 }
 
@@ -701,14 +563,18 @@ void run(sf::RenderWindow& window, sf::View& view){
         else if (p1->getPosition().x < 1280 && p1->getPosition().y < 720) {
             view.setCenter(640, 360);
         }
-        /*while (p1->getPosition().x < view.getSize().x) {
-            view.move(-1.f, 0.f);
-        }*/
-        /*if (p1->getPosition().x < view.getSize().x / 5000 && p1->getPosition().x < pasPos.x) {
-            view.move(-1.f, 0.f);
-            pasPos = p1->getPosition();
-        }*/
+        
+        std::thread bull(bullets, p1);
+        bull.join();
+
+        //std::thread move(movement, std::ref(window), p1);
+        //move.join();
+
+        //std::thread draw(drawing, std::ref(window), p1, std::ref(font));
+        //draw.join();
+
         window.setView(view);
+
         movement(window, p1);
 
         //re-draws objects so it looks good      
@@ -717,9 +583,8 @@ void run(sf::RenderWindow& window, sf::View& view){
         //Round counter & advancer
         if (zombies.size() == 0)
         {
-            //advances round and heals player
-            if (displayMenu && (clock() - roundCountTimer) > 1000)
-            {
+            //advances rou
+            if (displayMenu && (clock() - roundCountTimer) > 1000) {
                 roundCountTimer = clock();
                 displayMenu = false;
                 rounds++;
@@ -776,6 +641,8 @@ void run(sf::RenderWindow& window, sf::View& view){
 
         }
         //window.setView(view);
+        //move.join();
+        //draw.join();
         window.display();
     }
 }
