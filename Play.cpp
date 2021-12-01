@@ -12,15 +12,86 @@ sf::Sprite backdrop;
 bool displayMenu = true;
 vector<wall*> walls;
 
-void loadMap() {
-    wall* w = new wall(-32, -32, 32, 1504);
-    walls.push_back(w);
-    w = new wall(2560, -32, 32, 1504);
-    walls.push_back(w);
-    w = new wall(-32, -32, 2624, 32);
-    walls.push_back(w);
-    w = new wall(-32, 1440, 2624, 32);
-    walls.push_back(w);
+void loadWalls() {
+    //boundaries
+    walls.push_back(new wall(-32.f, -32.f, 32.f, 1504.f));
+    walls.push_back(new wall(2560.f, -32.f, 32.f, 1504.f));
+    walls.push_back(new wall(-32.f, -32.f, 2624.f, 32.f));
+    walls.push_back(new wall(-32.f, 1440.f, 2624.f, 32.f));
+
+    //motel (top left)
+    walls.push_back(new wall(-32.f, 192.f, 96.f, 32.f));
+    walls.push_back(new wall(160.f, 192.f, 256.f, 32.f));
+    walls.push_back(new wall(384.f, 160.f, 32.f, 64.f));
+    walls.push_back(new wall(384.f, -32.f, 32.f, 96.f));
+
+    //Bar (top right)
+    walls.push_back(new wall(608.f, -32.f, 32.f, 256.f));
+    walls.push_back(new wall(608.f, 192.f, 96.f, 32.f));
+    walls.push_back(new wall(832.f, 192.f, 448.f, 32.f));
+    walls.push_back(new wall(1248.f, -32.f, 64.f, 288.f));
+
+    //Cafe (bottom right)
+    walls.push_back(new wall(960.f, 416.f, 96.f, 32.f));
+    walls.push_back(new wall(960.f, 416.f, 32.f, 96.f));
+    walls.push_back(new wall(960.f, 608.f, 32.f, 192.f));
+    walls.push_back(new wall(960.f, 704.f, 352.f, 96.f));
+    walls.push_back(new wall(1152.f, 416.f, 128.f, 32.f));
+    walls.push_back(new wall(1248.f, 384.f, 64.f, 416.f));
+
+    //Lobby (bottom left)
+    walls.push_back(new wall(-32.f, 416.f, 640.f, 32.f));
+    walls.push_back(new wall(480.f, 416.f, 32.f, 192.f));
+    walls.push_back(new wall(288.f, 544.f, 32.f, 224.f));
+    walls.push_back(new wall(736.f, 416.f, 96.f, 32.f));
+    walls.push_back(new wall(800.f, 416.f, 32.f, 384.f));
+    walls.push_back(new wall(128.f, 704.f, 704.f, 96.f));
+
+    //The Lab(Right Side)
+     walls.push_back(new wall(2112.f, -32.f, 480.f, 64.f));
+     walls.push_back(new wall(2112.f, 160.f, 320.f, 32.f));
+     walls.push_back(new wall(2112.f, 160.f, 32.f, 256.f));
+     walls.push_back(new wall(2016.f, 384.f, 128.f, 32.f));
+     walls.push_back(new wall(2016.f, 384.f, 192.f, 32.f));
+    
+     walls.push_back(new wall(2368.f, 320.f, 224.f, 32.f));
+     walls.push_back(new wall(2368.f, 320.f, 32.f, 128.f));
+     walls.push_back(new wall(2240.f, 288.f, 32.f, 192.f));
+     walls.push_back(new wall(2400.f, 576.f, 32.f, 704.f));
+     walls.push_back(new wall(2016.f, 576.f, 384.f, 32.f));
+
+    //Hospital (bottom left)
+    walls.push_back(new wall(1280.f, 704.f, 1152.f, 32.f));
+    walls.push_back(new wall(1632.f, 768.f, 32.f, 384.f));
+    walls.push_back(new wall(1792.f, 832.f, 480.f, 32.f));
+    walls.push_back(new wall(1792.f, 1024.f, 96.f, 32.f));
+
+    walls.push_back(new wall(1312.f, 1280.f, 1120.f, 32.f));
+    walls.push_back(new wall(2176.f, 1216.f, 32.f, 96.f));
+    walls.push_back(new wall(1632.f, 1216.f, 32.f, 96.f));
+    walls.push_back(new wall(1856.f, 960.f, 32.f, 256.f));
+
+    walls.push_back(new wall(1920.f, 1120.f, 352.f, 32.f));
+    walls.push_back(new wall(2016.f, 960.f, 192.f, 32.f));
+    walls.push_back(new wall(2176.f, 992.f, 96.f, 32.f));
+    walls.push_back(new wall(2176.f, 960.f, 32.f, 192.f));
+    
+    //Military Base (Top Right - to the left)
+    walls.push_back(new wall(1728.f, -32.f, 224.f, 32.f));
+    walls.push_back(new wall(1728.f, -32.f, 32.f, 288.f));
+    walls.push_back(new wall(1920.f, -32.f, 32.f, 288.f));
+    walls.push_back(new wall(1408.f, -32.f, 32.f, 288.f));
+    walls.push_back(new wall(1600.f, -32.f, 32.f, 288.f));
+    walls.push_back(new wall(1408.f, -32.f, 224.f, 32.f));
+
+    walls.push_back(new wall(1408.f, 384.f, 32.f, 96.f));
+    walls.push_back(new wall(1600.f, 384.f, 32.f, 160.f));
+    walls.push_back(new wall(1728.f, 384.f, 32.f, 160.f));
+    walls.push_back(new wall(16000.f, 512.f, 160.f, 32.f));
+    walls.push_back(new wall(1920.f, 384.f, 32.f, 256.f));
+    walls.push_back(new wall(1408.f, 608.f, 544.f, 32.f));
+
+
 }
 
 void makeTrue(sf::Vector2i& gP, Player* p1) {
@@ -77,7 +148,7 @@ void spawnZombies(sf::Vector2u size, Player* p1) {
             }
         }
         zombies.push_back(new Zombie(20, 1, 1, size, v));
-        std::cout << "Zombie " <<  i << std::endl;
+        //std::cout << "Zombie " <<  i << std::endl;
         Sleep(500);
     }
 
@@ -103,37 +174,37 @@ void movement(sf::RenderWindow& window, Player* p1) {
         zombies[0]->getMove(p1, p1->getPosition());
     }
     sf::Vector2f v;
-    for (auto& wall : walls) {
+    for (int x = 0; x < walls.size(); x++) {
         sf::FloatRect player = p1->getSprite().getGlobalBounds();
-        sf::FloatRect wbounds = wall->getWall();
+        sf::FloatRect wbounds = walls[x]->getWall();
         if (wbounds.intersects(player)) {
-            if (player.left < wbounds.left && player.left + player.width < wbounds.left + wbounds.width && player.top < wbounds.top + wbounds.height && player.top + player.height > wbounds.top) { // right
-                //std::cout << "Left";
-                v.x = wbounds.left - player.width / 2;
-                v.y = p1->getPosition().y;
-                p1->setPosition(v);
-            }
-            else if (player.left > wbounds.left && player.left + player.width > wbounds.left + wbounds.width && player.top < wbounds.top + wbounds.height && player.top + player.height > wbounds.top) { //left
-                //std::cout << "Right";
-                v.x = wbounds.left + wbounds.width + player.width / 2;
-                v.y = p1->getPosition().y;
-                p1->setPosition(v);
-            }
-            else if (player.top < wbounds.top  && player.top + player.height < wbounds.top + wbounds.height && player.left < wbounds.left + wbounds.width && player.left + player.width > wbounds.left) { //bottom
-                //std::cout << "Top";
+            if (player.top < wbounds.top && player.top + player.height < wbounds.top + wbounds.height && player.left < wbounds.left + wbounds.width && player.left + player.width > wbounds.left) { //bottom
+                std::cout << "Top";
                 v.x = p1->getPosition().x;
                 v.y = wbounds.top - player.height / 2;
                 p1->setPosition(v);
             }
             else if (player.top > wbounds.top && player.top + player.height > wbounds.top + wbounds.height && player.left < wbounds.left + wbounds.width && player.left + player.width > wbounds.left) { //top
-                //std::cout << "Bottom";
+                std::cout << "Bottom";
                 v.x = p1->getPosition().x;
                 v.y = wbounds.top + wbounds.height + player.height / 2;
                 p1->setPosition(v);
             }
+            else if (player.left < wbounds.left && player.left + player.width < wbounds.left + wbounds.width && player.top < wbounds.top + wbounds.height && player.top + player.height > wbounds.top) { // right
+                std::cout << "Left";
+                v.x = wbounds.left - player.width / 2;
+                v.y = p1->getPosition().y;
+                p1->setPosition(v);
+            }
+            else if (player.left > wbounds.left && player.left + player.width > wbounds.left + wbounds.width && player.top < wbounds.top + wbounds.height && player.top + player.height > wbounds.top) { //left
+                std::cout << "Right";
+                v.x = wbounds.left + wbounds.width + player.width / 2;
+                v.y = p1->getPosition().y;
+                p1->setPosition(v);
+            }
         }
         for (int i = 0; i < zombies.size(); i++) {
-            if (wall->getWall().intersects(zombies[i]->getSprite().getGlobalBounds())) {
+            if (walls[x]->getWall().intersects(zombies[i]->getSprite().getGlobalBounds())) {
                 sf::FloatRect zbounds = zombies[i]->getSprite().getGlobalBounds();
                 if (zbounds.left < wbounds.left && zbounds.left + zbounds.width < wbounds.left + wbounds.width && zbounds.top < wbounds.top + wbounds.height && zbounds.top + zbounds.height > wbounds.top) { // right
                     v.x = wbounds.left - zbounds.width / 2;
@@ -155,6 +226,11 @@ void movement(sf::RenderWindow& window, Player* p1) {
                     v.y = wbounds.top + wbounds.height + zbounds.height / 2;
                     zombies[i]->setPosition(v);
                 }
+            }
+        }
+        for (int j = 0; j < p1->getGun()->getShots()->size(); j++) {
+            if (walls[x]->getWall().intersects(p1->getGun()->getShots()->at(j)->getSprite().getGlobalBounds())) {
+                p1->getGun()->getShots()->erase(p1->getGun()->getShots()->begin() + j);
             }
         }
     }
@@ -194,15 +270,17 @@ void displayGUI(Player* p1, sf::RenderWindow& window)
         ammoCount.setFillColor(sf::Color::White);
         ammoCount.setPosition(xPos + 1150, yPos-10);
         ammoCount.setOutlineColor(sf::Color::Black);
+        ammoCount.setOutlineThickness(3);
 
         sf::Text ammoAlert;
         string alert = "Press R to Reload!";
         ammoAlert.setFont(font);
         ammoAlert.setString(alert);
         ammoAlert.setCharacterSize(40);
-        ammoAlert.setFillColor(sf::Color::Red);
-        ammoAlert.setPosition(xPos + 1000, yPos - 40);
+        ammoAlert.setFillColor(sf::Color(94, 1, 6));
+        ammoAlert.setPosition(xPos + 1010, yPos - 50);
         ammoAlert.setOutlineColor(sf::Color::Black);
+        ammoAlert.setOutlineThickness(3);
 
         sf::Text moneyCount;
         string moneyString = "Money $: " + std::to_string(p1->getMoney());
@@ -212,6 +290,7 @@ void displayGUI(Player* p1, sf::RenderWindow& window)
         moneyCount.setFillColor(sf::Color::White);
         moneyCount.setPosition(xPos + 10, yPos - 40);
         moneyCount.setOutlineColor(sf::Color::Black);
+        moneyCount.setOutlineThickness(3);
 
         if (p1->getGun()->getReload() < 2) {
             window.draw(ammoAlert);
@@ -357,6 +436,7 @@ void run(sf::RenderWindow& window, sf::View& view){
     z.y = 500.f;
     Player* p1 = new Player(20, 1, 1, window.getSize());
     p1->getSprite().setPosition((float)z.x, (float)z.y);
+    loadWalls();
     //wall* w = new wall(-32, -32, 32, 1504);
     //wall* x = new wall(2560, -32, 32, 1504);
     //wall* y = new wall(-32, -32, 2624, 32);
@@ -430,7 +510,7 @@ void run(sf::RenderWindow& window, sf::View& view){
                 textDisplay.setCharacterSize(100);
                 textDisplay.setFillColor(sf::Color(94, 1, 6));
                 textDisplay.setOutlineColor(sf::Color::Black);
-                textDisplay.setOutlineThickness(4);
+                textDisplay.setOutlineThickness(3);
                 textDisplay.setOrigin(textDisplay.getLocalBounds().width / 2, textDisplay.getLocalBounds().height / 2);
                 textDisplay.setPosition(view.getCenter().x, view.getCenter().y-300);
                 window.draw(textDisplay);

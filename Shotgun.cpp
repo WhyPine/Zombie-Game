@@ -12,9 +12,9 @@ void Shotgun::fire(sf::Vector2f go)
         go.y = sin(-15 * 3.141592653 / 180) * temp.x + cos(-15 * 3.141592653 / 180) * temp.y;
         temp.x = go.x;
         temp.y = go.y;
-        for (int x = 0; x < 7; x++) {
-            go.x = cos(3 * 3.141592653 / 180) * temp.x - sin(3 * 3.141592653 / 180) * temp.y;
-            go.y = sin(3 * 3.141592653 / 180) * temp.x + cos(3 * 3.141592653 / 180) * temp.y;
+        for (int x = 0; x < 5; x++) {
+            go.x = cos(5 * 3.141592653 / 180) * temp.x - sin(5 * 3.141592653 / 180) * temp.y;
+            go.y = sin(5 * 3.141592653 / 180) * temp.x + cos(5 * 3.141592653 / 180) * temp.y;
             this->shots->push_back(new Bullet(v, go, this->size));
             temp.x = go.x;
             temp.y = go.y;

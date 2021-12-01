@@ -19,3 +19,4 @@ using std::string;
 	void displayGUI(Player* p1, sf::RenderWindow& window);
 	//void displaySkillPointMenu(Player* p1, sf::RenderWindow& window);
 	void dropMoney(Player* p1, sf::RenderWindow& window);
+	void loadWalls();
