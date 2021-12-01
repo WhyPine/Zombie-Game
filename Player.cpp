@@ -68,6 +68,8 @@ void Player::checkMove(sf::Vector2i gP) {
     this->gun->run(this->sprite.getPosition(), this->sprite.getRotation());
     if (this->gun->getReload() > 0 && canshoot) {
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+            //std::thread t2(&Gun::fire, this->gun, p);
+            //t2.detach();
             this->gun->fire(p);
         }
     }
