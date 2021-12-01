@@ -23,7 +23,7 @@ public:
 	virtual void fire(sf::Vector2f go);
 	sf::Sprite getSprite();
 	vector<Bullet*>* getShots();
-	int getReload();
+	virtual int getReload();
 	void changeReload(int add);
 	void setReload(int value);
 };

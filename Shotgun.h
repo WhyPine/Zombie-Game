@@ -10,6 +10,7 @@ public:
         this->maxReload = 6;
     };
     void fire(sf::Vector2f go);
+    int getReload();
     int getMaxReload();
 };
 

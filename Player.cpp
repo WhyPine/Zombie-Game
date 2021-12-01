@@ -10,7 +10,7 @@ Player::Player(int health, double speed, double damageP, sf::Vector2u size) {
 	this->speed = speed;
 	this->damageP = damageP;
     this->canshoot = true;
-    this->sprite.setPosition(500.f, 500.f);
+    this->sprite.setPosition(15*32.f, 9*32.f);
     this->texture->loadFromFile("survivor-move_handgun_0.png");
     this->sprite.setTexture(*(this->texture));
     this->sprite.setTextureRect(sf::IntRect(39, 39, 250, 200));
