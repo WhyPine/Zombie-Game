@@ -19,12 +19,18 @@ void Shotgun::fire(sf::Vector2f go)
             temp.x = go.x;
             temp.y = go.y;
         }
-        std::cout << std::endl;
         this->reload--;
         this->shottimer = 0;
     }
 }
 
-int Shotgun::getMaxReload() {
+int Shotgun::getReload()
+{
+    return this->reload;
+}
+
+int Shotgun::getMaxReload()
+{
     return 6;
 }
+
