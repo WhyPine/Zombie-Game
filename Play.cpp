@@ -47,22 +47,22 @@ void loadWalls() {
     walls.push_back(new wall(800.f, 416.f, 32.f, 384.f));
     walls.push_back(new wall(128.f, 704.f, 704.f, 96.f));
 
-    //The Lab(Right Side)
+    //The Lab(Right Side) GOOD
      walls.push_back(new wall(2112.f, -32.f, 480.f, 64.f));
      walls.push_back(new wall(2112.f, 160.f, 320.f, 32.f));
      walls.push_back(new wall(2112.f, 160.f, 32.f, 256.f));
      walls.push_back(new wall(2016.f, 384.f, 128.f, 32.f));
-     walls.push_back(new wall(2016.f, 384.f, 192.f, 32.f));
+     walls.push_back(new wall(2016.f, 384.f, 32.f, 224.f));
     
      walls.push_back(new wall(2368.f, 320.f, 224.f, 32.f));
      walls.push_back(new wall(2368.f, 320.f, 32.f, 128.f));
      walls.push_back(new wall(2240.f, 288.f, 32.f, 192.f));
-     walls.push_back(new wall(2400.f, 576.f, 32.f, 704.f));
+     walls.push_back(new wall(2400.f, 576.f, 32.f, 736.f));
      walls.push_back(new wall(2016.f, 576.f, 384.f, 32.f));
 
-    //Hospital (bottom left)
+    //Hospital (bottom left) GOOD
     walls.push_back(new wall(1280.f, 704.f, 1152.f, 32.f));
-    walls.push_back(new wall(1632.f, 768.f, 32.f, 384.f));
+    walls.push_back(new wall(1632.f, 704.f, 32.f, 384.f));
     walls.push_back(new wall(1792.f, 832.f, 480.f, 32.f));
     walls.push_back(new wall(1792.f, 1024.f, 96.f, 32.f));
 
@@ -71,23 +71,23 @@ void loadWalls() {
     walls.push_back(new wall(1632.f, 1216.f, 32.f, 96.f));
     walls.push_back(new wall(1856.f, 960.f, 32.f, 256.f));
 
-    walls.push_back(new wall(1920.f, 1120.f, 352.f, 32.f));
+    walls.push_back(new wall(1856.f, 1120.f, 352.f, 32.f));
     walls.push_back(new wall(2016.f, 960.f, 192.f, 32.f));
     walls.push_back(new wall(2176.f, 992.f, 96.f, 32.f));
     walls.push_back(new wall(2176.f, 960.f, 32.f, 192.f));
     
-    //Military Base (Top Right - to the left)
-    walls.push_back(new wall(1728.f, -32.f, 224.f, 32.f));
+    //Military Base (Top Right - to the left) GOOD
+    walls.push_back(new wall(1728.f, -32.f, 224.f, 64.f));
     walls.push_back(new wall(1728.f, -32.f, 32.f, 288.f));
     walls.push_back(new wall(1920.f, -32.f, 32.f, 288.f));
     walls.push_back(new wall(1408.f, -32.f, 32.f, 288.f));
     walls.push_back(new wall(1600.f, -32.f, 32.f, 288.f));
-    walls.push_back(new wall(1408.f, -32.f, 224.f, 32.f));
+    walls.push_back(new wall(1408.f, -32.f, 224.f, 64.f));
 
-    walls.push_back(new wall(1408.f, 384.f, 32.f, 96.f));
+    walls.push_back(new wall(1408.f, 384.f, 32.f, 256.f));
     walls.push_back(new wall(1600.f, 384.f, 32.f, 160.f));
     walls.push_back(new wall(1728.f, 384.f, 32.f, 160.f));
-    walls.push_back(new wall(16000.f, 512.f, 160.f, 32.f));
+    walls.push_back(new wall(1600.f, 512.f, 160.f, 32.f));
     walls.push_back(new wall(1920.f, 384.f, 32.f, 256.f));
     walls.push_back(new wall(1408.f, 608.f, 544.f, 32.f));
 
@@ -133,8 +133,8 @@ void spawnZombies(sf::Vector2u size, Player* p1) {
                 v.y = (23+4) * 32;
             }
             else {
-                v.x = (40+33) * 32;
-                v.y = (23+8) * 32;
+                v.x = (40+31) * 32;
+                v.y = (23+13) * 32;
             }
         }
         else if (p1->getPosition().x < 1280 && p1->getPosition().y < 720) { //top left
@@ -274,16 +274,6 @@ void displayGUI(Player* p1, sf::RenderWindow& window)
         ammoCount.setOutlineColor(sf::Color::Black);
         ammoCount.setOutlineThickness(3);
 
-        sf::Text ammoAlert;
-        string alert = "Press R to Reload!";
-        ammoAlert.setFont(font);
-        ammoAlert.setString(alert);
-        ammoAlert.setCharacterSize(40);
-        ammoAlert.setFillColor(sf::Color(94, 1, 6));
-        ammoAlert.setPosition(xPos + 1010, yPos - 50);
-        ammoAlert.setOutlineColor(sf::Color::Black);
-        ammoAlert.setOutlineThickness(3);
-
         sf::Text moneyCount;
         string moneyString = "Money $: " + std::to_string(p1->getMoney());
         moneyCount.setFont(font);
@@ -294,7 +284,16 @@ void displayGUI(Player* p1, sf::RenderWindow& window)
         moneyCount.setOutlineColor(sf::Color::Black);
         moneyCount.setOutlineThickness(3);
 
-        if (p1->getGun()->getReload() < 2) {
+        if ((double)p1->getGun()->getReload() / (double)p1->getGun()->getMaxReload() <= 0.35) {
+            sf::Text ammoAlert;
+            string alert = "Press R to Reload!";
+            ammoAlert.setFont(font);
+            ammoAlert.setString(alert);
+            ammoAlert.setCharacterSize(40);
+            ammoAlert.setFillColor(sf::Color(94, 1, 6));
+            ammoAlert.setPosition(xPos + 1010, yPos - 50);
+            ammoAlert.setOutlineColor(sf::Color::Black);
+            ammoAlert.setOutlineThickness(3);
             window.draw(ammoAlert);
         }
         window.draw(moneyCount);
@@ -430,27 +429,11 @@ void run(sf::RenderWindow& window, sf::View& view){
     tex.loadFromFile("mapv2.png");
     backdrop.setTexture(tex);
     sf::Vector2f v;
-    v.x = 1000.f;
-    v.y = 200.f;
+    v.x = 32*40.f;
+    v.y = 32*10.f;
     zombies.push_back(new Zombie(20, 1, 1, window.getSize(), v));
-    sf::Vector2f z;
-    z.x = 500.f;
-    z.y = 500.f;
     Player* p1 = new Player(20, 1, 1, window.getSize());
-    p1->getSprite().setPosition((float)z.x, (float)z.y);
     loadWalls();
-    //wall* w = new wall(-32, -32, 32, 1504);
-    //wall* x = new wall(2560, -32, 32, 1504);
-    //wall* y = new wall(-32, -32, 2624, 32);
-    //wall* b = new wall(-32, 1440, 2624, 32);
-    ////wall* a = new wall(500, 500, 32, 32);
-    //walls.push_back(*w);
-    //walls.push_back(*x);
-    //walls.push_back(*y);
-    //walls.push_back(*b);
-    //walls.push_back(*a);
-    // sf::View view1(sf::Vector2f(window.getSize().x / 2, window.getSize().y), sf::Vector2f(1280.f, 720.f));
-    //window.setView(view1);
     //Loading Font
     sf::Font font;
     bool loadFont = true;
