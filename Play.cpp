@@ -180,8 +180,9 @@ void movement(sf::RenderWindow& window, Player* p1) {
     p1->right = true;
     for (int x = 0; x < walls.size(); x++) {
         sf::FloatRect player = p1->getSprite().getGlobalBounds();
-        /*player.width = 50.f;
-        player.height = 50.f;*/
+        /*player.width = 32.f;
+        player.height = 32.f;*/
+        //player.height = player.width;
         sf::FloatRect wbounds = walls[x]->getWall();
         if (wbounds.intersects(player)) {
             //if (player.top < wbounds.top && player.top + player.height < wbounds.top + wbounds.height /*&& player.left < wbounds.left + wbounds.width && player.left + player.width > wbounds.left*/) { //bottom
