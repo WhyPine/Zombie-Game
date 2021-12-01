@@ -385,7 +385,9 @@ void drawing(sf::RenderWindow& window, Player* p1) {
     window.draw(p1->getGunSprite());
     for (int i = 0; i < zombies.size(); i++)
     {
-        window.draw(zombies[i]->getSprite());
+        if (zombies[i] != nullptr) {
+            window.draw(zombies[i]->getSprite());
+        }
     }
     for (int j = 0; j < p1->getGun()->getShots()->size(); j++) {
         if (p1->getGun()->getShots()->at(j) != nullptr) {
@@ -399,7 +401,7 @@ void drawing(sf::RenderWindow& window, Player* p1) {
                             if (zombies[i]->getHealth() <= 0) {
                                 zombies.erase(zombies.begin() + i);
                                 dropMoney(p1, window);
-                                //i--;
+                                i--;
                             }
                             if (p1->getGun()->getShots()->at(j)->getHealth() <= 0) {
                                 p1->getGun()->getShots()->erase(p1->getGun()->getShots()->begin() + j);
@@ -409,17 +411,18 @@ void drawing(sf::RenderWindow& window, Player* p1) {
                     }
                 }
             }
-            for (int k = 0; k < zombies.size(); k++) {
-                if (zombies[k]->getSprite().getGlobalBounds().intersects(p1->getSprite().getGlobalBounds()) && zombies[k]->getReload() == 0) {
-                    std::thread t2(&Zombie::attack, zombies[k], p1);
-                    t2.detach();
-                    //p1->setHealth(p1->getHealth() - zombies[k]->getDamage());
-                    //std::cout << p1->getHealth() << std::endl;
-                }
+        }
+    }
+    for (int k = 0; k < zombies.size(); k++) {
+        if (zombies[k] != nullptr) {
+            if (zombies[k]->getSprite().getGlobalBounds().intersects(p1->getSprite().getGlobalBounds()) && zombies[k]->getReload() == 0) {
+                std::thread t2(&Zombie::attack, zombies[k], p1);
+                t2.detach();
+                //p1->setHealth(p1->getHealth() - zombies[k]->getDamage());
+                //std::cout << p1->getHealth() << std::endl;
             }
         }
     }
-   
     
     displayGUI(p1, window);
 }
