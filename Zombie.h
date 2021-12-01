@@ -4,7 +4,7 @@
 
 class Zombie
 {
-private:
+protected:
 	int reload;
 	int health;
 	int speed;
