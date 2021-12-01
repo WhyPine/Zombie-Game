@@ -114,5 +114,9 @@ void Zombie::attack(Player* p1) {
 }
 
 void Zombie::setPosition(sf::Vector2f v) {
+    while (v.x > 2540) v.x--;
+    while (v.y > 1420) v.y--;
+    while (v.x < 20) v.x++;
+    while (v.y < 20) v.y++;
     this->sprite.setPosition(v);
 }
