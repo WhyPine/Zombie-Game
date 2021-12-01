@@ -49,17 +49,17 @@ void loadWalls() {
     walls.push_back(new wall(128.f, 704.f, 704.f, 96.f));
 
     //The Lab(Right Side) GOOD
-     walls.push_back(new wall(2112.f, -32.f, 480.f, 64.f));
-     walls.push_back(new wall(2112.f, 160.f, 320.f, 32.f));
-     walls.push_back(new wall(2112.f, 160.f, 32.f, 256.f));
-     walls.push_back(new wall(2016.f, 384.f, 128.f, 32.f));
-     walls.push_back(new wall(2016.f, 384.f, 32.f, 224.f));
-    
-     walls.push_back(new wall(2368.f, 320.f, 224.f, 32.f));
-     walls.push_back(new wall(2368.f, 320.f, 32.f, 128.f));
-     walls.push_back(new wall(2240.f, 288.f, 32.f, 192.f));
-     walls.push_back(new wall(2400.f, 576.f, 32.f, 736.f));
-     walls.push_back(new wall(2016.f, 576.f, 416.f, 32.f));
+    walls.push_back(new wall(2112.f, -32.f, 480.f, 64.f));
+    walls.push_back(new wall(2112.f, 160.f, 320.f, 32.f));
+    walls.push_back(new wall(2112.f, 160.f, 32.f, 256.f));
+    walls.push_back(new wall(2016.f, 384.f, 128.f, 32.f));
+    walls.push_back(new wall(2016.f, 384.f, 32.f, 224.f));
+
+    walls.push_back(new wall(2368.f, 320.f, 224.f, 32.f));
+    walls.push_back(new wall(2368.f, 320.f, 32.f, 128.f));
+    walls.push_back(new wall(2240.f, 288.f, 32.f, 192.f));
+    walls.push_back(new wall(2400.f, 576.f, 32.f, 736.f));
+    walls.push_back(new wall(2016.f, 576.f, 416.f, 32.f));
 
     //Hospital (bottom left) GOOD
     walls.push_back(new wall(1280.f, 704.f, 1152.f, 32.f));
@@ -76,7 +76,7 @@ void loadWalls() {
     walls.push_back(new wall(2016.f, 960.f, 192.f, 32.f));
     walls.push_back(new wall(2176.f, 992.f, 96.f, 32.f));
     walls.push_back(new wall(2176.f, 960.f, 32.f, 192.f));
-    
+
     //Military Base (Top Right - to the left) GOOD
     walls.push_back(new wall(1728.f, -32.f, 224.f, 64.f));
     walls.push_back(new wall(1728.f, -32.f, 32.f, 288.f));
@@ -122,47 +122,56 @@ void spawnZombies(sf::Vector2u size, Player* p1) {
         sf::Vector2f v;
         int x = rand();
         if (p1->getPosition().x < 1280 && p1->getPosition().y > 720) { //bottom left
-            if (x % 2 == 0){
+            if (x % 2 == 0) {
                 v.x = 1 * 32;
-                v.y = 43 * 32;
+                v.y = 41 * 32;
             }
             else {
-                v.x = 32 * 32;
-                v.y = 44 * 32;
+                v.x = 33 * 32;
+                v.y = 41 * 32;
             }
         }
         else if (p1->getPosition().x > 1280 && p1->getPosition().y < 720) { //top right
             if (x % 2 == 0) {
-                v.x = 58 * 32;
-                v.y = 5 * 32;
+                v.x = 56 * 32;
+                v.y = 2 * 32;
             }
             else {
-                v.x = 70 * 32;
-                v.y = 3 * 32;
+                v.x = 77 * 32;
+                v.y = 4 * 32;
             }
         }
-        else if (p1->getPosition().x > 1280 && p1->getPosition().y > 720) { //bottom right
+        else if (p1->getPosition().x >= 1280 && p1->getPosition().y >= 720) { //bottom right
             if (x % 2 == 0) {
-                v.x = (40+5) * 32;
-                v.y = (23+4) * 32;
+                v.x = 43 * 32;
+                v.y = 25 * 32;
             }
             else {
-                v.x = (40+31) * 32;
-                v.y = (23+13) * 32;
+                v.x = 71 * 32;
+                v.y = 36 * 32;
             }
         }
-        else if (p1->getPosition().x < 1280 && p1->getPosition().y < 720) { //top left
-            if (x % 2 == 0){
+        else if (p1->getPosition().x <= 1280 && p1->getPosition().y <= 720) { //top left
+            if (x % 2 == 0) {
                 v.x = 16 * 32;
                 v.y = 1 * 32;
             }
-            else{
+            else {
+                v.x = 1 * 32;
                 v.y = 10 * 32;
             }
         }
-                v.x = 1 * 32;
-        zombies.push_back(new Zombie(20, 1, 1, size, v));
-        //std::cout << "Zombie " <<  i << std::endl;
+        if (rounds <= 15) {
+            zombies.push_back(new Zombie(20, 1, 1, size, v));
+        }
+        else if (rounds > 15) {
+            if (i % 3 == 2) {
+                zombies.push_back(new RunnerZombie(20, 1, 1, size, v));
+            }
+            else {
+                zombies.push_back(new Zombie(20, 1, 1, size, v));
+            }
+        }
         Sleep(500);
     }
 
