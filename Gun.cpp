@@ -1,21 +1,20 @@
 #include "Gun.h"
-#include <iostream>
-sf::Texture texture;
+
 Gun::Gun(sf::Vector2f pos, sf::Vector2u size) {
-	this->power = 5;
+	this->power = 10;
 	this->projS = 10;
     this->size = size;
-    this->reload = 30;
-    this->maxReload = 30;
+    this->reload = 12;
+    this->maxReload = 12;
     
     //texture.loadFromFile("rifle.png");
-    
+    /*
     if (!texture.loadFromFile("rifle.png"))
     {
         std::cout << "Error occured" << std::endl;
     }
     this->sprite.setTexture(texture);
-    this->sprite.setTextureRect(sf::IntRect(0, 0, 256, 32));
+    this->sprite.setTextureRect(sf::IntRect(0, 0, 256, 32));*/
     this->sprite.setScale((float)size.x / 4800, (float)size.y / 4800);
     //this->sprite.setColor(sf::Color(138, 86, 3));
     this->sprite.setPosition(pos);
@@ -41,9 +40,9 @@ void Gun::run(sf::Vector2f pos, float rotation) {
 }
 
 void Gun::fire(sf::Vector2f go) {
-    if (this->shottimer > 6) {
+    if (this->shottimer > 10) {
         sf::Vector2f v = this->sprite.getPosition();
-        this->shots->push_back(new Bullet(v, go, this->size));
+        this->shots->push_back(new Bullet(v, go, this->size, this->power));
         this->reload--;
         shottimer = 0;
     }
@@ -71,5 +70,5 @@ void Gun::setReload(int value) {
 
 int Gun::getMaxReload()
 {
-    return 30;
+    return this->maxReload;
 }

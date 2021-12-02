@@ -2,12 +2,14 @@
 #include <SFML/Graphics.hpp>
 #include "Gun.h"
 #include "Shotgun.h"
+#include "Rifle.h"
 #include <thread>
 
 class Player : public sf::CircleShape, sf::Sprite
 {
 private:
-	sf::Vector2u size;
+	bool semiAuto; //used for making pistol semi automatic
+	sf::Vector2u size; 
 	int health;
 	int maxHealth;
 	int regenTimer;

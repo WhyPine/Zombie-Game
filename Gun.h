@@ -3,6 +3,7 @@
 #include "Bullet.h"
 //#include "Player.h"
 #include <vector>
+#include <iostream>
 using std::vector;
 
 class Gun
@@ -16,6 +17,7 @@ protected:
 	vector<Bullet*>* shots;
 	sf::Sprite sprite;
 	sf::Vector2u size;
+	sf::Texture texture;
 public:
 	virtual int getMaxReload();
 	Gun(sf::Vector2f pos, sf::Vector2u size);

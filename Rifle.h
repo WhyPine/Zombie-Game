@@ -1,11 +1,10 @@
 #pragma once
 #include "Gun.h"
-
-class Shotgun :
+class Rifle :
     public Gun
 {
 public:
-    Shotgun(sf::Vector2f pos, sf::Vector2u size);
+    Rifle(sf::Vector2f pos, sf::Vector2u size);
     void fire(sf::Vector2f go);
     int getReload();
     int getMaxReload();

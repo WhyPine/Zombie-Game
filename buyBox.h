@@ -9,13 +9,19 @@ public:
     buyBox(float x, float y, int newPrice, int newType) : wall(x, y, 64, 32) {
 
         this->type = newType;
-        if (this->type == 1) {
+        if (this->type == 0) {
+            this->name = "Pistol";
+            if (!boxTexture.loadFromFile("pistolbox.png")) {
+                std::cout << "Pistol Box texture failed to load" << std::endl;
+            }
+        }
+        else if (this->type == 1) {
             this->name = "Rifle";
             if (!boxTexture.loadFromFile("riflebox.png")) {
                 std::cout << "Rifle Box texture failed to load" << std::endl;
             }
         }
-        if (this->type == 2) {
+        else if (this->type == 2) {
             this->name = "Shotgun";
             if (!boxTexture.loadFromFile("shotgunbox.png")) {
                 std::cout << "Shotgun Box texture failed to load" << std::endl;

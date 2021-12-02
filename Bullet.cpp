@@ -2,8 +2,8 @@
 #include <iostream>
 #include <math.h>
 
-Bullet::Bullet(sf::Vector2f start, sf::Vector2f go, sf::Vector2u size) {
-    this->damage = 5;
+Bullet::Bullet(sf::Vector2f start, sf::Vector2f go, sf::Vector2u size, int newDamage) {
+    this->damage = newDamage;
     this->projS = 10;
     this->health = 1;
     sf::Texture texture;

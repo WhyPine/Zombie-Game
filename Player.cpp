@@ -5,6 +5,7 @@
 
 
 Player::Player(int health, double speed, double damageP, sf::Vector2u newSize) {
+    this->semiAuto = true;
     this->size = newSize;
     this->health = health;
     this->maxHealth = health;
@@ -79,11 +80,18 @@ void Player::checkMove(sf::Vector2i gP) {
     this->gun->run(this->sprite.getPosition(), this->sprite.getRotation());
     if (this->gun->getReload() > 0 && canshoot) {
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-            //std::thread t2(&Gun::fire, this->gun, p);
-            //t2.detach();
-            this->gun->fire(p);
+            if (this->gun->getMaxReload() == 12) { //is pistol
+                if (semiAuto == true) {
+                    this->gun->fire(p);
+                    semiAuto = false;
+                }
+            }
+            else {
+                this->gun->fire(p);
+            }
         }
     }
+    if (!sf::Mouse::isButtonPressed(sf::Mouse::Left)) semiAuto = true;
     /*if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R)) {
         std::thread t1(this->gun->changeReload(30));
         this->gun->changeReload(30);

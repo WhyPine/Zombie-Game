@@ -127,10 +127,12 @@ void loadWalls() {
     //buy boxes
     // x coord, y coord, price, type
     //
-    // 1 = rifle   2 = shotgun   
+    // 0 = pistol   1 = rifle   2 = shotgun   
     //
+    buyBoxes.push_back(new buyBox(33 * 32, 21 * 32, 25, 0));
     buyBoxes.push_back(new buyBox(27 * 32, 0 * 32, 25, 1));
     buyBoxes.push_back(new buyBox(33 * 32, 0 * 32, 25, 2));
+    
     
 }
 
@@ -272,6 +274,7 @@ sf::Vector2f checkCollision(sf::FloatRect& thisWall, sf::Vector2f pos, int type,
     int thisSize = 40;
     if (type == 0)  int thisSize = 30; //zombie
     else if (type == 1) int thisSize = 40; //player
+    else if (type == 2) int thisSize = 5; //bullet
     sf::FloatRect entity;
     entity.top = pos.y - thisSize / 2;
     entity.left = pos.x - thisSize / 2;

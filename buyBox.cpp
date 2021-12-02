@@ -14,8 +14,14 @@ bool buyBox::canBuy(Player& p1) {
 void buyBox::buy(Player& p1) {
 
 	std::cout << clock() - lastBought << std::endl;
-	if (this->type == 1) {
+
+	if (this->type == 0) {
 		if (p1.setGun(new Gun(p1.getPosition(), p1.getSize()))) {
+			p1.setMoney(p1.getMoney() - this->boxPrice);
+		}
+	}
+	else if (this->type == 1) {
+		if (p1.setGun(new Rifle(p1.getPosition(), p1.getSize()))) {
 			p1.setMoney(p1.getMoney() - this->boxPrice);
 		}
 	}
