@@ -20,10 +20,6 @@ private:
 public:
 	int getMaxHealth();
 	bool canshoot;
-	bool up = true;
-	bool down = true;
-	bool left = true;
-	bool right = true;
 	Player(int health, double speed, double damageP, sf::Vector2u size);
 	void checkMove(sf::Vector2i gP);
 	sf::Sprite getSprite();
