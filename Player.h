@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "Gun.h"
 #include "Shotgun.h"
+#include "BurstRifle.h"
 #include <thread>
 
 class Player : public sf::CircleShape, sf::Sprite
@@ -13,7 +14,7 @@ private:
 	int regenTimer;
 	int regenDelay;
 	double speed;
-	double damageP;
+	double damageP; //modifier for bullet damage
 	int money;
 	sf::Sprite sprite; 
 	Gun* gun; 

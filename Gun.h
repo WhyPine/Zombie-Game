@@ -8,10 +8,10 @@ using std::vector;
 class Gun
 {
 protected:
-	int maxReload;
-	int reload;
-	int shottimer;
-	int power;
+	int maxReload; //max ammo capacity
+	int reload; //current ammo ammount
+	int shottimer; //frames between bullets
+	int power; //how much damage it does
 	int projS;
 	vector<Bullet*>* shots;
 	sf::Sprite sprite;
