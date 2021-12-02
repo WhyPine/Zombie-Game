@@ -4,7 +4,8 @@
 #include <Windows.h> 
 
 
-Player::Player(int health, double speed, double damageP, sf::Vector2u size) {
+Player::Player(int health, double speed, double damageP, sf::Vector2u newSize) {
+    this->size = newSize;
     this->health = health;
     this->maxHealth = health;
 	this->speed = speed;
@@ -16,10 +17,10 @@ Player::Player(int health, double speed, double damageP, sf::Vector2u size) {
     this->sprite.setTextureRect(sf::IntRect(39, 39, 250, 200));
     this->sprite.setOrigin(this->sprite.getLocalBounds().width / 2, this->sprite.getLocalBounds().height / 2);
     this->sprite.setScale((float)size.x / 6400, (float)size.y / 3600);
-    this->gun = new Shotgun(this->sprite.getPosition(), size); 
+    this->gun = new Gun(this->sprite.getPosition(), size); 
     this->regenTimer = 0;
     this->regenDelay = 3;
-    this->money = 0;
+    this->money = 10000;
 }
 
 void Player::checkMove(sf::Vector2i gP) {
@@ -153,4 +154,18 @@ double Player::getSpeed() {
 }
 void Player::setSpeed(double newSpeed) {
     this->speed = newSpeed;
+}
+bool Player::setGun(Gun* newGun) {
+    bool result = false;
+    if (newGun->getMaxReload() != this->gun->getMaxReload()) {
+        Gun* temp = this->gun;
+        delete temp;
+        this->gun = newGun;
+        result = true;
+    }
+    return result;
+}
+
+sf::Vector2u Player::getSize() {
+    return this->size;
 }

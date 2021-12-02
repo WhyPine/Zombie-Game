@@ -10,6 +10,7 @@
 #include "wall.h"
 #include "Door.h"
 #include <mutex>
+#include "buyBox.h"
 
 using std::vector;
 using std::string;
@@ -24,3 +25,4 @@ using std::string;
 	void dropMoney(Player* p1);
 	void loadWalls();
 	void bullets(Player* p1);
+	sf::Vector2f checkCollision(sf::FloatRect thisWall, sf::Vector2f pos, int type, bool& collided); // 0 = zombie 1 = player

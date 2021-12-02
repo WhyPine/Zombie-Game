@@ -26,8 +26,3 @@ void Door::drawDoor(sf::RenderWindow& window) {
 int Door::getCost() {
 	return this->doorPrice;
 }
-
-sf::FloatRect Door::getWall()
-{
-	return *(this->walls);
-}

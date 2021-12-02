@@ -31,7 +31,6 @@ public:
     void drawDoor(sf::RenderWindow& window);
     bool isClosed();
     int getCost();
-    sf::FloatRect getWall();
 private:
     int doorPrice;
     sf::Texture doorTexture;

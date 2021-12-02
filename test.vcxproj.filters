@@ -45,6 +45,9 @@
     <ClCompile Include="Door.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="buyBox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player.h">
@@ -72,6 +75,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Door.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="buyBox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -110,6 +116,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Door2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="riflebox.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

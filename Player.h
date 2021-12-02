@@ -7,6 +7,7 @@
 class Player : public sf::CircleShape, sf::Sprite
 {
 private:
+	sf::Vector2u size;
 	int health;
 	int maxHealth;
 	int regenTimer;
@@ -37,5 +38,7 @@ public:
 	double getSpeed();
 	void setSpeed(double newSpeed);
 	void setPosition(sf::Vector2f v);
+	bool setGun(Gun* newGun);
+	sf::Vector2u getSize();
 };
 
