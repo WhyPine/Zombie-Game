@@ -2,6 +2,8 @@
 #include <SFML/Graphics.hpp>
 #include "Gun.h"
 #include "Shotgun.h"
+#include "RPG.h"
+#include "BurstRifle.h"
 #include "Rifle.h"
 #include <thread>
 
@@ -15,7 +17,7 @@ private:
 	int regenTimer;
 	int regenDelay;
 	double speed;
-	double damageP;
+	double damageP; //modifier for bullet damage
 	int money;
 	sf::Sprite sprite; 
 	Gun* gun; 

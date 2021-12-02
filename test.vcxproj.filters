@@ -51,6 +51,12 @@
     <ClCompile Include="Rifle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="RPG.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BurstRifle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player.h">
@@ -84,6 +90,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Rifle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RPG.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BurstRifle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
