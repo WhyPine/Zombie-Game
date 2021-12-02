@@ -53,19 +53,29 @@ void Player::checkMove(sf::Vector2i gP) {
     }
 
     this->sprite.setRotation(result);
+    float moveX = 0;
+    float moveY = 0;
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
-        for (int i = 0; i < 3; i++) this->sprite.move(1.f, 0.f);
+        moveX += 1;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
-        for (int i = 0; i < 3; i++) this->sprite.move(-1.f, 0.f);
+        moveX -= 1;;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
-        for (int i = 0; i < 3; i++) this->sprite.move(0.f, 1.f);
+        moveY += 1;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
-        for (int i = 0; i < 3; i++) this->sprite.move(0.f, -1.f);
+        moveY -= 1;
     }
+    if (moveX != 0 || moveY != 0) {
+        if (moveX != 0 && moveY != 0) {
+            moveX *= 0.71;
+            moveY *= 0.71;
+        }
+        for (int i = 0; i < 3; i++) this->sprite.move(moveX, moveY);
+    }
+
     this->gun->run(this->sprite.getPosition(), this->sprite.getRotation());
     if (this->gun->getReload() > 0 && canshoot) {
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {

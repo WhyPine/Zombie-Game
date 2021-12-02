@@ -35,7 +35,7 @@ void loadWalls() {
     walls.push_back(new wall(1248.f, -32.f, 64.f, 288.f));
 
     //Cafe (bottom right)
-    walls.push_back(new wall(960.f, 416.f, 96.f, 32.f));
+    walls.push_back(new wall(992.f, 416.f, 64.f, 32.f));
     walls.push_back(new wall(960.f, 416.f, 32.f, 96.f));
     walls.push_back(new wall(960.f, 608.f, 32.f, 192.f));
     walls.push_back(new wall(960.f, 704.f, 352.f, 96.f));
@@ -428,7 +428,7 @@ void movement(sf::RenderWindow& window, Player* p1) {
             }
         }
     }
-    for (int x = 0; x < walls.size(); x++) {
+    for (int x = 0; x < walls.size(); x++) { //try unoverlapping corners and see what happens
         v = checkCollision(walls[x]->getWall(), p1->getPosition(), 1, collisionCheck);
         if (collisionCheck) p1->setPosition(v);
         for (int i = 0; i < zombies.size(); i++) {
