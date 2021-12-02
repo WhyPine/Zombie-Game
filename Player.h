@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "Gun.h"
 #include "Shotgun.h"
+#include "RPG.h"
 #include <thread>
 
 class Player : public sf::CircleShape, sf::Sprite

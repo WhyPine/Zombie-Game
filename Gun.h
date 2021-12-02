@@ -19,7 +19,7 @@ protected:
 public:
 	virtual int getMaxReload();
 	Gun(sf::Vector2f pos, sf::Vector2u size);
-	void run(sf::Vector2f pos, float rotation);
+	virtual void run(sf::Vector2f pos, float rotation);
 	virtual void fire(sf::Vector2f go);
 	sf::Sprite getSprite();
 	vector<Bullet*>* getShots();
