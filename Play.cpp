@@ -211,7 +211,7 @@ void spawnZombies(sf::Vector2u size, Player* p1) {
                 v.y = 9 * 32;
             }
         }
-        zombies.push_back(new RunnerZombie(20, 1, 1, size, v));/*
+        
         if (rounds <= 15) {
             zombies.push_back(new Zombie(20, 1, 1, size, v));
         }
@@ -223,7 +223,7 @@ void spawnZombies(sf::Vector2u size, Player* p1) {
             else {
                 zombies.push_back(new Zombie(20, 1, 1, size, v));
             }
-        }*/
+        }
         Sleep(500);
     }
 
