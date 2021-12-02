@@ -33,19 +33,26 @@ void RPG::run(sf::Vector2f pos, float rotation, bool hold) {
         }
     }
     if (!fired) boomSpot = pos;
-    if (fired && hold && this->shots->size() > 0 && hold) {
-        this->boomSpot = this->shots[0].at(0)->getSprite().getPosition();
+    if (fired && hold && this->shots->size() > 0) {
+        boomSpot = this->shotbull->getSprite().getPosition();
     }
 
     //find the shot
 
     if (this->fired) {
         if (hitSomething(this->shotbull) || this->explode) {
-            this->shotbull = nullptr;
             sf::Vector2f temp;
             sf::Vector2f go;
             temp.x = boomSpot.x;
             temp.y = boomSpot.y;
+            if (!hitSomething(this->shotbull)) {
+                for (int x = 0; x < this->shots->size(); x++) {
+                    if (this->shots->at(x) == this->shotbull) {
+                        delete this->shots->at(x);
+                        this->shots->erase(this->shots->begin() + x);
+                    }
+                }
+            }
             for (int x = 0; x < 18; x++) {
                 go.x = cos(20 * 3.141592653 / 180) * temp.x - sin(20 * 3.141592653 / 180) * temp.y;
                 go.y = sin(20 * 3.141592653 / 180) * temp.x + cos(20 * 3.141592653 / 180) * temp.y;
@@ -53,6 +60,7 @@ void RPG::run(sf::Vector2f pos, float rotation, bool hold) {
                 temp.x = go.x;
                 temp.y = go.y;
             }
+            this->shotbull = nullptr;
             this->fired = false;
         }        
     }

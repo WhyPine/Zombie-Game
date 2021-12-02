@@ -596,23 +596,22 @@ void bullets(Player* p1) {
         if (p1->getGun()->getShots()->at(j) != nullptr) {
             for (int i = 0; i < zombies.size(); i++) {
                 if (zombies[i] != nullptr) {
-                    if (j > 0) {
-                        if (p1->getGun()->getShots()->at(j)->getSprite().getGlobalBounds().intersects(zombies[i]->getSprite().getGlobalBounds())) {
-                            zombies[i]->setHealth(zombies[i]->getHealth() - p1->getGun()->getShots()->at(j)->getDamage());
-                            p1->getGun()->getShots()->at(j)->setHealth(-1);
-                            std::cout << zombies[i]->getHealth() << std::endl;
-                            if (zombies[i]->getHealth() <= 0) {
-                                zombies.erase(zombies.begin() + i);
-                                dropMoney(p1);
-                                i--;
-                            }
-                            if (p1->getGun()->getShots()->at(j)->getHealth() <= 0) {
-                                p1->getGun()->getShots()->erase(p1->getGun()->getShots()->begin() + j);
-                                j--;
-                            }
+                    if (p1->getGun()->getShots()->at(j)->getSprite().getGlobalBounds().intersects(zombies[i]->getSprite().getGlobalBounds())) {
+                        zombies[i]->setHealth(zombies[i]->getHealth() - p1->getGun()->getShots()->at(j)->getDamage());
+                        p1->getGun()->getShots()->at(j)->setHealth(-1);
+                        std::cout << zombies[i]->getHealth() << std::endl;
+                        if (zombies[i]->getHealth() <= 0) {
+                            zombies.erase(zombies.begin() + i);
+                            dropMoney(p1);
+                            i--;
                         }
+
                     }
                 }
+            }
+            if (p1->getGun()->getShots()->at(j)->getHealth() <= 0) {
+                delete p1->getGun()->getShots()->at(j);
+                p1->getGun()->getShots()->erase(p1->getGun()->getShots()->begin() + j);
             }
         }
     }
@@ -694,8 +693,9 @@ void run(sf::RenderWindow& window, sf::View& view){
             view.setCenter(640, 360);
         }
         
-        std::thread bull(bullets, p1);
-        bull.join();
+        //std::thread bull(bullets, p1);
+        //bull.join();
+        bullets(p1);
 
         //std::thread move(movement, std::ref(window), p1);
         //move.join();
