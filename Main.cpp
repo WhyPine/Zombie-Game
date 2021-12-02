@@ -5,6 +5,7 @@ int main()
 {
     srand(time(NULL));
     sf::RenderWindow Menu(sf::VideoMode(1280, 720), "Horde Shooter Main Menu");
+    Menu.setFramerateLimit(60);
     sf::Sprite background1;
     sf::Sprite background2;
     sf::Sprite background3;
@@ -36,9 +37,9 @@ int main()
     while (Menu.isOpen()) {
         sf::Event event;
         Menu.pollEvent(event);
-        background1.move(.003, 0.f);
-        background2.move(.003, 0.f);
-        background3.move(.003, 0.f);
+        background1.move(.8, 0.f);
+        background2.move(.8, 0.f);
+        background3.move(.8, 0.f);
         sf::Vector2i gP = sf::Mouse::getPosition(Menu);
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left) &&  (playbutton.getGlobalBounds().contains(gP.x, gP.y))) {
             sf::RenderWindow window(sf::VideoMode(1280, 720), "Horde Shooter");
