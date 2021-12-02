@@ -3,13 +3,12 @@
 #include <math.h>
 #include <Windows.h>
 
-Zombie::Zombie(int health, int speed, int damage, sf::Vector2u size, sf::Vector2f pos) {
+Zombie::Zombie(int health, float speed, int damage, sf::Vector2u size, sf::Vector2f pos) {
     this->health = health;
     this->speed = speed;
     this->damage = damage;
     this->reload = 0;
     random = rand() & 64;
-    //std::cout << random << std::endl;
     this->texture->loadFromFile("zombie0.png");
     this->sprite.setTexture(*(this->texture));
     this->sprite.setTextureRect(sf::IntRect(10, 80, 240, 270));
@@ -31,7 +30,7 @@ void Zombie::getMove(Player* p1, sf::Vector2f pos) {
     if (randomMovement % 2 == 0) randomMovement = -1 * randomMovement;
     for (int i = 0; i < 2; i++)
     {
-        this->sprite.move((1.f * ((go.x / z)) + (double)randomMovement / 200), (1.f * ((go.y / z)) + (double)randomMovement / 200));
+        this->sprite.move((1.f * ((go.x / z)) * this->speed + (double)randomMovement / 200), (1.f * ((go.y / z)) * this->speed + (double)randomMovement / 200));
     }
     this->setPosition(this->sprite.getPosition()); // making sure that the zombie cannot go out of bounds
 

@@ -106,8 +106,23 @@ void loadWalls() {
     walls.push_back(new wall(1184.f, 736.f, 128.f, 320.f));
     walls.push_back(new wall(1248.f, 1184.f, 64.f, 128.f));
 
-    doors.push_back(new Door(19 * 32, 13 * 32, true, 69));
-    doors.push_back(new Door(39 * 32, 8 * 32, false, 43));
+    // DOORS 
+    // true means horizontal, false means vertical. doors are 32x128
+    // only give it the coords of the top right of the door - right number is the cost 
+    doors.push_back(new Door(19 * 32, 13 * 32, true, 100)); //city left 0
+    doors.push_back(new Door(39.5 * 32, 8 * 32, false, 100)); //city right 1
+    doors.push_back(new Door(26 * 32, 22 * 32, true, 100)); //city lower 2
+
+    doors.push_back(new Door(4 * 32, 35 * 32, false, 100)); //garden left 3
+    doors.push_back(new Door(39.5 * 32, 33 * 32, false, 100)); //garden right 4
+    doors.push_back(new Door(39.5 * 32, 41 * 32, false, 100)); //garden lower 5
+
+    doors.push_back(new Door(51*32, 34*32, false, 100)); //hospital left 6
+    doors.push_back(new Door(59*32, 30*32, true, 100)); //hospital right 7
+
+    doors.push_back(new Door(66 * 32, 1 * 32, false, 100)); //lab upper 8
+    doors.push_back(new Door(76 * 32, 22 * 32, true, 100)); //lab lower 9
+
 }
 
 void makeTrue(sf::Vector2i& gP, Player* p1) {
@@ -120,61 +135,95 @@ void makeTrue(sf::Vector2i& gP, Player* p1) {
 }
 
 void spawnZombies(sf::Vector2u size, Player* p1) {
+    sf::Vector2f v;
     for (int i = 0; i < 3 * rounds + 5; i++) {
 
-        sf::Vector2f v;
         int x = rand();
         if (p1->getPosition().x < 1280 && p1->getPosition().y > 720) { //bottom left
-            if (x % 2 == 0) {
-                v.x = 1 * 32;
-                v.y = 41 * 32;
-            }
-            else {
-                v.x = 33 * 32;
-                v.y = 41 * 32;
+            //doors 3 or 5 or 2
+            // if any of the doors are open, zombies can spawn in garden
+            //
+            // if the doors are closed, zombies continue to spawn at the last location while the player is on this screen
+            //
+            //
+            if (!doors[3]->isClosed() || !doors[5]->isClosed() || !doors[2]->isClosed()) {
+                if (x % 2 == 0) {
+                    v.x = 1 * 32;
+                    v.y = 41 * 32;
+                }
+                else {
+                    v.x = 33 * 32;
+                    v.y = 41 * 32;
+                }
             }
         }
         else if (p1->getPosition().x > 1280 && p1->getPosition().y < 720) { //top right
-            if (x % 2 == 0) {
+            //door 8 both
+            //door 1 first
+            //door 9 second
+            if (!doors[8]->isClosed()) {
+                if (x % 2 == 0) {
+                    v.x = 56 * 32;
+                    v.y = 2 * 32;
+                }
+
+                else {
+                    v.x = 77 * 32;
+                    v.y = 4 * 32;
+                }
+            }
+            else if (!doors[1]->isClosed()) {
                 v.x = 56 * 32;
                 v.y = 2 * 32;
             }
-            else {
+            else if (!doors[9]->isClosed()) {
                 v.x = 77 * 32;
                 v.y = 4 * 32;
             }
         }
         else if (p1->getPosition().x >= 1280 && p1->getPosition().y >= 720) { //bottom right
-            if (x % 2 == 0) {
+            //door 6 both
+            //door 4 first
+            if (!doors[6]->isClosed()) {
+                if (x % 2 == 0) {
+                    v.x = 43 * 32;
+                    v.y = 25 * 32;
+                }
+                else {
+                    v.x = 71 * 32;
+                    v.y = 36 * 32;
+                }
+            }
+            else if (!doors[4]->isClosed()) {
                 v.x = 43 * 32;
                 v.y = 25 * 32;
             }
-            else {
-                v.x = 71 * 32;
-                v.y = 36 * 32;
-            }
+
+            
         }
         else if (p1->getPosition().x <= 1280 && p1->getPosition().y <= 720) { //top left
             if (x % 2 == 0) {
-                v.x = 16 * 32;
+                v.x = 15 * 32;
                 v.y = 1 * 32;
             }
             else {
                 v.x = 1 * 32;
-                v.y = 10 * 32;
+                v.y = 9 * 32;
             }
         }
+        zombies.push_back(new RunnerZombie(20, 1, 1, size, v));/*
         if (rounds <= 15) {
             zombies.push_back(new Zombie(20, 1, 1, size, v));
         }
         else if (rounds > 15) {
             if (i % 3 == 2) {
                 zombies.push_back(new RunnerZombie(20, 1, 1, size, v));
+                std::cout << "New Runner" << std::endl;
             }
             else {
                 zombies.push_back(new Zombie(20, 1, 1, size, v));
             }
-        }
+        }*/
         Sleep(500);
     }
 
@@ -203,7 +252,7 @@ void movement(sf::RenderWindow& window, Player* p1) {
     p1->right = true;
     for (int x = 0; x < walls.size(); x++) {
         sf::FloatRect player = p1->getSprite().getGlobalBounds();
-        float playerSize = 50;
+        float playerSize = 40;
         player.top = p1->getPosition().y - playerSize/2;
         player.left = p1->getPosition().x - playerSize / 2;
         player.width = playerSize;
@@ -300,7 +349,7 @@ void movement(sf::RenderWindow& window, Player* p1) {
         for (int i = 0; i < zombies.size(); i++) {
             if (zombies[i] != nullptr) {
                 sf::FloatRect zbounds;
-                float zombieSize = 50;
+                float zombieSize = 30;
                 zbounds.top = zombies[i]->getSprite().getPosition().y - zombieSize/2;
                 zbounds.left = zombies[i]->getSprite().getPosition().x - zombieSize / 2;;
                 zbounds.width = zombieSize;
@@ -398,7 +447,7 @@ void movement(sf::RenderWindow& window, Player* p1) {
     }
     for (int x = 0; x < doors.size(); x++) {
         sf::FloatRect player = p1->getSprite().getGlobalBounds();
-        float playerSize = 50;
+        float playerSize = 40;
         player.top = p1->getPosition().y - playerSize / 2;
         player.left = p1->getPosition().x - playerSize / 2;
         player.width = playerSize;
@@ -494,7 +543,7 @@ void movement(sf::RenderWindow& window, Player* p1) {
         for (int i = 0; i < zombies.size(); i++) {
             if (zombies[i] != nullptr) {
                 sf::FloatRect zbounds;
-                float zombieSize = 50;
+                float zombieSize = 30;
                 zbounds.top = zombies[i]->getSprite().getPosition().y - zombieSize / 2;
                 zbounds.left = zombies[i]->getSprite().getPosition().x - zombieSize / 2;;
                 zbounds.width = zombieSize;
@@ -762,8 +811,8 @@ void run(sf::RenderWindow& window, sf::View& view){
     tex.loadFromFile("mapv2.png");
     backdrop.setTexture(tex);
     sf::Vector2f v;
-    v.x = 32*40.f;
-    v.y = 32*10.f;
+    v.x = 32*1.f;
+    v.y = 32*1.f;
     zombies.push_back(new Zombie(20, 1, 1, window.getSize(), v));
     Player* p1 = new Player(20, 1, 1, window.getSize());
     loadWalls();
