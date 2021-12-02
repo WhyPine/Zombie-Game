@@ -186,9 +186,14 @@
     <Image Include="Door2.png" />
     <Image Include="dragonFrames.png" />
     <Image Include="healthbtn.png" />
+    <Image Include="pistolshot.png" />
     <Image Include="play.png" />
     <Image Include="rifle.png" />
     <Image Include="riflebox.png" />
+    <Image Include="rifleshot.png" />
+    <Image Include="rpgmainshot.png" />
+    <Image Include="rpgshot.png" />
+    <Image Include="shotgunshot.png" />
     <Image Include="skeleton-attack_0.png" />
     <Image Include="speedbtn.png" />
     <Image Include="strengthbutton.png" />

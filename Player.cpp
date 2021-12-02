@@ -76,8 +76,12 @@ void Player::checkMove(sf::Vector2i gP) {
         }
         for (int i = 0; i < 3; i++) this->sprite.move(moveX, moveY);
     }
-
-    this->gun->run(this->sprite.getPosition(), this->sprite.getRotation());
+    if (this->gun->getMaxReload() == 3) {
+        this->gun->run(this->sprite.getPosition(), this->sprite.getRotation(), sf::Mouse::isButtonPressed(sf::Mouse::Left));
+    }
+    else {
+        this->gun->run(this->sprite.getPosition(), this->sprite.getRotation());
+    }
     if (this->gun->getReload() > 0 && canshoot) {
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
             if (this->gun->getMaxReload() == 12) { //is pistol

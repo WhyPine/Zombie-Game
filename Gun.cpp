@@ -7,14 +7,13 @@ Gun::Gun(sf::Vector2f pos, sf::Vector2u size) {
     this->reload = 12;
     this->maxReload = 12;
     
-    //texture.loadFromFile("rifle.png");
-    /*
-    if (!texture.loadFromFile("rifle.png"))
+    
+    if (!this->bulletTexture.loadFromFile("pistolshot.png"))
     {
-        std::cout << "Error occured" << std::endl;
+        std::cout << "Failed to load pistol shot" << std::endl;
     }
-    this->sprite.setTexture(texture);
-    this->sprite.setTextureRect(sf::IntRect(0, 0, 256, 32));*/
+    //this->sprite.setTexture(texture);
+    //this->sprite.setTextureRect(sf::IntRect(0, 0, 256, 32));
     this->sprite.setScale((float)size.x / 4800, (float)size.y / 4800);
     //this->sprite.setColor(sf::Color(138, 86, 3));
     this->sprite.setPosition(pos);
@@ -42,7 +41,7 @@ void Gun::run(sf::Vector2f pos, float rotation) {
 void Gun::fire(sf::Vector2f go) {
     if (this->shottimer > 10) {
         sf::Vector2f v = this->sprite.getPosition();
-        this->shots->push_back(new Bullet(v, go, this->size, this->power));
+        this->shots->push_back(new Bullet(v, go, this->size, this->power, this->bulletTexture));
         this->reload--;
         shottimer = 0;
     }

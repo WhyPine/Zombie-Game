@@ -4,7 +4,11 @@ Rifle::Rifle(sf::Vector2f pos, sf::Vector2u size) : Gun(pos, size) {
     this->power = 5;
     if (!this->texture.loadFromFile("rifle.png"))
     {
-        std::cout << "Error occured" << std::endl;
+        std::cout << "Failed to load rifle" << std::endl;
+    }
+    if (!this->bulletTexture.loadFromFile("rifleshot.png"))
+    {
+        std::cout << "Failed to load rifleshot" << std::endl;
     }
     this->sprite.setTexture(this->texture);
     this->sprite.setTextureRect(sf::IntRect(0, 0, 256, 32));
@@ -17,7 +21,7 @@ Rifle::Rifle(sf::Vector2f pos, sf::Vector2u size) : Gun(pos, size) {
 void Rifle::fire(sf::Vector2f go) {
     if (this->shottimer > 6) {
         sf::Vector2f v = this->sprite.getPosition();
-        this->shots->push_back(new Bullet(v, go, this->size, this->power));
+        this->shots->push_back(new Bullet(v, go, this->size, this->power, this->bulletTexture));
         this->reload--;
         shottimer = 0;
     }
