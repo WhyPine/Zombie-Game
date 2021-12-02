@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "Gun.h"
 #include "Shotgun.h"
+#include "RPG.h"
 #include "BurstRifle.h"
 #include <thread>
 

@@ -159,6 +159,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Play.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="RPG.cpp" />
     <ClCompile Include="RunnerZombie.cpp" />
     <ClCompile Include="Shotgun.cpp" />
     <ClCompile Include="wall.cpp" />
@@ -172,6 +173,7 @@
     <ClInclude Include="Gun.h" />
     <ClInclude Include="Play.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="RPG.h" />
     <ClInclude Include="RunnerZombie.h" />
     <ClInclude Include="wall.h" />
     <ClInclude Include="Shotgun.h" />
