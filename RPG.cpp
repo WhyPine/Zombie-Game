@@ -24,7 +24,7 @@ void RPG::run(sf::Vector2f pos, float rotation) {
         for (int x = 0; x < 18; x++) {
             go.x = cos(20 * 3.141592653 / 180) * temp.x - sin(20 * 3.141592653 / 180) * temp.y;
             go.y = sin(20 * 3.141592653 / 180) * temp.x + cos(20 * 3.141592653 / 180) * temp.y;
-            this->shots->push_back(new Bullet(v, go, this->size));
+            this->shots->push_back(new Bullet(v, go, this->size, this->power));
             temp.x = go.x;
             temp.y = go.y;
         }
@@ -35,7 +35,7 @@ void RPG::fire(sf::Vector2f go)
 {
     if (this->shottimer > 30 && this->shotbull == nullptr) {
         sf::Vector2f v = this->sprite.getPosition();
-        this->shotbull = new Bullet(v, go, this->size);
+        this->shotbull = new Bullet(v, go, this->size, this->power);
         this->shots->push_back(shotbull);
         this->reload--;
         shottimer = 0;

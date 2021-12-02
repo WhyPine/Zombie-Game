@@ -8,7 +8,7 @@ void BurstRifle::fire(sf::Vector2f go)
 		sf::Vector2f spacing(go.x * 24 / sqrtf(go.x * go.x + go.y * go.y), go.y * 24 / sqrtf(go.x * go.x + go.y * go.y));
 		for (int i = 0; i < 4; ++i)
 		{
-			this->shots->push_back(new Bullet(v, go, this->size));
+			this->shots->push_back(new Bullet(v, go, this->size, this->power));
 			this->reload--;
 			v -= spacing;
 		}
