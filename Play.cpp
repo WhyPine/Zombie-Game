@@ -238,7 +238,36 @@ void spawnZombies(sf::Vector2u size, Player* p1) {
 
 }
 
-sf::Vector2f checkCollision(sf::FloatRect thisWall, sf::Vector2f pos, int type, bool& collided) {
+sf::Vector2f doorCollision(Door& door, sf::Vector2f pos, int type, bool& collided) {
+    sf::Vector2f result = pos;
+    int thisSize = 40;
+    if (type == 0)  int thisSize = 30; //zombie
+    else if (type == 1) int thisSize = 40; //player
+    sf::FloatRect entity;
+    sf::FloatRect thisWall;
+    thisWall = door.getWall();
+    entity.top = pos.y - thisSize / 2;
+    entity.left = pos.x - thisSize / 2;
+    entity.width = thisSize;
+    entity.height = thisSize;
+    int x = thisWall.left + door.getWall().width / 2;
+    int y = thisWall.top + door.getWall().height/ 2;
+    if (thisWall.intersects(entity)) {
+        collided = true;
+        if (door.getType() && door.isClosed()) { //horizontal door
+            if (pos.y < y) result.y = thisWall.top - thisSize / 2;
+            else if (pos.y > y) result.y = thisWall.top + thisWall.height + thisSize / 2;
+        }
+        else if (!door.getType() && door.isClosed()) { //vertical door
+            if (pos.x < x) result.x = thisWall.left - thisSize / 2;
+            else if (pos.x > x) result.x = thisWall.left + thisWall.width + thisSize / 2;
+        }
+    }
+    else collided = false;
+    return result;
+}
+
+sf::Vector2f checkCollision(sf::FloatRect& thisWall, sf::Vector2f pos, int type, bool& collided) {
     sf::Vector2f result = pos;
     int thisSize = 40;
     if (type == 0)  int thisSize = 30; //zombie
@@ -384,6 +413,21 @@ void movement(sf::RenderWindow& window, Player* p1) {
     }
     sf::Vector2f v;
     bool collisionCheck;
+    for (int x = 0; x < doors.size(); x++) {
+        v = doorCollision(*doors[x], p1->getPosition(), 1, collisionCheck);
+        if (collisionCheck) p1->setPosition(v);
+        for (int i = 0; i < zombies.size(); i++) {
+            if (zombies[i] != nullptr) {
+                v = doorCollision(*doors[x], zombies[i]->getSprite().getPosition(), 0, collisionCheck);
+                if (collisionCheck) zombies[i]->setPosition(v);
+            }
+        }
+        for (int j = 0; j < p1->getGun()->getShots()->size(); j++) {
+            if (doors[x]->getWall().intersects(p1->getGun()->getShots()->at(j)->getSprite().getGlobalBounds())) {
+                p1->getGun()->getShots()->erase(p1->getGun()->getShots()->begin() + j);
+            }
+        }
+    }
     for (int x = 0; x < walls.size(); x++) {
         v = checkCollision(walls[x]->getWall(), p1->getPosition(), 1, collisionCheck);
         if (collisionCheck) p1->setPosition(v);
@@ -395,21 +439,6 @@ void movement(sf::RenderWindow& window, Player* p1) {
         }
         for (int j = 0; j < p1->getGun()->getShots()->size(); j++) {
             if (walls[x]->getWall().intersects(p1->getGun()->getShots()->at(j)->getSprite().getGlobalBounds())) {
-                p1->getGun()->getShots()->erase(p1->getGun()->getShots()->begin() + j);
-            }
-        }
-    }
-    for (int x = 0; x < doors.size(); x++) {
-        v = checkCollision(doors[x]->getWall(), p1->getPosition(), 1, collisionCheck);
-        if (collisionCheck) p1->setPosition(v);
-        for (int i = 0; i < zombies.size(); i++) {
-            if (zombies[i] != nullptr) {
-                v = checkCollision(doors[x]->getWall(), zombies[i]->getSprite().getPosition(), 0, collisionCheck);
-                if (collisionCheck) zombies[i]->setPosition(v);
-            }
-        }
-        for (int j = 0; j < p1->getGun()->getShots()->size(); j++) {
-            if (doors[x]->getWall().intersects(p1->getGun()->getShots()->at(j)->getSprite().getGlobalBounds())) {
                 p1->getGun()->getShots()->erase(p1->getGun()->getShots()->begin() + j);
             }
         }

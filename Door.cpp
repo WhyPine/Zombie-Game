@@ -26,3 +26,7 @@ void Door::drawDoor(sf::RenderWindow& window) {
 int Door::getCost() {
 	return this->doorPrice;
 }
+
+bool Door::getType() {
+	return this->orientation;
+}

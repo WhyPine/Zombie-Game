@@ -9,6 +9,6 @@ wall::~wall() {
 
 }
 
-sf::FloatRect wall::getWall() {
+sf::FloatRect& wall::getWall() {
 	return (*this->walls);
 }

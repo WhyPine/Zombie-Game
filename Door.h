@@ -25,13 +25,16 @@ public:
         this->doorPrice = newPrice;
         this->isOpen = false;
         this->door->setTexture(&doorTexture);
+        this->orientation = isFlat;
     }
     bool canOpen(Player& p1);
     void open();
     void drawDoor(sf::RenderWindow& window);
     bool isClosed();
     int getCost();
+    bool getType();
 private:
+    bool orientation;
     int doorPrice;
     sf::Texture doorTexture;
     sf::RectangleShape* door;
