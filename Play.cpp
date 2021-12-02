@@ -231,29 +231,36 @@ void spawnZombies(sf::Vector2u size, Player* p1) {
 
 void movement(sf::RenderWindow& window, Player* p1) {
     //Moves things around the window
-    int x = zombies.size() - 1;
-    for (int z = 0; z < x; z++) {
+    for (int z = 0; z < zombies.size(); z++) {
+        sf::FloatRect zbounds;
+        float zombieSize = 30;
+        zbounds.top = zombies[z]->getSprite().getPosition().y - zombieSize / 2;
+        zbounds.left = zombies[z]->getSprite().getPosition().x - zombieSize / 2;;
+        zbounds.width = zombieSize;
+        zbounds.height = zombieSize;
         if (zombies[z] != nullptr) {
-            if (zombies[z]->getSprite().getGlobalBounds().intersects(zombies[z + 1]->getSprite().getGlobalBounds()) != true) {
+            bool normal = true;
+            if (z + 1 < zombies.size()) {
+                sf::FloatRect z2bounds;
+                z2bounds.top = zombies[z + 1]->getSprite().getPosition().y - zombieSize / 2;
+                z2bounds.left = zombies[z + 1]->getSprite().getPosition().x - zombieSize / 2;
+                z2bounds.width = zombieSize;
+                z2bounds.height = zombieSize;
+                if (zbounds.intersects(z2bounds) == true) {
+                    zombies[z]->getOutDaWay(p1, zombies[z + 1]);
+                    normal = false;
+                }
+            }
+            if (normal) {
                 zombies[z]->getMove(p1, p1->getPosition());
             }
         }
     }
-    if (x > 0 && zombies[x] != nullptr) {
-        zombies[x]->getMove(p1, p1->getPosition());
-    }
-    else if (x == 0) {
-        zombies[0]->getMove(p1, p1->getPosition());
-    }
     sf::Vector2f v;
-    p1->up = true;
-    p1->down = true;
-    p1->left = true;
-    p1->right = true;
     for (int x = 0; x < walls.size(); x++) {
         sf::FloatRect player = p1->getSprite().getGlobalBounds();
         float playerSize = 40;
-        player.top = p1->getPosition().y - playerSize/2;
+        player.top = p1->getPosition().y - playerSize / 2;
         player.left = p1->getPosition().x - playerSize / 2;
         player.width = playerSize;
         player.height = playerSize;
@@ -262,7 +269,7 @@ void movement(sf::RenderWindow& window, Player* p1) {
         int x2 = wbounds.left + wbounds.width;
         int y1 = wbounds.top;
         int y2 = wbounds.top + wbounds.height;
-
+        v = p1->getPosition();
         if (wbounds.intersects(player)) {
             if (p1->getPosition().y < y1 && p1->getPosition().x < x1) {
                 //top left
@@ -272,10 +279,14 @@ void movement(sf::RenderWindow& window, Player* p1) {
                     v.x = wbounds.left - playerSize/2;
                     v.y = p1->getPosition().y;
                 }
-                else {
+                else if (y2 - p1->getPosition().y < x2 - p1->getPosition().x) {
                     //closer to y side
                     v.x = p1->getPosition().x;
                     v.y = wbounds.top - playerSize/2;
+                }
+                else {
+                    v.x = p1->getPosition().x;
+                    v.y = p1->getPosition().y;
                 }
             }
             else if (p1->getPosition().y < y1 && p1->getPosition().x >= x1 && p1->getPosition().x <= x2) {
@@ -292,10 +303,14 @@ void movement(sf::RenderWindow& window, Player* p1) {
                     v.x = wbounds.left + wbounds.width + playerSize/2;
                     v.y = p1->getPosition().y;
                 }
-                else {
+                else if (y2 - p1->getPosition().y < x2 - p1->getPosition().x) {
                     //closer to y side
                     v.x = p1->getPosition().x;
                     v.y = wbounds.top - playerSize/2;
+                }
+                else {
+                    v.x = p1->getPosition().x;
+                    v.y = p1->getPosition().y;
                 }
             }
             else if (p1->getPosition().y >= y1 && p1->getPosition().y <= y2 && p1->getPosition().x > x2) {
@@ -312,10 +327,14 @@ void movement(sf::RenderWindow& window, Player* p1) {
                     v.x = wbounds.left + wbounds.width + playerSize/2;
                     v.y = p1->getPosition().y;
                 }
-                else {
+                else if (y2 - p1->getPosition().y < x2 - p1->getPosition().x) {
                     //closer to y side
                     v.x = p1->getPosition().x;
                     v.y = wbounds.top + wbounds.height + playerSize/2;
+                }
+                else {
+                    v.x = p1->getPosition().x;
+                    v.y = p1->getPosition().y;
                 }
             }
             else if (p1->getPosition().y > y2 && p1->getPosition().x >= x1 && p1->getPosition().x <= x2) {
@@ -332,10 +351,14 @@ void movement(sf::RenderWindow& window, Player* p1) {
                     v.x = wbounds.left - playerSize/2;
                     v.y = p1->getPosition().y;
                 }
-                else {
+                else if (y2 - p1->getPosition().y < x2 - p1->getPosition().x) {
                     //closer to y side
                     v.x = p1->getPosition().x;
                     v.y = wbounds.top + wbounds.height + playerSize/2;
+                }
+                else {
+                    v.x = p1->getPosition().x;
+                    v.y = p1->getPosition().y;
                 }
             }
             else if (p1->getPosition().y >= y1 && p1->getPosition().y <= y2 && p1->getPosition().x < x1) {
@@ -363,10 +386,14 @@ void movement(sf::RenderWindow& window, Player* p1) {
                             v.x = wbounds.left - zombieSize / 2;
                             v.y = zombies[i]->getSprite().getPosition().y;
                         }
-                        else {
+                        else if (y2 - zombies[i]->getSprite().getPosition().y < x2 - zombies[i]->getSprite().getPosition().x) {
                             //closer to y side
                             v.x = zombies[i]->getSprite().getPosition().x;
                             v.y = wbounds.top - zombieSize / 2;
+                        }
+                        else {
+                            v.x = zombies[i]->getSprite().getPosition().x;
+                            v.y = zombies[i]->getSprite().getPosition().y;
                         }
                     }
                     else if (zombies[i]->getSprite().getPosition().y < y1 && zombies[i]->getSprite().getPosition().x >= x1 && zombies[i]->getSprite().getPosition().x <= x2) {
@@ -383,10 +410,14 @@ void movement(sf::RenderWindow& window, Player* p1) {
                             v.x = wbounds.left + wbounds.width + zombieSize / 2;
                             v.y = zombies[i]->getSprite().getPosition().y;
                         }
-                        else {
+                        else if (y2 - zombies[i]->getSprite().getPosition().y < x2 - zombies[i]->getSprite().getPosition().x) {
                             //closer to y side
                             v.x = zombies[i]->getSprite().getPosition().x;
                             v.y = wbounds.top - zombieSize / 2;
+                        }
+                        else {
+                            v.x = zombies[i]->getSprite().getPosition().x;
+                            v.y = zombies[i]->getSprite().getPosition().y;
                         }
                     }
                     else if (zombies[i]->getSprite().getPosition().y >= y1 && zombies[i]->getSprite().getPosition().y <= y2 && zombies[i]->getSprite().getPosition().x > x2) {
@@ -403,10 +434,14 @@ void movement(sf::RenderWindow& window, Player* p1) {
                             v.x = wbounds.left + wbounds.width + zombieSize / 2;
                             v.y = zombies[i]->getSprite().getPosition().y;
                         }
-                        else {
+                        else if (y2 - zombies[i]->getSprite().getPosition().y < x2 - zombies[i]->getSprite().getPosition().x) {
                             //closer to y side
                             v.x = zombies[i]->getSprite().getPosition().x;
                             v.y = wbounds.top + wbounds.height + zombieSize / 2;
+                        }
+                        else {
+                            v.x = zombies[i]->getSprite().getPosition().x;
+                            v.y = zombies[i]->getSprite().getPosition().y;
                         }
                     }
                     else if (zombies[i]->getSprite().getPosition().y > y2 && zombies[i]->getSprite().getPosition().x >= x1 && zombies[i]->getSprite().getPosition().x <= x2) {
@@ -423,10 +458,14 @@ void movement(sf::RenderWindow& window, Player* p1) {
                             v.x = wbounds.left - zombieSize / 2;
                             v.y = zombies[i]->getSprite().getPosition().y;
                         }
-                        else {
+                        else if (y2 - zombies[i]->getSprite().getPosition().y < x2 - zombies[i]->getSprite().getPosition().x) {
                             //closer to y side
                             v.x = zombies[i]->getSprite().getPosition().x;
                             v.y = wbounds.top + wbounds.height + zombieSize / 2;
+                        }
+                        else {
+                            v.x = zombies[i]->getSprite().getPosition().x;
+                            v.y = zombies[i]->getSprite().getPosition().y;
                         }
                     }
                     else if (zombies[i]->getSprite().getPosition().y >= y1 && zombies[i]->getSprite().getPosition().y <= y2 && zombies[i]->getSprite().getPosition().x < x1) {
@@ -466,10 +505,14 @@ void movement(sf::RenderWindow& window, Player* p1) {
                     v.x = wbounds.left - playerSize / 2;
                     v.y = p1->getPosition().y;
                 }
-                else {
+                else if (y2 - p1->getPosition().y < x2 - p1->getPosition().x) {
                     //closer to y side
                     v.x = p1->getPosition().x;
                     v.y = wbounds.top - playerSize / 2;
+                }
+                else {
+                    v.x = p1->getPosition().x;
+                    v.y = p1->getPosition().y;
                 }
             }
             else if (p1->getPosition().y < y1 && p1->getPosition().x >= x1 && p1->getPosition().x <= x2) {
@@ -486,10 +529,14 @@ void movement(sf::RenderWindow& window, Player* p1) {
                     v.x = wbounds.left + wbounds.width + playerSize / 2;
                     v.y = p1->getPosition().y;
                 }
-                else {
+                else if (y2 - p1->getPosition().y < x2 - p1->getPosition().x) {
                     //closer to y side
                     v.x = p1->getPosition().x;
                     v.y = wbounds.top - playerSize / 2;
+                }
+                else {
+                    v.x = p1->getPosition().x;
+                    v.y = p1->getPosition().y;
                 }
             }
             else if (p1->getPosition().y >= y1 && p1->getPosition().y <= y2 && p1->getPosition().x > x2) {
@@ -506,10 +553,14 @@ void movement(sf::RenderWindow& window, Player* p1) {
                     v.x = wbounds.left + wbounds.width + playerSize / 2;
                     v.y = p1->getPosition().y;
                 }
-                else {
+                else if (y2 - p1->getPosition().y < x2 - p1->getPosition().x) {
                     //closer to y side
                     v.x = p1->getPosition().x;
                     v.y = wbounds.top + wbounds.height + playerSize / 2;
+                }
+                else {
+                    v.x = p1->getPosition().x;
+                    v.y = p1->getPosition().y;
                 }
             }
             else if (p1->getPosition().y > y2 && p1->getPosition().x >= x1 && p1->getPosition().x <= x2) {
@@ -526,10 +577,14 @@ void movement(sf::RenderWindow& window, Player* p1) {
                     v.x = wbounds.left - playerSize / 2;
                     v.y = p1->getPosition().y;
                 }
-                else {
+                else if (y2 - p1->getPosition().y < x2 - p1->getPosition().x) {
                     //closer to y side
                     v.x = p1->getPosition().x;
                     v.y = wbounds.top + wbounds.height + playerSize / 2;
+                }
+                else {
+                    v.x = p1->getPosition().x;
+                    v.y = p1->getPosition().y;
                 }
             }
             else if (p1->getPosition().y >= y1 && p1->getPosition().y <= y2 && p1->getPosition().x < x1) {
@@ -557,10 +612,14 @@ void movement(sf::RenderWindow& window, Player* p1) {
                             v.x = wbounds.left - zombieSize / 2;
                             v.y = zombies[i]->getSprite().getPosition().y;
                         }
-                        else {
+                        else if (y2 - zombies[i]->getSprite().getPosition().y < x2 - zombies[i]->getSprite().getPosition().x) {
                             //closer to y side
                             v.x = zombies[i]->getSprite().getPosition().x;
                             v.y = wbounds.top - zombieSize / 2;
+                        }
+                        else {
+                            v.x = zombies[i]->getSprite().getPosition().x;
+                            v.y = zombies[i]->getSprite().getPosition().y;
                         }
                     }
                     else if (zombies[i]->getSprite().getPosition().y < y1 && zombies[i]->getSprite().getPosition().x >= x1 && zombies[i]->getSprite().getPosition().x <= x2) {
@@ -577,10 +636,14 @@ void movement(sf::RenderWindow& window, Player* p1) {
                             v.x = wbounds.left + wbounds.width + zombieSize / 2;
                             v.y = zombies[i]->getSprite().getPosition().y;
                         }
-                        else {
+                        else if (y2 - zombies[i]->getSprite().getPosition().y < x2 - zombies[i]->getSprite().getPosition().x) {
                             //closer to y side
                             v.x = zombies[i]->getSprite().getPosition().x;
                             v.y = wbounds.top - zombieSize / 2;
+                        }
+                        else {
+                            v.x = zombies[i]->getSprite().getPosition().x;
+                            v.y = zombies[i]->getSprite().getPosition().y;
                         }
                     }
                     else if (zombies[i]->getSprite().getPosition().y >= y1 && zombies[i]->getSprite().getPosition().y <= y2 && zombies[i]->getSprite().getPosition().x > x2) {
@@ -597,10 +660,14 @@ void movement(sf::RenderWindow& window, Player* p1) {
                             v.x = wbounds.left + wbounds.width + zombieSize / 2;
                             v.y = zombies[i]->getSprite().getPosition().y;
                         }
-                        else {
+                        else if (y2 - zombies[i]->getSprite().getPosition().y < x2 - zombies[i]->getSprite().getPosition().x) {
                             //closer to y side
                             v.x = zombies[i]->getSprite().getPosition().x;
                             v.y = wbounds.top + wbounds.height + zombieSize / 2;
+                        }
+                        else {
+                            v.x = zombies[i]->getSprite().getPosition().x;
+                            v.y = zombies[i]->getSprite().getPosition().y;
                         }
                     }
                     else if (zombies[i]->getSprite().getPosition().y > y2 && zombies[i]->getSprite().getPosition().x >= x1 && zombies[i]->getSprite().getPosition().x <= x2) {
@@ -617,10 +684,14 @@ void movement(sf::RenderWindow& window, Player* p1) {
                             v.x = wbounds.left - zombieSize / 2;
                             v.y = zombies[i]->getSprite().getPosition().y;
                         }
-                        else {
+                        else if (y2 - zombies[i]->getSprite().getPosition().y < x2 - zombies[i]->getSprite().getPosition().x) {
                             //closer to y side
                             v.x = zombies[i]->getSprite().getPosition().x;
                             v.y = wbounds.top + wbounds.height + zombieSize / 2;
+                        }
+                        else {
+                            v.x = zombies[i]->getSprite().getPosition().x;
+                            v.y = zombies[i]->getSprite().getPosition().y;
                         }
                     }
                     else if (zombies[i]->getSprite().getPosition().y >= y1 && zombies[i]->getSprite().getPosition().y <= y2 && zombies[i]->getSprite().getPosition().x < x1) {

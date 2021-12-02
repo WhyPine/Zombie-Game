@@ -30,23 +30,10 @@ void Zombie::getMove(Player* p1, sf::Vector2f pos) {
     if (randomMovement % 2 == 0) randomMovement = -1 * randomMovement;
     for (int i = 0; i < 2; i++)
     {
-        this->sprite.move((1.f * ((go.x / z)) * this->speed + (double)randomMovement / 200), (1.f * ((go.y / z)) * this->speed + (double)randomMovement / 200));
+        this->sprite.move((1 * ((go.x / z)) * this->speed + (double)randomMovement / 200), (1 * ((go.y / z)) * this->speed + (double)randomMovement / 200));
     }
     this->setPosition(this->sprite.getPosition()); // making sure that the zombie cannot go out of bounds
 
-   /* this->sprite.move()
-    if (v2.x < v1.x) {
-        this->sprite.move(1.f, 0.f);
-    }
-    if (v2.x > v1.x) {
-        this->sprite.move(-1.f, 0.f); 
-    }
-    if (v2.y < v1.y) {
-        this->sprite.move(0.f, 1.f);
-    }
-    if (v2.y > v1.y) {
-        this->sprite.move(0.f, -1.f);
-    }*/
     sf::Vector2f v = this->sprite.getPosition();
     sf::Vector2f p;
 
@@ -119,4 +106,60 @@ void Zombie::setPosition(sf::Vector2f v) {
     if (v.y > 1420) v.y = 1420;
     else if (v.y < 20) v.y = 20;
     this->sprite.setPosition(v);
+}
+
+void Zombie::getOutDaWay(Player* p1, Zombie* z2) //this zombie is moving away from z2 is the one not moving
+{
+    int randomMovement = (rand() % 100) + 1;
+
+    //getting distance to player and zombie
+    float pxUnit = this->getSprite().getPosition().x - p1->getPosition().x;
+    float pyUnit = this->getSprite().getPosition().y - p1->getPosition().y;
+    float zxUnit = this->getSprite().getPosition().x - z2->getSprite().getPosition().x;
+    float zyUnit = this->getSprite().getPosition().y - z2->getSprite().getPosition().y;
+
+    //changing the coords to a unit vector
+    pxUnit = pxUnit / sqrt(pxUnit * pxUnit + pyUnit * pyUnit);
+    pyUnit = pyUnit / sqrt(pxUnit * pxUnit + pyUnit * pyUnit);
+    zxUnit = zxUnit / sqrt(zxUnit * zxUnit + zyUnit * zyUnit);
+    zyUnit = zyUnit / sqrt(zxUnit * zxUnit + zyUnit * zyUnit);
+
+    //adding them together - player is weighted 1/3, other zombie is weighted 2/3
+    //zxUnit = (1 / 3) * pxUnit + (2) * zxUnit;
+    //zyUnit = (1 / 3) * pyUnit + (2) * zyUnit;
+
+    //adding random movement
+    
+    if (randomMovement % 2 == 0) randomMovement = -1 * randomMovement;
+    for (int i = 0; i < 2; i++)
+    {
+        this->sprite.move((zxUnit * this->speed + (double)randomMovement / 200), (zyUnit * this->speed + (double)randomMovement / 200));
+    }
+    this->setPosition(this->sprite.getPosition());
+
+
+    sf::Vector2f v = this->sprite.getPosition();
+    sf::Vector2f p;
+
+    p.x = p1->getPosition().x - v.x;
+    p.y = p1->getPosition().y - v.y;
+    //std::cout << p.x << ": " << p.y << std::endl;
+    long float result;
+    long float param;
+    if (p.x > 0) {
+        param = p.y / p.x;
+        result = atanf(param) * 180 / (3.141592653589793);
+        //std::cout << result << std::endl;
+        result -= 360;
+    }
+    else if (p.x < 0) {
+        param = p.y / p.x;
+        result = atanf(param) * 180 / (3.141592653589793);
+        //std::cout << result << std::endl;
+        result += 180;
+    }
+    else {
+        result = this->sprite.getRotation();
+    }
+    this->sprite.setRotation(result);
 }

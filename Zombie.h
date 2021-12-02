@@ -23,5 +23,6 @@ public:
 	void setHealth(int health);
 	void attack(Player* p1);
 	void setPosition(sf::Vector2f v);
+	void getOutDaWay(Player* p1, Zombie* z2);
 };
 
