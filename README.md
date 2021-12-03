@@ -35,3 +35,15 @@ The player begins the game in the city, and as gameplay progresses, the player w
 2. Printing the health of the zombie to the console to verify that it takes damage
 3. Printing the direction vector of a bullet when it was fired from the gun
 4. Testing collisions by printing what side of a wall the player was touching
+
+## Remaining Tasks
+- [ ] Developing more zombie types (runners, bigbois, etc.)
+- [ ] Move buy boxes around
+- [ ] Tweak main menu
+- [ ] Dying
+- [ ] Skill updating
+- [ ] Video demo for turn in (This is the most important out of all of these)
+- [ ] Actual test cases and not just printing stuff to the console
+- [ ] Save system
+- [ ] Skill system
+- [ ] Add description of player controls to the menu

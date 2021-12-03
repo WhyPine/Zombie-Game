@@ -10,8 +10,11 @@ public:
     void fire(sf::Vector2f go);
     int getReload();
     int getMaxReload();
+    void mainHit(int zombieId);
     
 protected:
+    int zombieXploded;
+    sf::Vector2f thisGo;
     bool hitSomething(Bullet* bullet);
     Bullet* shotbull;
     bool fired;

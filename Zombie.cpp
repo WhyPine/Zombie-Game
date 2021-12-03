@@ -15,6 +15,7 @@ Zombie::Zombie(int health, float speed, int damage, sf::Vector2u size, sf::Vecto
     this->sprite.setScale((float)size.x / 7200, (float)size.y / 4400);
     this->sprite.setOrigin(this->sprite.getLocalBounds().width / 2, this->sprite.getLocalBounds().height / 2);
     this->sprite.setPosition(pos.x + random, pos.y + random);
+    this->id = clock();
 }
 
 Zombie::~Zombie() {
@@ -166,4 +167,8 @@ void Zombie::getOutDaWay(Player* p1, Zombie* z2) //this zombie is moving away fr
         result = this->sprite.getRotation();
     }
     this->sprite.setRotation(result);
+}
+
+int Zombie::getId() {
+    return this->id;
 }

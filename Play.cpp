@@ -5,7 +5,7 @@ clock_t start = 0;
 int roundCountTimer = 0;
 int reloadDelayTimer = 0;
 time_t end = 0;
-int rounds = 45;
+int rounds = 0;
 vector<Zombie*> zombies;
 sf::Vector2f pasPos;
 sf::Sprite backdrop;
@@ -654,7 +654,9 @@ void bullets(Player* p1) {
             zombieBox.left = zombies[z]->getSprite().getPosition().x - 30 / 2;
             zombieBox.width = 30;
             zombieBox.height = 30;
-            if (z < zombies.size() && b < p1->getGun()->getShots()->size() && p1->getGun()->getShots()->at(b)->getSprite().getGlobalBounds().intersects(zombieBox)) { //if bullet is touching zombie
+            if (z < zombies.size() && b < p1->getGun()->getShots()->size() && p1->getGun()->getShots()->at(b)->getSprite().getGlobalBounds().intersects(zombieBox) && !p1->getGun()->getShots()->at(b)->hasHit(zombies[z]->getId())) { //if bullet is touching zombie
+                p1->getGun()->getShots()->at(b)->hit(zombies[z]->getId());
+                if (p1->getGun()->getMaxReload() == 3 && p1->getGun()->getShots()->at(b)->getDamage() == 20) p1->getGun()->mainHit(zombies[z]->getId()); //if rpg rocket, make explosion not hit the zombie
                 zombies[z]->setHealth(zombies[z]->getHealth() - p1->getGun()->getShots()->at(b)->getDamage()); //damage the zombie
                 p1->getGun()->getShots()->at(b)->setHealth(-1); //damage the bullet
                 if (zombies[z]->getHealth() < 1) { //if zombie has no more health
