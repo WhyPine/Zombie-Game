@@ -16,17 +16,22 @@ void buyBox::buy(Player& p1) {
 	std::cout << clock() - lastBought << std::endl;
 
 	if (this->type == 0) {
-		if (p1.setGun(new Gun(p1.getPosition(), p1.getSize()))) {
+		if (p1.setGun(new Gun(p1.getPosition(), p1.getSize(), p1.getBulletHealth()))) {
 			p1.setMoney(p1.getMoney() - this->boxPrice);
 		}
 	}
 	else if (this->type == 1) {
-		if (p1.setGun(new Rifle(p1.getPosition(), p1.getSize()))) {
+		if (p1.setGun(new Rifle(p1.getPosition(), p1.getSize(), p1.getBulletHealth()))) {
 			p1.setMoney(p1.getMoney() - this->boxPrice);
 		}
 	}
 	else if (this->type == 2) {
-		if (p1.setGun(new Shotgun(p1.getPosition(), p1.getSize()))) {
+		if (p1.setGun(new Shotgun(p1.getPosition(), p1.getSize(), p1.getBulletHealth()))) {
+			p1.setMoney(p1.getMoney() - this->boxPrice);
+		}
+	}
+	else if (this->type == 3) {
+		if (p1.setGun(new RPG(p1.getPosition(), p1.getSize(), p1.getBulletHealth()))) {
 			p1.setMoney(p1.getMoney() - this->boxPrice);
 		}
 	}

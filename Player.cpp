@@ -4,13 +4,15 @@
 #include <Windows.h> 
 
 
-Player::Player(int health, double speed, double damageP, sf::Vector2u newSize) {
+Player::Player(int newHealth, double newSpeedMultiplier, double newReloadMultiplier, sf::Vector2u newSize, int newBulletHealth, double newRegenMultiplier) {
+    this->regenTimer = 0;
+    this->bulletHealth = newBulletHealth;
     this->semiAuto = true;
     this->size = newSize;
-    this->health = health;
-    this->maxHealth = health;
-	this->speed = speed;
-	this->damageP = damageP;
+    this->health = newHealth;
+    this->maxHealth = newHealth;
+    this->speedMultiplier = newSpeedMultiplier;
+	this->reloadMultiplier = newReloadMultiplier;
     this->canshoot = true;
     this->sprite.setPosition(15*32.f, 9*32.f);
     this->texture->loadFromFile("survivor-move_handgun_0.png");
@@ -18,9 +20,8 @@ Player::Player(int health, double speed, double damageP, sf::Vector2u newSize) {
     this->sprite.setTextureRect(sf::IntRect(39, 39, 250, 200));
     this->sprite.setOrigin(this->sprite.getLocalBounds().width / 2, this->sprite.getLocalBounds().height / 2);
     this->sprite.setScale((float)size.x / 6400, (float)size.y / 3600);
-    this->gun = new RPG(this->sprite.getPosition(), size); 
-    this->regenTimer = 0;
-    this->regenDelay = 3;
+    this->gun = new Sniper(this->sprite.getPosition(), size, bulletHealth); 
+    this->regenMultiplier = newRegenMultiplier;
     this->money = 10000;
 }
 
@@ -58,21 +59,21 @@ void Player::checkMove(sf::Vector2i gP) {
     float moveY = 0;
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
-        moveX += 1;
+        moveX += 1 * this->speedMultiplier;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
-        moveX -= 1;;
+        moveX -= 1 * this->speedMultiplier;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
-        moveY += 1;
+        moveY += 1 * this->speedMultiplier;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
-        moveY -= 1;
+        moveY -= 1 * this->speedMultiplier;
     }
     if (moveX != 0 || moveY != 0) {
         if (moveX != 0 && moveY != 0) {
-            moveX *= 0.71;
-            moveY *= 0.71;
+            moveX *= 0.71 * this->speedMultiplier;
+            moveY *= 0.71 * this->speedMultiplier;
         }
         for (int i = 0; i < 3; i++) this->sprite.move(moveX, moveY);
     }
@@ -84,7 +85,7 @@ void Player::checkMove(sf::Vector2i gP) {
     }
     if (this->gun->getReload() > 0 && canshoot) {
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-            if (this->gun->getMaxReload() == 12) { //is pistol
+            if (this->gun->getMaxReload() == 12 || this->gun->getMaxReload() == 4) { //is pistol or sniper
                 if (semiAuto == true) {
                     this->gun->fire(p);
                     semiAuto = false;
@@ -103,7 +104,7 @@ void Player::checkMove(sf::Vector2i gP) {
 
     //regenerating health
     if (this->health < this->maxHealth) {
-        if (clock() - this->regenTimer > this->regenDelay * 1000) {
+        if (clock() - this->regenTimer > 3000 * this->regenMultiplier) {
             this->health+=2;
             this->regenTimer = clock();
         }
@@ -138,8 +139,8 @@ void Player::setHealth(int health) {
     this->regenTimer = clock();
 }
 
-void Player::reload(int value) {
-    Sleep(1500);
+void Player::reload(Gun* myGun) {
+    Sleep(myGun->getReloadTime());
     this->gun->changeReload(this->gun->getMaxReload());
     this->canshoot = true;
 }
@@ -165,18 +166,18 @@ void Player::setMaxHealth(int newMaxHealth) {
     this->maxHealth = newMaxHealth;
 }
 
-double Player::getStrength() {
-    return this->damageP;
-}
-void Player::setStrength(double newStrength) {
-    this->damageP = newStrength;
-}
-double Player::getSpeed() {
-    return this->speed;
-}
-void Player::setSpeed(double newSpeed) {
-    this->speed = newSpeed;
-}
+//double Player::getStrength() {
+//    return this->damageP;
+//}
+//void Player::setStrength(double newStrength) {
+//    this->damageP = newStrength;
+//}
+//double Player::getSpeed() {
+//    return this->speedMultiplier;
+//}
+//void Player::setSpeed(double newSpeed) {
+//    this->speed = newSpeed;
+//}
 bool Player::setGun(Gun* newGun) {
     bool result = false;
     if (newGun->getMaxReload() != this->gun->getMaxReload()) {
@@ -190,4 +191,8 @@ bool Player::setGun(Gun* newGun) {
 
 sf::Vector2u Player::getSize() {
     return this->size;
+}
+
+int Player::getBulletHealth() {
+    return this->bulletHealth;
 }
