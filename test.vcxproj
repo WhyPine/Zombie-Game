@@ -182,6 +182,7 @@
     <ClInclude Include="Zombie.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\..\..\..\WSU\Sophomore\Semester 1\CptS122\zombie2\rpgsprite.png" />
     <Image Include="Door.png" />
     <Image Include="Door2.png" />
     <Image Include="dragonFrames.png" />

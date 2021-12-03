@@ -132,6 +132,7 @@ void loadWalls() {
     buyBoxes.push_back(new buyBox(33 * 32, 21 * 32, 25, 0));
     buyBoxes.push_back(new buyBox(27 * 32, 0 * 32, 25, 1));
     buyBoxes.push_back(new buyBox(33 * 32, 0 * 32, 25, 2));
+    buyBoxes.push_back(new buyBox(61 * 32, 34 * 32, 50, 3));
     
     
 }

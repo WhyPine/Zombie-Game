@@ -27,6 +27,12 @@ public:
                 std::cout << "Shotgun Box texture failed to load" << std::endl;
             }
         }
+        else if (this->type == 3) {
+            this->name = "HellFire Launcher";
+            if (!boxTexture.loadFromFile("shotgunbox.png")) {
+                std::cout << "Hell Fire Launcher texture failed to load" << std::endl;
+            }
+        }
         
         this->box = new sf::RectangleShape(sf::Vector2f((float)this->walls->width / 4800, (float)this->walls->height / 4800));
         this->box->setPosition(x, y);

@@ -30,6 +30,11 @@ void buyBox::buy(Player& p1) {
 			p1.setMoney(p1.getMoney() - this->boxPrice);
 		}
 	}
+	else if (this->type == 3) {
+		if (p1.setGun(new RPG(p1.getPosition(), p1.getSize()))) {
+			p1.setMoney(p1.getMoney() - this->boxPrice);
+		}
+	}
 	lastBought = clock();
 
 }
