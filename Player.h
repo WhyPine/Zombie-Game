@@ -30,7 +30,7 @@ public:
 	sf::Sprite getSprite();
 	sf::Vector2f getPosition();
 	sf::Sprite getGunSprite();
-	Gun* getGun();
+	Gun*& getGun();
 	int getHealth();
 	void setHealth(int health);
 	void reload(int value);

@@ -45,18 +45,27 @@ void RPG::run(sf::Vector2f pos, float rotation, bool hold) {
             sf::Vector2f go;
             temp.x = boomSpot.x;
             temp.y = boomSpot.y;
+            sf::Vector2f backTrack;
+            if (go.x == 0 && go.y == 0) {
+                go.x = -1;
+                go.y = 0;
+            }
+            backTrack.x = -1 * go.x / sqrtf(go.x * go.x + go.y * go.y);
+            backTrack.y = -1 * go.y / sqrtf(go.x * go.x + go.y * go.y);
+
             if (!hitSomething(this->shotbull)) {
                 for (int x = 0; x < this->shots->size(); x++) {
                     if (this->shots->at(x) == this->shotbull) {
                         delete this->shots->at(x);
                         this->shots->erase(this->shots->begin() + x);
+                        x = this->shots->size();
                     }
                 }
             }
             for (int x = 0; x < 18; x++) {
                 go.x = cos(20 * 3.141592653 / 180) * temp.x - sin(20 * 3.141592653 / 180) * temp.y;
                 go.y = sin(20 * 3.141592653 / 180) * temp.x + cos(20 * 3.141592653 / 180) * temp.y;
-                this->shots->push_back(new Bullet(boomSpot, go, this->size, this->power, this->bulletTexture));
+                this->shots->push_back(new Bullet(boomSpot + backTrack, go, this->size, this->power, this->bulletTexture));
                 temp.x = go.x;
                 temp.y = go.y;
             }
@@ -68,11 +77,11 @@ void RPG::run(sf::Vector2f pos, float rotation, bool hold) {
 
 void RPG::fire(sf::Vector2f go)
 {
-    if (this->shottimer > 60 && this->shotbull == nullptr) { //if 45 frames since last shot and there isnt already been a shot
+    if (this->shottimer > 60 && this->shotbull == nullptr) { //if 60 frames since last shot and there isnt already been a shot
         this->fired = true;
         sf::Vector2f v = this->sprite.getPosition();
         this->shotbull = new Bullet(v, go, this->size, this->power, this->rocketTexture);
-        this->shots->push_back(shotbull);
+        this->shots->push_back(this->shotbull);
         this->reload--;
         shottimer = 0;
     }
@@ -92,6 +101,7 @@ bool RPG::hitSomething(Bullet* bullet)
 {
     bool result = true;
     for (int x = 0; x < this->shots->size(); x++) {
+        //std::cout << "Hit something" << std::endl;
         if (this->shots->at(x) != nullptr) {
             if (bullet == shots->at(x)) {
                 result = false;

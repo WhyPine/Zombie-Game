@@ -125,7 +125,7 @@ sf::Sprite Player::getGunSprite() {
     return this->gun->getSprite();
 }
 
-Gun* Player::getGun() {
+Gun*& Player::getGun() {
     return this->gun;
 }
 

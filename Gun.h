@@ -26,7 +26,7 @@ public:
 	Gun(sf::Vector2f pos, sf::Vector2u size);
 	virtual void run(sf::Vector2f pos, float rotation);
 	virtual void fire(sf::Vector2f go);
-	virtual sf::Sprite getSprite();
+	sf::Sprite getSprite();
 	vector<Bullet*>* getShots();
 	virtual int getReload();
 	void changeReload(int add);

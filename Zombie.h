@@ -16,7 +16,7 @@ public:
 	Zombie(int health, float speed, int damage, sf::Vector2u size, sf::Vector2f pos);
 	~Zombie();
 	void getMove(Player* p1, sf::Vector2f pos);
-	virtual sf::Sprite getSprite();
+	sf::Sprite getSprite();
 	int getDamage();
 	int getReload();
 	int getHealth();
