@@ -2,18 +2,22 @@
 #include <iostream>
 #include <math.h>
 
-Bullet::Bullet(sf::Vector2f start, sf::Vector2f go, sf::Vector2u size, int newDamage) {
+Bullet::Bullet(sf::Vector2f start, sf::Vector2f newGo, sf::Vector2u size, int newDamage, sf::Texture& newTexture) : texture(newTexture) {
     this->damage = newDamage;
     this->projS = 10;
     this->health = 1;
-    sf::Texture texture;
-    texture.loadFromFile("zombie0.png");
-    this->sprite.setTexture(texture);
-    this->sprite.setTextureRect(sf::IntRect(0, 0, 30, 30));
-    this->sprite.setScale((float)size.x / 16000, (float)size.y / 9000);
+    //this->texture = newTexture;
+    //sf::Texture texture;
+    //texture.loadFromFile("zombie0.png");  //load texture in gun and then pass it in by reference
+    this->sprite.setTexture(this->texture);
+    this->sprite.setTextureRect(sf::IntRect(0, 0, this->texture.getSize().x, this->texture.getSize().y));
+    this->sprite.setScale(1, 1);
     this->sprite.setColor(sf::Color(179, 170, 4));
+    this->sprite.setOrigin(this->sprite.getPosition().x / 2, this->sprite.getPosition().y / 2);
     this->sprite.setPosition(start);
-    this->go = go;
+    this->go = newGo;
+    float rotate = atan2(this->go.y / sqrtf(this->go.x * this->go.x + this->go.y * this->go.y), this->go.x / sqrtf(this->go.x * this->go.x + this->go.y * this->go.y));
+    this->sprite.setRotation(rotate * 180.0 / (float)3.141592653);
 }
 
 Bullet::~Bullet() {
@@ -29,9 +33,10 @@ void Bullet::updatePosition() {
     for (int i = 0; i < this->projS; i++) {
         this->sprite.move(0.f, 1.f * (go.y / z));
     }
+    //this->sprite.rotate(0.5);
 }
 
-sf::Sprite Bullet::getSprite() {
+sf::Sprite& Bullet::getSprite() {
     return this->sprite;
 }
 

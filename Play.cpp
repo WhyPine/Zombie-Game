@@ -5,7 +5,7 @@ clock_t start = 0;
 int roundCountTimer = 0;
 int reloadDelayTimer = 0;
 time_t end = 0;
-int rounds = 0;
+int rounds = 45;
 vector<Zombie*> zombies;
 sf::Vector2f pasPos;
 sf::Sprite backdrop;
@@ -235,9 +235,11 @@ void spawnZombies(sf::Vector2u size, Player* p1) {
                 zombies.push_back(new Zombie(20, 1, 1, size, v));
             }
         }
-        Sleep(500);
+        std::cout << (int)(zombies.size() / 15) + 1 << std::endl;
+        for (int i = 0; i < (int)(zombies.size() / 10) + 1; i++) {
+            Sleep(500);
+        }
     }
-
 }
 
 sf::Vector2f doorCollision(Door& door, sf::Vector2f pos, int type, bool& collided) {
@@ -382,6 +384,23 @@ sf::Vector2f checkCollision(sf::FloatRect& thisWall, sf::Vector2f pos, int type,
             result.x = thisWall.left - thisSize / 2;
             result.y = pos.y;
         }
+        else { //player/object is inside!
+            if (abs(pos.x - x1) <= abs(pos.x - x2) && abs(pos.x - x1) <= abs(pos.y - y1) && abs(pos.x - x1) <= abs(pos.y - y2)) { //if closer to the left side
+                result.x = pos.x - abs(pos.x - x1) - thisSize / 2; //go up
+                result.y = pos.y;
+            }
+            else if (abs(pos.x - x2) < abs(pos.y - y1) && abs(pos.x - x2) < abs(pos.y - y2)) { //if closer to the right side
+                result.x = pos.x + abs(pos.x - x2) + thisSize / 2; //go right
+            }
+            else if (abs(pos.y - y1) < abs(pos.y - y2)) { //if closer to the top
+                result.x = pos.x;
+                result.y = pos.y - abs(pos.y - y1) - thisSize / 2; //go up
+            }
+            else {
+                result.x = pos.x;
+                result.y = pos.y + abs(pos.y - y2) + thisSize / 2;
+            }
+        }
     }
     else collided = false;
     return result;
@@ -425,9 +444,12 @@ void movement(sf::RenderWindow& window, Player* p1) {
                 if (collisionCheck) zombies[i]->setPosition(v);
             }
         }
-        for (int j = 0; j < p1->getGun()->getShots()->size(); j++) {
-            if (doors[x]->getWall().intersects(p1->getGun()->getShots()->at(j)->getSprite().getGlobalBounds())) {
-                p1->getGun()->getShots()->erase(p1->getGun()->getShots()->begin() + j);
+        if (doors[x]->isClosed()) {
+            for (int j = 0; j < p1->getGun()->getShots()->size(); j++) {
+                if (doors[x]->getWall().intersects(p1->getGun()->getShots()->at(j)->getSprite().getGlobalBounds())) {
+                    delete p1->getGun()->getShots()->at(j);
+                    p1->getGun()->getShots()->erase(p1->getGun()->getShots()->begin() + j);
+                }
             }
         }
     }
@@ -442,6 +464,7 @@ void movement(sf::RenderWindow& window, Player* p1) {
         }
         for (int j = 0; j < p1->getGun()->getShots()->size(); j++) {
             if (walls[x]->getWall().intersects(p1->getGun()->getShots()->at(j)->getSprite().getGlobalBounds())) {
+                delete p1->getGun()->getShots()->at(j);
                 p1->getGun()->getShots()->erase(p1->getGun()->getShots()->begin() + j);
             }
         }
@@ -457,10 +480,22 @@ void movement(sf::RenderWindow& window, Player* p1) {
         }
         for (int j = 0; j < p1->getGun()->getShots()->size(); j++) {
             if (buyBoxes[x]->getWall().intersects(p1->getGun()->getShots()->at(j)->getSprite().getGlobalBounds())) {
+                delete p1->getGun()->getShots()->at(j);
                 p1->getGun()->getShots()->erase(p1->getGun()->getShots()->begin() + j);
             }
         }
     }
+    sf::FloatRect playerBox;
+    playerBox.top = p1->getPosition().y - 40 / 2;
+    playerBox.left = p1->getPosition().x - 40 / 2;
+    playerBox.width = 40;
+    playerBox.height = 40;
+    for (int x = 0; x < zombies.size(); x++) {
+        v = checkCollision(playerBox, zombies[x]->getSprite().getPosition(), 1, collisionCheck);
+        if (collisionCheck) zombies[x]->setPosition(v);
+    }
+
+
     sf::Vector2i gP = sf::Mouse::getPosition(window);
     makeTrue(gP, p1);
     p1->checkMove(gP);
@@ -483,8 +518,8 @@ void displayGUI(Player* p1, sf::RenderWindow& window, sf::Font& font, int zombie
         healthBack.setFillColor(sf::Color(50, 50, 50));
         sf::RectangleShape healthFront(sf::Vector2f(300 * p1->getHealth() / p1->getMaxHealth(), 30));
         healthFront.setFillColor(sf::Color(230, 45, 45));
-        int xPos = 0;
-        int yPos = 670;
+        float xPos = 0;
+        float yPos = 670;
         if (p1->getPosition().x >= 1280) xPos += 1280;
         if (p1->getPosition().y >= 720) yPos += 720;
         healthBack.setPosition(xPos, yPos);
@@ -519,6 +554,22 @@ void displayGUI(Player* p1, sf::RenderWindow& window, sf::Font& font, int zombie
         zombieCount.setPosition(xPos + 1180, yPos - 650);
         zombieCount.setOutlineColor(sf::Color::Black);
         zombieCount.setOutlineThickness(3);
+
+        sf::RectangleShape ammoBack(sf::Vector2f(15, -45));
+        sf::RectangleShape ammoFront(sf::Vector2f(15, -45* ((float)p1->getGun()->getReload()/ (float)p1->getGun()->getMaxReload())));
+        //ammoBack.setOrigin(ammoBack.getPosition().x, ammoBack.getPosition().y + 45);
+        //ammoFront.setOrigin(ammoFront.getPosition().x, ammoFront.getPosition().y + 45);
+        ammoBack.setFillColor(sf::Color(32, 32, 32, 125));
+        ammoBack.setOutlineColor(sf::Color(127, 127, 127, 100));
+        ammoBack.setOutlineThickness(1);
+        ammoFront.setFillColor(sf::Color(96, 96, 96, 175));
+        ammoFront.setOutlineColor(sf::Color(0, 0, 0, 100));
+        ammoFront.setOutlineThickness(1);
+        sf::Vector2i gP = sf::Mouse::getPosition(window);
+        makeTrue(gP, p1);
+        ammoBack.setPosition(gP.x - 25, gP.y + 45);
+        ammoFront.setPosition(gP.x - 25, gP.y + 45);
+
 
         
         for (int x = 0; x < doors.size(); x++) {
@@ -574,15 +625,17 @@ void displayGUI(Player* p1, sf::RenderWindow& window, sf::Font& font, int zombie
             ammoAlert.setCharacterSize(40);
             ammoAlert.setFillColor(sf::Color(94, 1, 6));
             ammoAlert.setPosition(xPos + 1010, yPos - 50);
-            ammoAlert.setOutlineColor(sf::Color::Black);
-            ammoAlert.setOutlineThickness(3);
+            ammoAlert.setOutlineColor(sf::Color::White);
+            ammoAlert.setOutlineThickness(2);
             window.draw(ammoAlert);
         }
         window.draw(zombieCount);
         window.draw(moneyCount);
         window.draw(ammoCount);
         window.draw(healthBack);
-        window.draw(healthFront);         
+        window.draw(healthFront); 
+        window.draw(ammoBack);
+        window.draw(ammoFront);
     }
 }
 
@@ -592,25 +645,27 @@ void dropMoney(Player* p1) {
 }
 
 void bullets(Player* p1) {
-    for (int j = 0; j < p1->getGun()->getShots()->size(); j++) {
-        if (p1->getGun()->getShots()->at(j) != nullptr) {
-            for (int i = 0; i < zombies.size(); i++) {
-                if (zombies[i] != nullptr) {
-                    if (j > 0) {
-                        if (p1->getGun()->getShots()->at(j)->getSprite().getGlobalBounds().intersects(zombies[i]->getSprite().getGlobalBounds())) {
-                            zombies[i]->setHealth(zombies[i]->getHealth() - p1->getGun()->getShots()->at(j)->getDamage());
-                            p1->getGun()->getShots()->at(j)->setHealth(-1);
-                            std::cout << zombies[i]->getHealth() << std::endl;
-                            if (zombies[i]->getHealth() <= 0) {
-                                zombies.erase(zombies.begin() + i);
-                                dropMoney(p1);
-                                i--;
-                            }
-                            if (p1->getGun()->getShots()->at(j)->getHealth() <= 0) {
-                                p1->getGun()->getShots()->erase(p1->getGun()->getShots()->begin() + j);
-                                j--;
-                            }
-                        }
+    for (int b = p1->getGun()->getShots()->size() - 1; b >= 0;  b--) { //iterates through the vector back to front
+        //bullets can't be nullptr - they always get deleted and erased right away
+        for (int z = zombies.size() - 1; z >= 0; z--) {
+            sf::FloatRect zombieBox;
+            zombieBox.top = zombies[z]->getSprite().getPosition().y - 30 / 2;
+            zombieBox.left = zombies[z]->getSprite().getPosition().x - 30 / 2;
+            zombieBox.width = 30;
+            zombieBox.height = 30;
+            if (z < zombies.size() && b < p1->getGun()->getShots()->size() && p1->getGun()->getShots()->at(b)->getSprite().getGlobalBounds().intersects(zombieBox)) { //if bullet is touching zombie
+                zombies[z]->setHealth(zombies[z]->getHealth() - p1->getGun()->getShots()->at(b)->getDamage()); //damage the zombie
+                p1->getGun()->getShots()->at(b)->setHealth(-1); //damage the bullet
+                if (zombies[z]->getHealth() < 1) { //if zombie has no more health
+                    zombies.erase(zombies.begin() + z); //remove from vector
+                    if (z > zombies.size()) z--; //making sure z stays in bounds
+                    dropMoney(p1);
+                }
+                if (p1->getGun()->getShots()->at(b)->getHealth() < 1) { //if bullet has no more health
+                    delete p1->getGun()->getShots()->at(b); //delete bullet
+                    p1->getGun()->getShots()->erase(p1->getGun()->getShots()->begin() + b); //remove from vector
+                    if (b >= p1->getGun()->getShots()->size()) {
+                        b = p1->getGun()->getShots()->size() - 1; //making sure b stays in bounds
                     }
                 }
             }
@@ -694,8 +749,9 @@ void run(sf::RenderWindow& window, sf::View& view){
             view.setCenter(640, 360);
         }
         
-        std::thread bull(bullets, p1);
-        bull.join();
+        //std::thread bull(bullets, p1);
+        //bull.join();
+        bullets(p1);
 
         //std::thread move(movement, std::ref(window), p1);
         //move.join();

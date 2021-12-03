@@ -5,7 +5,11 @@ Shotgun::Shotgun(sf::Vector2f pos, sf::Vector2u size) : Gun(pos, size) {
     this->power = 5;
     if (!texture.loadFromFile("rifle.png"))
     {
-        std::cout << "Error occured" << std::endl;
+        std::cout << "Failed to load shotgun" << std::endl;
+    }
+    if (!bulletTexture.loadFromFile("shotgunshot.png"))
+    {
+        std::cout << "Failed to load shotgunshot" << std::endl;
     }
     this->sprite.setTexture(texture);
     this->sprite.setTextureRect(sf::IntRect(0, 0, 256, 32));
@@ -29,7 +33,7 @@ void Shotgun::fire(sf::Vector2f go)
         for (int x = 0; x < 5; x++) {
             go.x = cos(5 * 3.141592653 / 180) * temp.x - sin(5 * 3.141592653 / 180) * temp.y;
             go.y = sin(5 * 3.141592653 / 180) * temp.x + cos(5 * 3.141592653 / 180) * temp.y;
-            this->shots->push_back(new Bullet(v, go, this->size, this->power));
+            this->shots->push_back(new Bullet(v, go, this->size, this->power, this->bulletTexture));
             temp.x = go.x;
             temp.y = go.y;
         }

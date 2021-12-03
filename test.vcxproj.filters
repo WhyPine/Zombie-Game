@@ -139,6 +139,21 @@
     <Image Include="riflebox.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="pistolshot.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="rifleshot.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="rpgmainshot.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="rpgshot.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="shotgunshot.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Font Include="shlop rg.ttf">

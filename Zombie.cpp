@@ -40,17 +40,17 @@ void Zombie::getMove(Player* p1, sf::Vector2f pos) {
     p.x = pos.x - v.x;
     p.y = pos.y - v.y;
     //std::cout << p.x << ": " << p.y << std::endl;
-    long float result;
-    long float param;
+    float result;
+    float param;
     if (p.x > 0) {
         param = p.y / p.x;
-        result = atanf(param) * 180 / (3.141592653589793);
+        result = atanf(param) * 180 / (float)(3.141592653589793);
         //std::cout << result << std::endl;
         result -= 360;
     }
     else if (p.x < 0) {
         param = p.y / p.x;
-        result = atanf(param) * 180 / (3.141592653589793);
+        result = atanf(param) * 180.0 / (float)(3.141592653589793);
         //std::cout << result << std::endl;
         result += 180;
     }
@@ -118,15 +118,19 @@ void Zombie::getOutDaWay(Player* p1, Zombie* z2) //this zombie is moving away fr
     float zxUnit = this->getSprite().getPosition().x - z2->getSprite().getPosition().x;
     float zyUnit = this->getSprite().getPosition().y - z2->getSprite().getPosition().y;
 
-    //changing the coords to a unit vector
-    pxUnit = pxUnit / sqrt(pxUnit * pxUnit + pyUnit * pyUnit);
-    pyUnit = pyUnit / sqrt(pxUnit * pxUnit + pyUnit * pyUnit);
-    zxUnit = zxUnit / sqrt(zxUnit * zxUnit + zyUnit * zyUnit);
-    zyUnit = zyUnit / sqrt(zxUnit * zxUnit + zyUnit * zyUnit);
+    float pDenom = sqrtf(pxUnit * pxUnit + pyUnit * pyUnit);
+    float zDenom = sqrtf(zxUnit * zxUnit + zyUnit * zyUnit);
+    if (zDenom == 0) zDenom = 1;
+    if (pDenom == 0) pDenom = 1;
 
+    //changing the coords to a unit vector
+    pxUnit = pxUnit / pDenom;
+    pyUnit = pyUnit / pDenom;
+    zxUnit = zxUnit / zDenom;
+    zyUnit = zyUnit / zDenom;
     //adding them together - player is weighted 1/3, other zombie is weighted 2/3
-    //zxUnit = (1 / 3) * pxUnit + (2) * zxUnit;
-    //zyUnit = (1 / 3) * pyUnit + (2) * zyUnit;
+    zxUnit = (1 / 3) * pxUnit + (2) * zxUnit;
+    zyUnit = (1 / 3) * pyUnit + (2) * zyUnit;
 
     //adding random movement
     
@@ -148,13 +152,13 @@ void Zombie::getOutDaWay(Player* p1, Zombie* z2) //this zombie is moving away fr
     long float param;
     if (p.x > 0) {
         param = p.y / p.x;
-        result = atanf(param) * 180 / (3.141592653589793);
+        result = atanf(param) * 180 / (float)(3.141592653589793);
         //std::cout << result << std::endl;
         result -= 360;
     }
     else if (p.x < 0) {
         param = p.y / p.x;
-        result = atanf(param) * 180 / (3.141592653589793);
+        result = atanf(param) * 180 / (float)(3.141592653589793);
         //std::cout << result << std::endl;
         result += 180;
     }
