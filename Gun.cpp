@@ -41,7 +41,7 @@ void Gun::run(sf::Vector2f pos, float rotation) {
 void Gun::fire(sf::Vector2f go) {
     if (this->shottimer > 10) {
         sf::Vector2f v = this->sprite.getPosition();
-        this->shots->push_back(new Bullet(v, go, this->size, this->power, this->bulletTexture));
+        this->shots->push_back(new Bullet(v, go, this->size, this->power, this->bulletTexture, 1));
         this->reload--;
         shottimer = 0;
     }

@@ -11,6 +11,7 @@ protected:
 	int damage;
 	sf::Sprite sprite;
 	sf::Texture* texture = new sf::Texture;
+	int id;
 public:
 	float random;
 	Zombie(int health, float speed, int damage, sf::Vector2u size, sf::Vector2f pos);
@@ -24,5 +25,6 @@ public:
 	void attack(Player* p1);
 	void setPosition(sf::Vector2f v);
 	void getOutDaWay(Player* p1, Zombie* z2);
+	int getId();
 };
 

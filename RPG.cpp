@@ -33,7 +33,7 @@ void RPG::run(sf::Vector2f pos, float rotation, bool hold) {
         }
     }
     if (!fired) this->boomSpot = pos; //updating explosion location to the last position of the character before it is fired -> incase you click fast it should explode on character
-    if (fired && hold && this->shots->size() > 0) { //if you shot, holding mouse, and there still is a bullet out there
+    if (fired && hold && this->shots->size() > 0 && !this->hitSomething(this->shotbull)) { //if you shot, holding mouse, and there still is a bullet out there
         this->boomSpot = this->shotbull->getSprite().getPosition(); //set explosion location to the location of the rocket
     }
 
@@ -42,16 +42,15 @@ void RPG::run(sf::Vector2f pos, float rotation, bool hold) {
     if (this->fired) { //if you have shot
         if (hitSomething(this->shotbull) || this->explode) { //if the rocket hits something or you let go of left mouse
             sf::Vector2f temp;
-            sf::Vector2f go;
             temp.x = this->boomSpot.x;
             temp.y = this->boomSpot.y;
             sf::Vector2f backTrack; //opposite direction of the rocket to prevent the explosion from happening inside walls
-            if (go.x == 0 && go.y == 0) { //making sure that the denominator of the below equation is not 0
-                go.x = -1;
-                go.y = 0;
+            if (this->thisGo.x == 0 && this->thisGo.y == 0) { //making sure that the denominator of the below equation is not 0
+                this->thisGo.x = -1;
+                this->thisGo.y = 0;
             }
-            backTrack.x = -2 * go.x / sqrtf(go.x * go.x + go.y * go.y); 
-            backTrack.y = -2 * go.y / sqrtf(go.x * go.x + go.y * go.y); 
+            backTrack.x = -3 * this->thisGo.x / sqrtf(this->thisGo.x * this->thisGo.x + this->thisGo.y * this->thisGo.y);
+            backTrack.y = -3 * this->thisGo.y / sqrtf(this->thisGo.x * this->thisGo.x + this->thisGo.y * this->thisGo.y);
 
             if (!hitSomething(this->shotbull)) { //if you triggered the explosion
                 for (int x = 0; x < this->shots->size(); x++) { //go through all bullets
@@ -63,12 +62,14 @@ void RPG::run(sf::Vector2f pos, float rotation, bool hold) {
                 }
             }
             for (int x = 0; x < 18; x++) { //18 shots * 20 degrees apart = 360 degrees
-                go.x = cos(20 * 3.141592653 / 180) * temp.x - sin(20 * 3.141592653 / 180) * temp.y;
-                go.y = sin(20 * 3.141592653 / 180) * temp.x + cos(20 * 3.141592653 / 180) * temp.y;
+                this->thisGo.x = cos(20 * 3.141592653 / 180) * temp.x - sin(20 * 3.141592653 / 180) * temp.y;
+                this->thisGo.y = sin(20 * 3.141592653 / 180) * temp.x + cos(20 * 3.141592653 / 180) * temp.y;
                 //adding the explosion bullets to the vector at boomspot + the opposite direction 
-                this->shots->push_back(new Bullet(this->boomSpot + backTrack, go, this->size, this->power, this->bulletTexture));
-                temp.x = go.x;
-                temp.y = go.y;
+                Bullet* explosion = new Bullet(this->boomSpot + backTrack, this->thisGo, this->size, this->power, this->bulletTexture, 2);
+                explosion->hit(this->zombieXploded);
+                this->shots->push_back(explosion);
+                temp.x = this->thisGo.x;
+                temp.y = this->thisGo.y;
             }
             this->shotbull = nullptr; //setting rocket pointer to nullpointer because the rocket is deleted
             this->fired = false; //no longer fired
@@ -78,10 +79,11 @@ void RPG::run(sf::Vector2f pos, float rotation, bool hold) {
 
 void RPG::fire(sf::Vector2f go)
 {
+    this->thisGo = go;
     if (this->shottimer > 60 && this->shotbull == nullptr) { //if 60 frames since last shot and there isnt already been a shot
         this->fired = true; //fired
         sf::Vector2f v = this->sprite.getPosition();
-        this->shotbull = new Bullet(v, go, this->size, this->power, this->rocketTexture); //setting shotbull pointer to the rocket
+        this->shotbull = new Bullet(v, thisGo, this->size, this->power*4, this->rocketTexture, 1); //setting shotbull pointer to the rocket
         this->shots->push_back(this->shotbull); //sending the rocket out
         this->reload--;
         shottimer = 0;
@@ -109,4 +111,8 @@ bool RPG::hitSomething(Bullet* bullet)
         }
     }
     return result;
+}
+
+void RPG::mainHit(int zombieId) {
+    this->zombieXploded = zombieId;
 }
