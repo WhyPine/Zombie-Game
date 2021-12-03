@@ -1,12 +1,15 @@
 #include "RPG.h"
 
 
-RPG::RPG(sf::Vector2f pos, sf::Vector2u size) : Gun(pos, size) {
+RPG::RPG(sf::Vector2f pos, sf::Vector2u size, int newBulletHealth) : Gun(pos, size, newBulletHealth) {
+    this->reloadDelay = 1750;
+    this->bulletHealth = newBulletHealth;
     this->reload = 3;
     this->maxReload = 3;
     this->shotbull = nullptr;
-    explode = false;
-    fired = false;
+    this->explode = false;
+    this->fired = false;
+    this->zombieXploded = 0;
     //if (!this->texture.loadFromFile("rpgsprite.png")) //explosion
     //{
     //    std::cout << "Failed to load rpgsprite" << std::endl;
@@ -73,7 +76,7 @@ void RPG::run(sf::Vector2f pos, float rotation, bool hold) {
                 this->thisGo.x = cos(20 * 3.141592653 / 180) * temp.x - sin(20 * 3.141592653 / 180) * temp.y;
                 this->thisGo.y = sin(20 * 3.141592653 / 180) * temp.x + cos(20 * 3.141592653 / 180) * temp.y;
                 //adding the explosion bullets to the vector at boomspot + the opposite direction 
-                Bullet* explosion = new Bullet(this->boomSpot + backTrack, this->thisGo, this->size, this->power, this->bulletTexture, 2);
+                Bullet* explosion = new Bullet(this->boomSpot + backTrack, this->thisGo, this->size, this->power, this->bulletTexture, 2 + this->bulletHealth);
                 explosion->hit(this->zombieXploded);
                 this->shots->push_back(explosion);
                 temp.x = this->thisGo.x;
@@ -123,4 +126,8 @@ bool RPG::hitSomething(Bullet* bullet)
 
 void RPG::mainHit(int zombieId) {
     this->zombieXploded = zombieId;
+}
+
+int RPG::getReloadTime() {
+    return this->reloadDelay;
 }

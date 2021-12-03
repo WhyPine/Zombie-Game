@@ -16,17 +16,19 @@ private:
 	int health;
 	int maxHealth;
 	int regenTimer;
-	int regenDelay;
-	double speed;
-	double damageP; //modifier for bullet damage
+	double regenMultiplier;
+	double speedMultiplier;
+	double reloadMultiplier; 
 	int money;
 	sf::Sprite sprite; 
 	Gun* gun; 
 	sf::Texture* texture = new sf::Texture;
+	int bulletHealth;
 public:
+	int getBulletHealth();
 	int getMaxHealth();
 	bool canshoot;
-	Player(int health, double speed, double damageP, sf::Vector2u size);
+	Player(int newHealth, double newSpeedMultiplier, double newReloadMultiplier, sf::Vector2u newSize, int newBulletHealth, double newRegenMultiplier);
 	void checkMove(sf::Vector2i gP);
 	sf::Sprite getSprite();
 	sf::Vector2f getPosition();
@@ -34,14 +36,14 @@ public:
 	Gun*& getGun();
 	int getHealth();
 	void setHealth(int health);
-	void reload(int value);
+	void reload(Gun* myGun);
 	int getMoney();
 	void setMoney(int newMoney);
 	void setMaxHealth(int newMaxHealth);
-	double getStrength();
-	void setStrength(double newStrength);
-	double getSpeed();
-	void setSpeed(double newSpeed);
+	//double getStrength();
+	//void setStrength(double newStrength);
+	//double getSpeed();
+	//void setSpeed(double newSpeed);
 	void setPosition(sf::Vector2f v);
 	bool setGun(Gun* newGun);
 	sf::Vector2u getSize();

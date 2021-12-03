@@ -1,6 +1,8 @@
 #include "Rifle.h"
 
-Rifle::Rifle(sf::Vector2f pos, sf::Vector2u size) : Gun(pos, size) {
+Rifle::Rifle(sf::Vector2f pos, sf::Vector2u size, int newBulletHealth) : Gun(pos, size, newBulletHealth) {
+    this->reloadDelay = 1250; //1.25 second reload for rifle
+    this->bulletHealth = newBulletHealth;
     this->power = 5;
     if (!this->texture.loadFromFile("rifle.png"))
     {
@@ -21,7 +23,7 @@ Rifle::Rifle(sf::Vector2f pos, sf::Vector2u size) : Gun(pos, size) {
 void Rifle::fire(sf::Vector2f go) {
     if (this->shottimer > 6) {
         sf::Vector2f v = this->sprite.getPosition();
-        this->shots->push_back(new Bullet(v, go, this->size, this->power, this->bulletTexture, 1));
+        this->shots->push_back(new Bullet(v, go, this->size, this->power, this->bulletTexture, 1 + this->bulletHealth));
         this->reload--;
         shottimer = 0;
     }
@@ -33,4 +35,8 @@ int Rifle::getReload() {
 
 int Rifle::getMaxReload() {
 	return 30;
+}
+
+int Rifle::getReloadTime() {
+    return this->reloadDelay;
 }

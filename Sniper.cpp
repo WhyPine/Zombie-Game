@@ -1,10 +1,12 @@
 #include "Sniper.h"
 
-Sniper::Sniper(sf::Vector2f pos, sf::Vector2u size) : Gun(pos, size) {
+Sniper::Sniper(sf::Vector2f pos, sf::Vector2u size, int newBulletHealth) : Gun(pos, size, newBulletHealth) {
+    this->reloadDelay = 1500;
+    this->bulletHealth = newBulletHealth;
 	this->reload = 4;
 	this->maxReload = 4;
 	this->shottimer = 0;
-	this->power = 30;
+	this->power = 30 + newBulletHealth;
     if (!this->bulletTexture.loadFromFile("rifleshot.png"))
     {
         std::cout << "Failed to load rifleshot" << std::endl;
@@ -18,7 +20,7 @@ Sniper::Sniper(sf::Vector2f pos, sf::Vector2u size) : Gun(pos, size) {
 void Sniper::fire(sf::Vector2f go) {
     if (this->shottimer > 75) {
         sf::Vector2f v = this->sprite.getPosition();
-        this->shots->push_back(new Bullet(v, go, this->size, this->power, this->bulletTexture, 4));
+        this->shots->push_back(new Bullet(v, go, this->size, this->power, this->bulletTexture, 4 + this->bulletHealth));
         this->reload--;
         shottimer = 0;
     }
@@ -30,4 +32,8 @@ int Sniper::getReload() {
 
 int Sniper::getMaxReload() {
 	return this->maxReload;
+}
+
+int Sniper::getReloadTime() {
+    return this->reloadDelay;
 }

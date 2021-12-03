@@ -500,13 +500,13 @@ void movement(sf::RenderWindow& window, Player* p1) {
     sf::Vector2i gP = sf::Mouse::getPosition(window);
     makeTrue(gP, p1);
     p1->checkMove(gP);
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R))
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R)) //add specific reload delays to guns. multiply time by reloadMultiplier to find how long reload should be
     {
         if (clock() - reloadDelayTimer > 2000 && p1->getGun()->getReload() < p1->getGun()->getMaxReload()) //fixed spam reload bug
         {
             reloadDelayTimer = clock();
             p1->canshoot = false;
-            std::thread t1(&Player::reload, p1, p1->getGun()->getMaxReload());
+            std::thread t1(&Player::reload, p1, p1->getGun());
             t1.detach();
         }
     }
@@ -721,7 +721,7 @@ void run(sf::RenderWindow& window, sf::View& view){
     v.x = 32*1.f;
     v.y = 32*1.f;
     zombies.push_back(new Zombie(20, 1, 1, window.getSize(), v));
-    Player* p1 = new Player(20, 1, 1, window.getSize());
+    Player* p1 = new Player(20, 2, 0.5, window.getSize(), 2, 0.5); 
     loadWalls();
     //Loading Font
     sf::Font font;
