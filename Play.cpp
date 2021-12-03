@@ -235,9 +235,11 @@ void spawnZombies(sf::Vector2u size, Player* p1) {
                 zombies.push_back(new Zombie(20, 1, 1, size, v));
             }
         }
-        Sleep(500);
+        std::cout << (int)(zombies.size() / 15) + 1 << std::endl;
+        for (int i = 0; i < (int)(zombies.size() / 10) + 1; i++) {
+            Sleep(500);
+        }
     }
-
 }
 
 sf::Vector2f doorCollision(Door& door, sf::Vector2f pos, int type, bool& collided) {
@@ -553,6 +555,22 @@ void displayGUI(Player* p1, sf::RenderWindow& window, sf::Font& font, int zombie
         zombieCount.setOutlineColor(sf::Color::Black);
         zombieCount.setOutlineThickness(3);
 
+        sf::RectangleShape ammoBack(sf::Vector2f(15, -45));
+        sf::RectangleShape ammoFront(sf::Vector2f(15, -45* ((float)p1->getGun()->getReload()/ (float)p1->getGun()->getMaxReload())));
+        //ammoBack.setOrigin(ammoBack.getPosition().x, ammoBack.getPosition().y + 45);
+        //ammoFront.setOrigin(ammoFront.getPosition().x, ammoFront.getPosition().y + 45);
+        ammoBack.setFillColor(sf::Color(32, 32, 32, 125));
+        ammoBack.setOutlineColor(sf::Color(127, 127, 127, 100));
+        ammoBack.setOutlineThickness(1);
+        ammoFront.setFillColor(sf::Color(96, 96, 96, 175));
+        ammoFront.setOutlineColor(sf::Color(0, 0, 0, 100));
+        ammoFront.setOutlineThickness(1);
+        sf::Vector2i gP = sf::Mouse::getPosition(window);
+        makeTrue(gP, p1);
+        ammoBack.setPosition(gP.x - 25, gP.y + 45);
+        ammoFront.setPosition(gP.x - 25, gP.y + 45);
+
+
         
         for (int x = 0; x < doors.size(); x++) {
             if (doors[x]->canOpen(*p1) && doors[x]->isClosed()) {
@@ -607,15 +625,17 @@ void displayGUI(Player* p1, sf::RenderWindow& window, sf::Font& font, int zombie
             ammoAlert.setCharacterSize(40);
             ammoAlert.setFillColor(sf::Color(94, 1, 6));
             ammoAlert.setPosition(xPos + 1010, yPos - 50);
-            ammoAlert.setOutlineColor(sf::Color::Black);
-            ammoAlert.setOutlineThickness(3);
+            ammoAlert.setOutlineColor(sf::Color::White);
+            ammoAlert.setOutlineThickness(2);
             window.draw(ammoAlert);
         }
         window.draw(zombieCount);
         window.draw(moneyCount);
         window.draw(ammoCount);
         window.draw(healthBack);
-        window.draw(healthFront);         
+        window.draw(healthFront); 
+        window.draw(ammoBack);
+        window.draw(ammoFront);
     }
 }
 
@@ -633,66 +653,24 @@ void bullets(Player* p1) {
             zombieBox.left = zombies[z]->getSprite().getPosition().x - 30 / 2;
             zombieBox.width = 30;
             zombieBox.height = 30;
-            //std::cout << "before collision check" << std::endl;
             if (z < zombies.size() && b < p1->getGun()->getShots()->size() && p1->getGun()->getShots()->at(b)->getSprite().getGlobalBounds().intersects(zombieBox)) { //if bullet is touching zombie
-                if (zombieBox.left != zombieBox.left) {
-                    std::cout << "Fuck" << std::endl;
-                }
-                std::cout << "Zombie: (" << zombieBox.left + zombieBox.width / 2 << ", " << zombieBox.top + zombieBox.height / 2 << ")  ";
-                std::cout << "Bullet: " << p1->getGun()->getShots()->at(b)->getSprite().getPosition().x << ", " << p1->getGun()->getShots()->at(b)->getSprite().getPosition().y << ")" << std::endl;
                 zombies[z]->setHealth(zombies[z]->getHealth() - p1->getGun()->getShots()->at(b)->getDamage()); //damage the zombie
                 p1->getGun()->getShots()->at(b)->setHealth(-1); //damage the bullet
                 if (zombies[z]->getHealth() < 1) { //if zombie has no more health
-                    //std::cout << "kill zombie" << std::endl;
-                    //delete zombies[z]; //delete the zombie
                     zombies.erase(zombies.begin() + z); //remove from vector
                     if (z > zombies.size()) z--; //making sure z stays in bounds
+                    dropMoney(p1);
                 }
                 if (p1->getGun()->getShots()->at(b)->getHealth() < 1) { //if bullet has no more health
-                    //std::cout << "kill bullet" << std::endl;
                     delete p1->getGun()->getShots()->at(b); //delete bullet
                     p1->getGun()->getShots()->erase(p1->getGun()->getShots()->begin() + b); //remove from vector
                     if (b >= p1->getGun()->getShots()->size()) {
                         b = p1->getGun()->getShots()->size() - 1; //making sure b stays in bounds
-                        //std::cout << b  << " >= " << p1->getGun()->getShots()->size() << std::endl;
                     }
                 }
             }
         }
     }
-
-    //for (int j = 0; j < p1->getGun()->getShots()->size(); j++) {
-    //    if (p1->getGun()->getShots()->at(j) != nullptr) {
-    //        for (int i = 0; i < zombies.size(); i++) {
-    //            if (zombies[i] != nullptr) {
-    //                std::cout << "before comparing gun" << std::endl;
-    //                if (p1->getGun()->getShots()->at(j)->getSprite().getGlobalBounds().intersects(zombies[i]->getSprite().getGlobalBounds())) {
-    //                    std::cout << "Right after comparing gun and zombie" << std::endl;
-    //                    zombies[i]->setHealth(zombies[i]->getHealth() - p1->getGun()->getShots()->at(j)->getDamage());
-    //                    p1->getGun()->getShots()->at(j)->setHealth(-1);
-    //                    std::cout << zombies[i]->getHealth() << std::endl;
-    //                    if (zombies[i]->getHealth() <= 0) {
-    //                        std::cout << "is it zombie?" << std::endl;
-    //                        delete zombies[i];
-    //                        zombies[i] = nullptr;
-    //                        //zombies.erase(zombies.begin() + i);
-    //                        dropMoney(p1);
-    //                        //if (i > 0 && i < zombies.size()) i--;
-    //                    }
-    //                    if (p1->getGun()->getShots()->at(j)->getHealth() <= 0) {
-    //                        std::cout << "is it gun?" << std::endl;
-    //                        delete p1->getGun()->getShots()->at(j);
-    //                        p1->getGun()->getShots()->erase(p1->getGun()->getShots()->begin() + j);
-    //                        if (j > 0 && j < p1->getGun()->getShots()->size()) j--;
-    //                    }
-    //                }
-    //            }
-    //        }
-    //    }
-    //}
-    //for (int x = zombies.size() - 1; x >= 0; x--) {
-    //    if (zombies[x] == nullptr) zombies.erase(zombies.begin() + x);
-    //}
 }
 
 
