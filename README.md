@@ -42,7 +42,7 @@ The player begins the game in the city, and as gameplay progresses, the player w
 - [ ] Tweak main menu
 - [ ] Dying
 - [ ] Skill updating
-- [ ] Video demo for turn in
+- [ ] Video demo for turn in (This is the most important out of all of these)
 - [ ] Actual test cases and not just printing stuff to the console
 - [ ] Save system
 - [ ] Skill system
