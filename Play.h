@@ -11,6 +11,7 @@
 #include "Door.h"
 #include <mutex>
 #include "buyBox.h"
+#include "Sniper.h"
 
 using std::vector;
 using std::string;

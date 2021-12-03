@@ -5,7 +5,7 @@ clock_t start = 0;
 int roundCountTimer = 0;
 int reloadDelayTimer = 0;
 time_t end = 0;
-int rounds = 45;
+int rounds = 0;
 vector<Zombie*> zombies;
 sf::Vector2f pasPos;
 sf::Sprite backdrop;
@@ -132,6 +132,7 @@ void loadWalls() {
     buyBoxes.push_back(new buyBox(33 * 32, 21 * 32, 25, 0));
     buyBoxes.push_back(new buyBox(27 * 32, 0 * 32, 25, 1));
     buyBoxes.push_back(new buyBox(33 * 32, 0 * 32, 25, 2));
+    buyBoxes.push_back(new buyBox(61 * 32, 34 * 32, 50, 3));
     
     
 }
@@ -499,13 +500,13 @@ void movement(sf::RenderWindow& window, Player* p1) {
     sf::Vector2i gP = sf::Mouse::getPosition(window);
     makeTrue(gP, p1);
     p1->checkMove(gP);
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R))
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R)) //add specific reload delays to guns. multiply time by reloadMultiplier to find how long reload should be
     {
         if (clock() - reloadDelayTimer > 2000 && p1->getGun()->getReload() < p1->getGun()->getMaxReload()) //fixed spam reload bug
         {
             reloadDelayTimer = clock();
             p1->canshoot = false;
-            std::thread t1(&Player::reload, p1, p1->getGun()->getMaxReload());
+            std::thread t1(&Player::reload, p1, p1->getGun());
             t1.detach();
         }
     }
@@ -653,7 +654,9 @@ void bullets(Player* p1) {
             zombieBox.left = zombies[z]->getSprite().getPosition().x - 30 / 2;
             zombieBox.width = 30;
             zombieBox.height = 30;
-            if (z < zombies.size() && b < p1->getGun()->getShots()->size() && p1->getGun()->getShots()->at(b)->getSprite().getGlobalBounds().intersects(zombieBox)) { //if bullet is touching zombie
+            if (z < zombies.size() && b < p1->getGun()->getShots()->size() && p1->getGun()->getShots()->at(b)->getSprite().getGlobalBounds().intersects(zombieBox) && !p1->getGun()->getShots()->at(b)->hasHit(zombies[z]->getId())) { //if bullet is touching zombie
+                p1->getGun()->getShots()->at(b)->hit(zombies[z]->getId());
+                if (p1->getGun()->getMaxReload() == 3 && p1->getGun()->getShots()->at(b)->getDamage() == 20) p1->getGun()->mainHit(zombies[z]->getId()); //if rpg rocket, make explosion not hit the zombie
                 zombies[z]->setHealth(zombies[z]->getHealth() - p1->getGun()->getShots()->at(b)->getDamage()); //damage the zombie
                 p1->getGun()->getShots()->at(b)->setHealth(-1); //damage the bullet
                 if (zombies[z]->getHealth() < 1) { //if zombie has no more health
@@ -718,7 +721,7 @@ void run(sf::RenderWindow& window, sf::View& view){
     v.x = 32*1.f;
     v.y = 32*1.f;
     zombies.push_back(new Zombie(20, 1, 1, window.getSize(), v));
-    Player* p1 = new Player(20, 1, 1, window.getSize());
+    Player* p1 = new Player(20, 2, 0.5, window.getSize(), 2, 0.5); 
     loadWalls();
     //Loading Font
     sf::Font font;
