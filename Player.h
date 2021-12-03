@@ -6,6 +6,7 @@
 #include "BurstRifle.h"
 #include "Rifle.h"
 #include <thread>
+#include "Sniper.h"
 
 class Player : public sf::CircleShape, sf::Sprite
 {
