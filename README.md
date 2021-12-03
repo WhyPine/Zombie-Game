@@ -46,3 +46,4 @@ The player begins the game in the city, and as gameplay progresses, the player w
 - [ ] Actual test cases and not just printing stuff to the console
 - [ ] Save system
 - [ ] Skill system
+- [ ] Add description of player controls to the menu
