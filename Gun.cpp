@@ -77,3 +77,7 @@ int Gun::getMaxReload()
 int Gun::getReloadTime() {
     return this->reloadDelay;
 }
+
+bool Gun::canShoot() {
+    return this->shottimer > 10;
+}

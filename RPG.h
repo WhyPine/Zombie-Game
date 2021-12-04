@@ -12,7 +12,7 @@ public:
     int getMaxReload();
     void mainHit(int zombieId);
     int getReloadTime();
-    
+    bool canShoot();
 protected:
     int zombieXploded;
     sf::Vector2f thisGo;

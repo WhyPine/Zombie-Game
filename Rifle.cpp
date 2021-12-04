@@ -40,3 +40,7 @@ int Rifle::getMaxReload() {
 int Rifle::getReloadTime() {
     return this->reloadDelay;
 }
+
+bool Rifle::canShoot() {
+    return this->shottimer > 6;
+}

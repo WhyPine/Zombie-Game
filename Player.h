@@ -25,6 +25,7 @@ private:
 	sf::Texture* texture = new sf::Texture;
 	int bulletHealth;
 	bool bottomlessClip;
+	bool duringReload;
 public:
 	int getBulletHealth();
 	int getMaxHealth();

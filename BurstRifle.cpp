@@ -40,3 +40,7 @@ int BurstRifle::getMaxReload()
 int BurstRifle::getReloadTime() {
 	return this->reloadDelay;
 }
+
+bool BurstRifle::canShoot() {
+	return this->shottimer > 10; //temp
+}

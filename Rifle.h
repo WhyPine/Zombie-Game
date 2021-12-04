@@ -9,5 +9,6 @@ public:
     int getReload();
     int getMaxReload();
     int getReloadTime();
+    bool canShoot();
 };
 

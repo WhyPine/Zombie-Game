@@ -37,3 +37,7 @@ int Sniper::getMaxReload() {
 int Sniper::getReloadTime() {
     return this->reloadDelay;
 }
+
+bool Sniper::canShoot() {
+    return this->shottimer > 75;
+}

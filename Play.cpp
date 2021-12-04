@@ -574,6 +574,7 @@ void displayGUI(Player* p1, sf::RenderWindow& window, sf::Font& font, int zombie
         ammoBack.setFillColor(sf::Color(32, 32, 32, 125));
         ammoBack.setOutlineColor(sf::Color(127, 127, 127, 100));
         ammoBack.setOutlineThickness(1);
+        if (!p1->canshoot) ammoBack.setFillColor(sf::Color(200, 0, 20, 125));
         ammoFront.setFillColor(sf::Color(96, 96, 96, 175));
         ammoFront.setOutlineColor(sf::Color(0, 0, 0, 100));
         ammoFront.setOutlineThickness(1);

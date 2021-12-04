@@ -131,3 +131,7 @@ void RPG::mainHit(int zombieId) {
 int RPG::getReloadTime() {
     return this->reloadDelay;
 }
+
+bool RPG::canShoot() {
+    return this->shottimer > 60;
+}

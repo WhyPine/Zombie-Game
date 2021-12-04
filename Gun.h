@@ -35,5 +35,6 @@ public:
 	void changeReload(int add);
 	void setReload(int value);
 	virtual int getReloadTime();
+	virtual bool canShoot(); //return false if shot delay
 };
 
