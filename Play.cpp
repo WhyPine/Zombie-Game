@@ -5,7 +5,7 @@ clock_t start = 0;
 int roundCountTimer = 0;
 int reloadDelayTimer = 0;
 time_t end = 0;
-int rounds = 4;
+int rounds = 0;
 vector<Zombie*> zombies;
 sf::Vector2f pasPos;
 sf::Sprite backdrop;
@@ -226,35 +226,39 @@ sf::Vector2f getZombieSpawn(Player* p1)
     }
     return v;
 }
-
-void spawnZombies(sf::Vector2u size, Player* p1, int horde, float waitMultiplier) {
+/*
+void spawnZombies(sf::Vector2u size, Player* p1, int horde, float waitMultiplier) { //may need to redo this and unthread it
     sf::Vector2f v;
-    int health = 20;
-    if (waitMultiplier == 0.5) health = 10;
-    if (waitMultiplier == 2.0) health = 40;
+    int health = 20 + rounds/4;
+    if (waitMultiplier == 0.5) health /= 2;
+    if (waitMultiplier == 2.0) health *= 2;
     for (int i = 0; i < 3 * rounds + 5; i++) {
         v = getZombieSpawn(p1);       
        
-        for (int i = 0; i < horde; i++) {
+        for (int j = 0; j < horde; j++) {
             if (rounds <= 15) {
                 zombies.push_back(new Zombie(health, 1, 1, size, v));
             }
             else if (rounds > 15) {
                 if (i % 3 == 2) {
                     zombies.push_back(new RunnerZombie(health, 1, 1, size, v));
-                    std::cout << "New Runner" << std::endl;
+                    //std::cout << "New Runner" << std::endl;
                 }
                 else {
                     zombies.push_back(new Zombie(health, 1, 1, size, v));
                 }
             }
         }
-        for (int i = 0; i < (int)(zombies.size() / 10) + 1; i++) { //needs to be updated
-            Sleep(500 * waitMultiplier);
+        int delay = 300;
+        int spawnThreshold = zombies.size() / (10 + rounds / 5);
+        for (int i = 0; i < spawnThreshold; i++) {
+            delay += delay;
         }
+        //std::cout << "Zombies: " << zombies.size() << "  Round: " << rounds << "  Delay: " << delay << std::endl;
+        Sleep(delay * waitMultiplier);
     }
 }
-
+*/
 sf::Vector2f doorCollision(Door& door, sf::Vector2f pos, int type, bool& collided) {
     sf::Vector2f result = pos;
     int thisSize = 40;
@@ -424,6 +428,7 @@ void movement(sf::RenderWindow& window, Player* p1) {
     for (int z = 0; z < zombies.size(); z++) {
         sf::FloatRect zbounds;
         float zombieSize = 30;
+        //std::cout << "before zbounds" << std::endl;
         zbounds.top = zombies[z]->getSprite().getPosition().y - zombieSize / 2;
         zbounds.left = zombies[z]->getSprite().getPosition().x - zombieSize / 2;;
         zbounds.width = zombieSize;
@@ -432,6 +437,7 @@ void movement(sf::RenderWindow& window, Player* p1) {
             bool normal = true;
             if (z + 1 < zombies.size()) {
                 sf::FloatRect z2bounds;
+                //std::cout << "before z2bounds" << std::endl;
                 z2bounds.top = zombies[z + 1]->getSprite().getPosition().y - zombieSize / 2;
                 z2bounds.left = zombies[z + 1]->getSprite().getPosition().x - zombieSize / 2;
                 z2bounds.width = zombieSize;
@@ -451,6 +457,7 @@ void movement(sf::RenderWindow& window, Player* p1) {
     for (int x = 0; x < doors.size(); x++) {
         v = doorCollision(*doors[x], p1->getPosition(), 1, collisionCheck);
         if (collisionCheck) p1->setPosition(v);
+        //std::cout << "before door collision" << std::endl;
         for (int i = 0; i < zombies.size(); i++) {
             if (zombies[i] != nullptr) {
                 v = doorCollision(*doors[x], zombies[i]->getSprite().getPosition(), 0, collisionCheck);
@@ -460,7 +467,7 @@ void movement(sf::RenderWindow& window, Player* p1) {
         if (doors[x]->isClosed()) {
             for (int j = 0; j < p1->getGun()->getShots()->size(); j++) {
                 if (doors[x]->getWall().intersects(p1->getGun()->getShots()->at(j)->getSprite().getGlobalBounds())) {
-                    delete p1->getGun()->getShots()->at(j);
+                    //delete p1->getGun()->getShots()->at(j);
                     p1->getGun()->getShots()->erase(p1->getGun()->getShots()->begin() + j);
                 }
             }
@@ -469,15 +476,19 @@ void movement(sf::RenderWindow& window, Player* p1) {
     for (int x = 0; x < walls.size(); x++) { //try unoverlapping corners and see what happens
         v = checkCollision(walls[x]->getWall(), p1->getPosition(), 1, collisionCheck);
         if (collisionCheck) p1->setPosition(v);
+        //std::cout << "before wall collision" << std::endl;
         for (int i = 0; i < zombies.size(); i++) {
             if (zombies[i] != nullptr) {
-                v = checkCollision(walls[x]->getWall(), zombies[i]->getSprite().getPosition(), 0, collisionCheck);
+                Zombie* zombieChecker = zombies[i]; ///zombies[i] exists, but zombieChecker does not sometimes wtf
+                sf::Sprite zombieSprite = zombieChecker->getSprite();
+                sf::Vector2f zombieLocation = zombieSprite.getPosition();
+                v = checkCollision(walls[x]->getWall(), zombieLocation, 0, collisionCheck);
                 if (collisionCheck) zombies[i]->setPosition(v);
             }
         }
         for (int j = 0; j < p1->getGun()->getShots()->size(); j++) {
             if (walls[x]->getWall().intersects(p1->getGun()->getShots()->at(j)->getSprite().getGlobalBounds())) {
-                delete p1->getGun()->getShots()->at(j);
+                //delete p1->getGun()->getShots()->at(j);
                 p1->getGun()->getShots()->erase(p1->getGun()->getShots()->begin() + j);
             }
         }
@@ -485,6 +496,7 @@ void movement(sf::RenderWindow& window, Player* p1) {
     for (int x = 0; x < buyBoxes.size(); x++) {
         v = checkCollision(buyBoxes[x]->getWall(), p1->getPosition(), 1, collisionCheck);
         if (collisionCheck) p1->setPosition(v);
+        //std::cout << "before box collision" << std::endl;
         for (int i = 0; i < zombies.size(); i++) {
             if (zombies[i] != nullptr) {
                 v = checkCollision(buyBoxes[x]->getWall(), zombies[i]->getSprite().getPosition(), 0, collisionCheck);
@@ -493,7 +505,7 @@ void movement(sf::RenderWindow& window, Player* p1) {
         }
         for (int j = 0; j < p1->getGun()->getShots()->size(); j++) {
             if (buyBoxes[x]->getWall().intersects(p1->getGun()->getShots()->at(j)->getSprite().getGlobalBounds())) {
-                delete p1->getGun()->getShots()->at(j);
+                //delete p1->getGun()->getShots()->at(j);
                 p1->getGun()->getShots()->erase(p1->getGun()->getShots()->begin() + j);
             }
         }
@@ -503,9 +515,12 @@ void movement(sf::RenderWindow& window, Player* p1) {
     playerBox.left = p1->getPosition().x - 40 / 2;
     playerBox.width = 40;
     playerBox.height = 40;
+    //std::cout << "before player collision" << std::endl;
     for (int x = 0; x < zombies.size(); x++) {
-        v = checkCollision(playerBox, zombies[x]->getSprite().getPosition(), 1, collisionCheck);
-        if (collisionCheck) zombies[x]->setPosition(v);
+        if (zombies[x] != nullptr && x < zombies.size()) {
+            v = checkCollision(playerBox, zombies[x]->getSprite().getPosition(), 1, collisionCheck);
+                if (collisionCheck) zombies[x]->setPosition(v);
+        }
     }
 
     sf::Vector2i gP = sf::Mouse::getPosition(window);
@@ -582,8 +597,6 @@ void displayGUI(Player* p1, sf::RenderWindow& window, sf::Font& font, int zombie
         makeTrue(gP, p1);
         ammoBack.setPosition(gP.x - 25, gP.y + 45);
         ammoFront.setPosition(gP.x - 25, gP.y + 45);
-
-
         
         for (int x = 0; x < doors.size(); x++) {
             if (doors[x]->canOpen(*p1) && doors[x]->isClosed()) {
@@ -708,8 +721,11 @@ void drawing(sf::RenderWindow& window, Player* p1, sf::Font& font) {
     window.draw(p1->getGunSprite());
     for (int i = 0; i < zombies.size(); i++)
     {
-        if (zombies[i] != nullptr) {
+        //std::cout << "before draw" << std::endl;
+        if (zombies[i] != nullptr && i < zombies.size()) {
             window.draw(zombies[i]->getSprite());
+            window.draw(zombies[i]->getHealthBack());
+            window.draw(zombies[i]->getHealthFront());
         }
     }
     for (int k = 0; k < zombies.size(); k++) {
@@ -734,7 +750,7 @@ void run(sf::RenderWindow& window, sf::View& view){
     v.x = 32*1.f;
     v.y = 32*1.f;
     zombies.push_back(new Zombie(20, 1, 1, window.getSize(), v));
-    Player* p1 = new Player(20, 2, 0.5, window.getSize(), 10, 0.5); 
+    Player* p1 = new Player(100, 2, 0.5, window.getSize(), 100, 0.5); 
     loadWalls();
     //Loading Font
     sf::Font font;
@@ -746,9 +762,14 @@ void run(sf::RenderWindow& window, sf::View& view){
     }
     sf::Text textDisplay;
 
+    int lastSpawnTime = 0;
+    int zombiesSpawned = 0;
+    bool spawnZombies = false;
+    int hordeCounter = 0;
+
     //special round variables
-    int zombiesPerSpawn;
-    float zombieSpawnMultiplier;
+    int zombiesPerSpawn = 1;
+    float zombieSpawnMultiplier = 1.0;
     int checkComplete = 0;
     bool roundComplete = false;
     bool horde = false;
@@ -792,10 +813,45 @@ void run(sf::RenderWindow& window, sf::View& view){
         //re-draws objects so it looks good      
         drawing(window, p1, font);
 
-        if (zombies.size() == 0) {
-            if (clock() - checkComplete > 1000) roundComplete = true;
+        
+
+        if (horde) p1->setBottomlessClip(true);
+
+        //spawn zombies 
+        if (spawnZombies && rounds > 0 && zombiesSpawned < 3 * rounds + 5) {
+            int delay = 300;
+            for (int i = 0; i < zombies.size() / (10 + rounds / 5); i++) delay += delay;
+            std::cout << "Time: " << clock() << "  Last Spawn: " << lastSpawnTime << "  Delay: " << zombieSpawnMultiplier * delay << std::endl;
+            if (clock() - lastSpawnTime > zombieSpawnMultiplier * delay) { //if enough time has passed
+                lastSpawnTime = clock();
+                sf::Vector2f spawnLocation = getZombieSpawn(p1);
+                if (rounds <= 15) {
+                    zombies.push_back(new Zombie(20 + rounds / 4, 1, 1, p1->getSize(), spawnLocation));
+                }
+                else if (rounds > 15) {
+                    if (zombiesSpawned % 3 == 2) {
+                        zombies.push_back(new RunnerZombie(20 + rounds / 4, 1, 1, p1->getSize(), spawnLocation));
+                        //std::cout << "New Runner" << std::endl;
+                    }
+                    else {
+                        zombies.push_back(new Zombie(20 + rounds / 4, 1, 1, p1->getSize(), spawnLocation));
+                    }
+                }
+                if (zombiesPerSpawn == 3) {
+                    hordeCounter++;
+                    if (hordeCounter % 3 == 0) zombiesSpawned++;
+                }
+                else zombiesSpawned++;
+            }
         }
-        else {
+
+        if (zombies.size() == 0 && (zombiesSpawned == 3 * rounds + 5 || rounds == 0)) { // rounds == initial value of rounds
+            std::cout << "zombiesSpawned = " << 3 * rounds + 5 << std::endl;
+            if (clock() - checkComplete > 1000) {
+                roundComplete = true;
+            }
+        }
+        else if(spawnZombies) {
             roundComplete = false;
             checkComplete = clock();
         }
@@ -806,6 +862,7 @@ void run(sf::RenderWindow& window, sf::View& view){
             //advances rou
             if (displayMenu && (clock() - roundCountTimer) > 1000) {
                 roundCountTimer = clock();
+                spawnZombies = false;
                 displayMenu = false;
                 rounds++;
 
@@ -819,7 +876,6 @@ void run(sf::RenderWindow& window, sf::View& view){
                         else if (picker >= 75) megaZombie = true;
                         if (picker % 5 == 0) goldRush = true;
                     }
-                    if (horde) p1->setBottomlessClip(true);
                 }
                 else {
                     siege = false;
@@ -829,6 +885,12 @@ void run(sf::RenderWindow& window, sf::View& view){
                     megaZombie = false;
                     p1->setBottomlessClip(false);
                 }
+                //remove this for actual randomness
+                //siege = false;
+                //horde = true;
+                //ambush = false;
+                //goldRush = true;
+                //megaZombie = false;
 
                 p1->setHealth(p1->getHealth() + ((p1->getMaxHealth() - p1->getHealth())/2));
                 if (p1->getHealth() > p1->getMaxHealth()) p1->setHealth(p1->getMaxHealth());
@@ -858,14 +920,19 @@ void run(sf::RenderWindow& window, sf::View& view){
             {
                 zombiesPerSpawn = 1;
                 zombieSpawnMultiplier = 1;
-                if (horde) zombiesPerSpawn = 3 + rounds / 20;
+                if (horde) {
+                    zombiesPerSpawn = 3;
+                    zombieSpawnMultiplier = 0.3;
+                }
                 if (siege) zombieSpawnMultiplier = 2.0;
                 if (ambush) zombieSpawnMultiplier = 0.5;
                 //if (megaZombie) zombiesPerSpawn = -1;
-                std::thread t1(spawnZombies, window.getSize(), p1, zombiesPerSpawn, zombieSpawnMultiplier);
-                t1.detach();
+                //std::thread t1(spawnZombies, window.getSize(), p1, zombiesPerSpawn, zombieSpawnMultiplier);
+                //t1.detach();
+                spawnZombies = true;
                 displayMenu = true;
                 roundCountTimer = clock();
+                zombiesSpawned = 0;
             }
         }
         //DEATH MESSAGE
