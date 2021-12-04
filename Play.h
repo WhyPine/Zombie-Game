@@ -16,7 +16,8 @@
 using std::vector;
 using std::string;
 
-	void spawnZombies(sf::Vector2u size, Player* p1);
+	void spawnZombies(sf::Vector2u size, Player* p1, int horde, float waitMultiplier);
+	sf::Vector2f getZombieSpawn(Player* p1);
 	void run(sf::RenderWindow& window, sf::View& view);
 	void movement(sf::RenderWindow& window, Player* p1);
 	void drawing(sf::RenderWindow& window, Player* p1, sf::Font& font);

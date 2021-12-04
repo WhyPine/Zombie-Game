@@ -40,11 +40,11 @@ void Gun::run(sf::Vector2f pos, float rotation) {
      
 }
 
-void Gun::fire(sf::Vector2f go) {
+void Gun::fire(sf::Vector2f go, bool bottomlessClip) {
     if (this->shottimer > 10) {
         sf::Vector2f v = this->sprite.getPosition();
-        this->shots->push_back(new Bullet(v, go, this->size, this->power, this->bulletTexture, 1 + this->bulletHealth));
-        this->reload--;
+        this->shots->push_back(new Bullet(v, go, this->size, this->power, this->bulletTexture, 1 + this->bulletHealth, 10));
+        if(!bottomlessClip) this->reload--;
         shottimer = 0;
     }
 }

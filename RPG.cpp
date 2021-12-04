@@ -4,8 +4,8 @@
 RPG::RPG(sf::Vector2f pos, sf::Vector2u size, int newBulletHealth) : Gun(pos, size, newBulletHealth) {
     this->reloadDelay = 1750;
     this->bulletHealth = newBulletHealth;
-    this->reload = 3;
-    this->maxReload = 3;
+    this->reload = 2;
+    this->maxReload = 2;
     this->shotbull = nullptr;
     this->explode = false;
     this->fired = false;
@@ -76,7 +76,7 @@ void RPG::run(sf::Vector2f pos, float rotation, bool hold) {
                 this->thisGo.x = cos(20 * 3.141592653 / 180) * temp.x - sin(20 * 3.141592653 / 180) * temp.y;
                 this->thisGo.y = sin(20 * 3.141592653 / 180) * temp.x + cos(20 * 3.141592653 / 180) * temp.y;
                 //adding the explosion bullets to the vector at boomspot + the opposite direction 
-                Bullet* explosion = new Bullet(this->boomSpot + backTrack, this->thisGo, this->size, this->power, this->bulletTexture, 2 + this->bulletHealth);
+                Bullet* explosion = new Bullet(this->boomSpot + backTrack, this->thisGo, this->size, this->power, this->bulletTexture, 2 + this->bulletHealth, 15);
                 explosion->hit(this->zombieXploded);
                 this->shots->push_back(explosion);
                 temp.x = this->thisGo.x;
@@ -88,15 +88,15 @@ void RPG::run(sf::Vector2f pos, float rotation, bool hold) {
     }
 }
 
-void RPG::fire(sf::Vector2f go)
+void RPG::fire(sf::Vector2f go, bool bottomlessClip)
 {
     this->thisGo = go;
     if (this->shottimer > 60 && this->shotbull == nullptr) { //if 60 frames since last shot and there isnt already been a shot
         this->fired = true; //fired
         sf::Vector2f v = this->sprite.getPosition();
-        this->shotbull = new Bullet(v, thisGo, this->size, this->power*4, this->rocketTexture, 1); //setting shotbull pointer to the rocket
+        this->shotbull = new Bullet(v, thisGo, this->size, this->power*4, this->rocketTexture, 1, 7); //setting shotbull pointer to the rocket
         this->shots->push_back(this->shotbull); //sending the rocket out
-        this->reload--;
+        if(!bottomlessClip) this->reload--;
         shottimer = 0;
     }
 }
@@ -108,7 +108,7 @@ int RPG::getReload()
 
 int RPG::getMaxReload()
 {
-    return 3;
+    return this->maxReload;
 }
 
 bool RPG::hitSomething(Bullet* bullet)

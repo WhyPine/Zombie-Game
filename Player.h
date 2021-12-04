@@ -24,6 +24,7 @@ private:
 	Gun* gun; 
 	sf::Texture* texture = new sf::Texture;
 	int bulletHealth;
+	bool bottomlessClip;
 public:
 	int getBulletHealth();
 	int getMaxHealth();
@@ -47,5 +48,6 @@ public:
 	void setPosition(sf::Vector2f v);
 	bool setGun(Gun* newGun);
 	sf::Vector2u getSize();
+	void setBottomlessClip(bool newValue);
 };
 

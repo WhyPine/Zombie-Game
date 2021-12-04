@@ -20,11 +20,11 @@ Rifle::Rifle(sf::Vector2f pos, sf::Vector2u size, int newBulletHealth) : Gun(pos
     this->sprite.setOrigin(this->sprite.getLocalBounds().width / 2, this->sprite.getLocalBounds().height / 2);
 }
 
-void Rifle::fire(sf::Vector2f go) {
+void Rifle::fire(sf::Vector2f go, bool bottomlessClip) {
     if (this->shottimer > 6) {
         sf::Vector2f v = this->sprite.getPosition();
-        this->shots->push_back(new Bullet(v, go, this->size, this->power, this->bulletTexture, 1 + this->bulletHealth));
-        this->reload--;
+        this->shots->push_back(new Bullet(v, go, this->size, this->power, this->bulletTexture, 1 + this->bulletHealth, 15));
+        if(!bottomlessClip) this->reload--;
         shottimer = 0;
     }
 }

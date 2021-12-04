@@ -17,11 +17,11 @@ Sniper::Sniper(sf::Vector2f pos, sf::Vector2u size, int newBulletHealth) : Gun(p
     this->sprite.setOrigin(this->sprite.getLocalBounds().width / 2, this->sprite.getLocalBounds().height / 2);
 }
 
-void Sniper::fire(sf::Vector2f go) {
+void Sniper::fire(sf::Vector2f go, bool bottomlessClip) {
     if (this->shottimer > 75) {
         sf::Vector2f v = this->sprite.getPosition();
-        this->shots->push_back(new Bullet(v, go, this->size, this->power, this->bulletTexture, 4 + this->bulletHealth));
-        this->reload--;
+        this->shots->push_back(new Bullet(v, go, this->size, this->power, this->bulletTexture, 4 + this->bulletHealth, 30));
+        if(!bottomlessClip) this->reload--;
         shottimer = 0;
     }
 }

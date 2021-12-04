@@ -28,7 +28,7 @@ public:
 	virtual int getMaxReload();
 	Gun(sf::Vector2f pos, sf::Vector2u size, int newBulletHealth);
 	virtual void run(sf::Vector2f pos, float rotation);
-	virtual void fire(sf::Vector2f go);
+	virtual void fire(sf::Vector2f go, bool bottomlessClip);
 	sf::Sprite getSprite();
 	vector<Bullet*>* getShots();
 	virtual int getReload();

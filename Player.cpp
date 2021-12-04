@@ -20,9 +20,10 @@ Player::Player(int newHealth, double newSpeedMultiplier, double newReloadMultipl
     this->sprite.setTextureRect(sf::IntRect(39, 39, 250, 200));
     this->sprite.setOrigin(this->sprite.getLocalBounds().width / 2, this->sprite.getLocalBounds().height / 2);
     this->sprite.setScale((float)size.x / 6400, (float)size.y / 3600);
-    this->gun = new Sniper(this->sprite.getPosition(), size, bulletHealth); 
+    this->gun = new RPG(this->sprite.getPosition(), size, bulletHealth); 
     this->regenMultiplier = newRegenMultiplier;
     this->money = 10000;
+    this->bottomlessClip = false;
 }
 
 void Player::checkMove(sf::Vector2i gP) {
@@ -72,12 +73,12 @@ void Player::checkMove(sf::Vector2i gP) {
     }
     if (moveX != 0 || moveY != 0) {
         if (moveX != 0 && moveY != 0) {
-            moveX *= 0.71 * this->speedMultiplier;
-            moveY *= 0.71 * this->speedMultiplier;
+            moveX *= 0.71;
+            moveY *= 0.71;
         }
         for (int i = 0; i < 3; i++) this->sprite.move(moveX, moveY);
     }
-    if (this->gun->getMaxReload() == 3) {
+    if (this->gun->getMaxReload() == 2) {
         this->gun->run(this->sprite.getPosition(), this->sprite.getRotation(), sf::Mouse::isButtonPressed(sf::Mouse::Left));
     }
     else {
@@ -87,12 +88,12 @@ void Player::checkMove(sf::Vector2i gP) {
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
             if (this->gun->getMaxReload() == 12 || this->gun->getMaxReload() == 4) { //is pistol or sniper
                 if (semiAuto == true) {
-                    this->gun->fire(p);
+                    this->gun->fire(p, bottomlessClip);
                     semiAuto = false;
                 }
             }
             else {
-                this->gun->fire(p);
+                this->gun->fire(p, this->bottomlessClip);
             }
         }
     }
@@ -195,4 +196,8 @@ sf::Vector2u Player::getSize() {
 
 int Player::getBulletHealth() {
     return this->bulletHealth;
+}
+
+void Player::setBottomlessClip(bool newValue) {
+    this->bottomlessClip = newValue;
 }
