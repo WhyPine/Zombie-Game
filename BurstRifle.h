@@ -14,8 +14,9 @@ public:
     void run(sf::Vector2f pos, float rotation);
 
 protected:
+    sf::Vector2f direction;
     bool fired;
     int lastShot;
-    int numShots
+    int numShots;
 };
 

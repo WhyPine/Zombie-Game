@@ -5,7 +5,9 @@ BurstRifle::BurstRifle(sf::Vector2f pos, sf::Vector2u size, int newBulletHealth)
 	this->bulletHealth = newBulletHealth;
 	this->reload = 36;
 	this->maxReload = 36;
-	fired = false;
+	this->fired = false;
+	this->lastShot = 0;
+	this->numShots = 4;
 	if (!this->bulletTexture.loadFromFile("rifleshot.png"))
 	{
 		std::cout << "Failed to load Burst Rifle shot" << std::endl;
@@ -14,23 +16,26 @@ BurstRifle::BurstRifle(sf::Vector2f pos, sf::Vector2u size, int newBulletHealth)
 
 void BurstRifle::fire(sf::Vector2f go, bool bottomelessClip)
 {
-	if (this->shottimer > 28)
+	if (this->shottimer > 40)
 	{
-		fired = true; //the gun has been fired
-		sf::Vector2f v = this->sprite.getPosition();
-		sf::Vector2f spacing(go.x * 24 / sqrtf(go.x * go.x + go.y * go.y), go.y * 24 / sqrtf(go.x * go.x + go.y * go.y));
-		for (int i = 0; i < 4; ++i)
-		{
-			this->shots->push_back(new Bullet(v, go, this->size, this->power, this->bulletTexture, 1 + this->bulletHealth, 15));
-			this->reload--;
-			v -= spacing;
-		}
-		shottimer = 0;
+		this->direction = go;
+		this->fired = true; //the gun has been fired
+		this->shottimer = 0;
+		this->numShots = 4;
+		if (!bottomelessClip) this->reload -= 4;
+		//sf::Vector2f spacing(go.x * 24 / sqrtf(go.x * go.x + go.y * go.y), go.y * 24 / sqrtf(go.x * go.x + go.y * go.y));
+		//for (int i = 0; i < 4; ++i)
+		//{
+		//	this->shots->push_back(new Bullet(v, go, this->size, this->power, this->bulletTexture, 1 + this->bulletHealth, 15));
+		//	this->reload--;
+		//	v -= spacing;
+		//}
+		//shottimer = 0;
 
-		this->shots->push_back(new Bullet(v, go, this->size, this->power, this->bulletTexture));
-		this->reload--;
-		v -= spacing;
-		shottimer = 0;
+		//this->shots->push_back(new Bullet(v, go, this->size, this->power, this->bulletTexture, bulletHealth, 15));
+		//this->reload--;
+		//v -= spacing;
+		//shottimer = 0;
 	}
 }
 
@@ -43,8 +48,6 @@ void BurstRifle::run(sf::Vector2f pos, float rotation)
 {
 	this->shottimer++;
 	sprite.setRotation(rotation);
-	double xPos, yPos;
-	sf::Vector2f go;
 	if (rotation < 0) rotation += 360;
 	rotation += 30;
 	sf::Vector2f newVector(pos.x + cos((3.141592653 / 180) * rotation) * 12, pos.y + sin((3.141592653 / 180) * rotation) * 12);
@@ -54,17 +57,17 @@ void BurstRifle::run(sf::Vector2f pos, float rotation)
 			(*it)->updatePosition(); //moving all the bullets
 		}
 	}
-	if (!fired) numShots = 4;
-	if (fired)
+	if (this->fired)
 	{
-		if (clock() - lastShot > 100)
+		if (clock() - lastShot > 62.5)
 		{
-			numShots--;
-			this->shots->push_back(new Bullet(v, go, this->size, this->power, this->bulletTexture));
-			lastShot = clock();
+			this->numShots--;
+			this->shots->push_back(new Bullet(newVector, this->direction, this->size, this->power, this->bulletTexture, 1 + this->bulletHealth, 15));
+			std::cout << "BOOM   shotsSize = " << this->shots->size() << std::endl;
+			this->lastShot = clock();
 		}
 	}
-	if (numShots == 0) fired = false;
+	if (this->numShots == 0) this->fired = false;
 }
 
 int BurstRifle::getReload()

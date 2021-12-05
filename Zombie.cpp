@@ -21,6 +21,7 @@ Zombie::Zombie(int health, float speed, int damage, sf::Vector2u size, sf::Vecto
     this->healthBack.setSize(sf::Vector2f(32, 5));
     this->healthBack.setFillColor(sf::Color(0, 0, 0, 127));
     this->healthFront.setFillColor(sf::Color(230, 45, 45, 127));
+    this->attackPlayer = false;
 }
 
 Zombie::~Zombie() {
@@ -68,6 +69,15 @@ void Zombie::getMove(Player* p1, sf::Vector2f pos) {
     this->healthFront.setSize((sf::Vector2f(32 * this->health / this->maxHealth, 5)));
     this->healthBack.setPosition(this->sprite.getPosition().x - 11, this->sprite.getPosition().y + this->sprite.getGlobalBounds().height / 2 - 10);
     this->healthFront.setPosition(this->sprite.getPosition().x - 11, this->sprite.getPosition().y + this->sprite.getGlobalBounds().height / 2 - 10);
+
+    //if it has been 900ms since attack && attack is true,
+    if (clock() - reload > 900 && attackPlayer) {
+        if (this->sprite.getGlobalBounds().intersects(p1->getSprite().getGlobalBounds())) {
+            p1->setHealth(p1->getHealth() - this->getDamage());
+            std::cout << p1->getHealth() << std::endl;
+        }
+        attackPlayer = false;
+    }
 }
 
 sf::Sprite Zombie::getSprite() {
@@ -97,18 +107,7 @@ void Zombie::setHealth(int health) {
 
 void Zombie::attack(Player* p1) {
     this->reload = clock();
-    Sleep(900);
-    double size = 0.75;
-    //makes the collision box for the player change size by a factor of size
-    /*sf::FloatRect pSafeZone = p1->getSprite().getGlobalBounds();
-    pSafeZone.top += ((pSafeZone.height / 2) - (pSafeZone.height * size / 2));
-    pSafeZone.left += ((pSafeZone.width / 2) - (pSafeZone.width * size / 2));
-    pSafeZone.height = pSafeZone.height * size;
-    pSafeZone.width = pSafeZone.width * size;*/
-    if (this->sprite.getGlobalBounds().intersects(p1->getSprite().getGlobalBounds())) {
-        p1->setHealth(p1->getHealth() - this->getDamage());
-        std::cout << p1->getHealth() << std::endl;
-    }
+    attackPlayer = true;    
 }
 
 void Zombie::setPosition(sf::Vector2f v) {
