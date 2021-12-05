@@ -34,3 +34,18 @@ public:
 	int getMaxHealth();
 };
 
+class megaZombieManager {
+public:
+	megaZombieManager(int newLevel, int newID, sf::Vector2f newPos);
+	int getLevel();
+	int getID();
+	void setLastPos(sf::Vector2f newPos);
+	sf::Vector2f getLastPos();
+	void setAlive(bool newAlive);
+	bool getAlive();
+private:
+	bool isAlive;
+	sf::Vector2f lastPos;
+	int ID;
+	int level;
+};

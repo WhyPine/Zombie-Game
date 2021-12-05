@@ -197,4 +197,40 @@ sf::RectangleShape Zombie::getHealthFront() {
 }
 
 
+//megaZombieManager Class
+megaZombieManager::megaZombieManager(int newLevel, int newID, sf::Vector2f newPos) {
+    this->ID = newID;
+    this->level = newLevel;
+    this->lastPos = newPos;
+}
+
+int megaZombieManager::getLevel() {
+    return this->level;
+}
+
+int megaZombieManager::getID() {
+    return this->ID;
+}
+
+void megaZombieManager::setLastPos(sf::Vector2f newPos) {
+    this->lastPos = newPos;
+}
+
+sf::Vector2f megaZombieManager::getLastPos() {
+    return this->lastPos;
+}
+
+void megaZombieManager::setAlive(bool newAlive) {
+    this->isAlive = newAlive;
+}
+
+bool megaZombieManager::getAlive() {
+    return this->isAlive;
+}
+
+
+
+
+
+
 

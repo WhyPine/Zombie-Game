@@ -4,7 +4,7 @@
 clock_t start = 0;
 int reloadDelayTimer = 0;
 time_t end = 0;
-int rounds = 0;
+int rounds = 1;
 vector<Zombie*> zombies;
 sf::Vector2f pasPos;
 sf::Sprite backdrop;
@@ -760,6 +760,7 @@ void run(sf::RenderWindow& window, sf::View& view){
     }
     sf::Text roundText;
 
+    std::vector<megaZombieManager> mzManager;
     int lastSpawnTime = 0;
     int zombiesSpawned = 0;
     int spawnCount = 0;
@@ -771,13 +772,13 @@ void run(sf::RenderWindow& window, sf::View& view){
     bool loadDeathMessage = false;
 
     //special round variables
-    int zombiesPerSpawn = 1;
     float zombieSpawnMultiplier = 1.0;
     int checkComplete = 0;
     bool roundComplete = false;
     bool horde = false;
     bool ambush = false;
     bool megaZombie = false;
+    int megaZombieHp = 0;
     bool siege = false;
     
     while (window.isOpen())
@@ -801,36 +802,89 @@ void run(sf::RenderWindow& window, sf::View& view){
         window.setView(view);
 
         //zombie management
-        if (!roundComplete) { 
+        if (!roundComplete) {
             //if there are more zombies to spawn
             if (zombiesSpawned < spawnCount) {
-                //setting up delay between zombie spawns based on how many zombies have already spawned
-                int delay = 300;
-                for (int i = 0; i < zombies.size() / (10 + rounds / 5); i++) delay += delay;
-                //if enough time has passed
-                if (clock() - lastSpawnTime > zombieSpawnMultiplier * delay) { 
-                    //choosing which zombie and spawning
-                    sf::Vector2f spawnLocation = getZombieSpawn(p1);
-                    //
-                    //in here put code to spawn big boi: if zombiesSpawned %6 = 1
-                    if (rounds > 15 && zombiesSpawned % 3 == 2) {
-                        zombies.push_back(new RunnerZombie(15 + rounds / 5, 1, 1, p1->getSize(), spawnLocation));
+                //if not megaZombie Round
+                if (!megaZombie) {
+                    //setting up delay between zombie spawns based on how many zombies have already spawned
+                    int delay = 300;
+                    for (int i = 0; i < zombies.size() / (10 + rounds / 5); i++) delay += delay;
+                    //if enough time has passed
+                    if (clock() - lastSpawnTime > zombieSpawnMultiplier * delay) {
+                        //choosing which zombie and spawning
+                        sf::Vector2f spawnLocation = getZombieSpawn(p1);
+                        //
+                        //in here put code to spawn big boi: if zombiesSpawned %6 = 1
+                        if (rounds > 15 && zombiesSpawned % 3 == 2) {
+                            zombies.push_back(new RunnerZombie(15 + rounds / 5, 1, 1, p1->getSize(), spawnLocation));
+                        }
+                        else {
+                            zombies.push_back(new Zombie(15 + rounds / 5, 1, 1, p1->getSize(), spawnLocation));
+                        }
+                        //updating last spawnTime and number of zombies spawned
+                        lastSpawnTime = clock();
+                        zombiesSpawned++;
+                    }
+                }
+                //else it is a megaZombie Round
+                else {
+                    //if first zombie
+                    if (zombiesSpawned == 0) {
+                        Zombie* newZombie = new Zombie(megaZombieHp, 1, 1, sf::Vector2u(p1->getSize().x * 2, p1->getSize().y*2), getZombieSpawn(p1));
+                        mzManager.push_back(megaZombieManager(0, newZombie->getId(), newZombie->getSprite().getPosition()));
+                        zombies.push_back(newZombie);
+                        zombiesSpawned++;
+                        //create zombie
+                        //add zombie to vector of megaZombieManagers
+                        //level = 0;
                     }
                     else {
-                        zombies.push_back(new Zombie(15 + rounds / 5, 1, 1, p1->getSize(), spawnLocation));
+                        //iterate through all zombies that have spawned
+                        for (int m = 0; m < mzManager.size(); m++) {
+                            //initially setting all zombies to dead
+                            mzManager[m].setAlive(false);
+                            //for each zombie that has spawend, check it with the mzManager
+                                for (int z = 0; z < zombies.size(); z++) {
+                                    //if found a zombie
+                                    if (mzManager[m].getID() == zombies[z]->getId()) {
+                                        //update their position & set alive
+                                        mzManager[m].setLastPos(zombies[z]->getSprite().getPosition());
+                                        mzManager[m].setAlive(true);
+                                    }
+                                }
+                            //if the zombie is dead
+                            if(mzManager[m].getAlive() == false) {
+                                //if there are divisions remaining
+                                if (mzManager[m].getLevel() + 1 < 4) {
+                                    //add a new zombie with 1/2 the health of the previous one and a bit smaller
+                                    double sizeScalar = 2.0 - ((double)(mzManager[m].getLevel() + 1) / 3.0);
+                                    sf::Vector2u size(p1->getSize().x * sizeScalar, p1->getSize().y * sizeScalar);
+                                    Zombie* newZombie = new Zombie(megaZombieHp / (2 * (mzManager[m].getLevel() + 1)), 1, 1, size, mzManager[m].getLastPos());
+                                    mzManager.push_back(megaZombieManager(mzManager[m].getLevel() + 1, newZombie->getId(), newZombie->getSprite().getPosition()));
+                                    zombies.push_back(newZombie);
+                                    zombiesSpawned++;
+                                    //add a second new zombie with 1/2 the health of the previous one
+                                    newZombie = new Zombie(megaZombieHp / (2 * (mzManager[m].getLevel() + 1)), 1, 1, size, mzManager[m].getLastPos());
+                                    mzManager.push_back(megaZombieManager(mzManager[m].getLevel() + 1, newZombie->getId(), newZombie->getSprite().getPosition()));
+                                    zombies.push_back(newZombie);
+                                    zombiesSpawned++;
+                                }
+                                //removing the killed zombie from the mzManager
+                                mzManager.erase(mzManager.begin() + m);
+                                //updating m because the item in the vector at m no longer exists
+                                m--;
+                            }   
+                        }
                     }
-                    //updating last spawnTime and number of zombies spawned
-                    lastSpawnTime = clock(); 
-                    zombiesSpawned++;
                 }
             }
-            //if all of the zombies in the round have been spawned
-            else if (zombiesSpawned == spawnCount) { 
-                //if all of the zombies have been killed
-                if (zombies.size() == 0) { 
-                    roundComplete = true;
-                }
+            //else if all the zombies are dead, round is complete
+            else if (zombies.size() == 0) {
+                roundComplete = true;
+                if (megaZombie) mzManager.clear();
             }
+
         }
 
         //moving objects
@@ -857,20 +911,22 @@ void run(sf::RenderWindow& window, sf::View& view){
                         if (picker < 25) horde = true;
                         else if (picker >= 25 && picker < 50) ambush = true;
                         else if (picker >= 50 && picker < 75) siege = true;
-                        else if (picker >= 75) ambush = true; //replace with megaZombie when that is done
+                        else if (picker >= 75) megaZombie = true; //replace with megaZombie when that is done
                     }
                     //setting appropriate values for zombie spawning
-                    zombiesPerSpawn = 1;
                     zombieSpawnMultiplier = 1;
+                    spawnCount = 3 * rounds + 5;
                     if (horde) {
-                        zombiesPerSpawn = 3;
                         zombieSpawnMultiplier = 0.3;
+                        p1->setBottomlessClip(true);
+                        spawnCount *= 3;
                     }
                     if (siege) zombieSpawnMultiplier = 2.0;
                     if (ambush) zombieSpawnMultiplier = 0.5;
-                    if (horde) p1->setBottomlessClip(true);
-                    spawnCount = 3 * rounds + 5;
-                    if (horde) spawnCount *= 3;
+                    if (megaZombie) {
+                        megaZombieHp = spawnCount * 4;
+                        spawnCount = 15;
+                    }
                     //setting up next round display text
                     roundText.setFont(font);
                     string display = "Round " + std::to_string(rounds);
@@ -879,7 +935,7 @@ void run(sf::RenderWindow& window, sf::View& view){
                     if (megaZombie) display += ": MEGAZOMBIE";
                     if (ambush) display += ": AMBUSH";
                     if (goldRush) display += ": GOLD RUSH";
-                    std::cout << display << std::endl;
+                    std::cout << display << " - " << spawnCount << " Zombies" << std::endl;
                     roundText.setString(display);
                     roundText.setCharacterSize(100);
                     roundText.setFillColor(sf::Color(94, 1, 6));
@@ -898,7 +954,6 @@ void run(sf::RenderWindow& window, sf::View& view){
                         displayRound = false;
                         nextRound = true;
                     }
-                    
                 }
             }
             else { //beginning next round

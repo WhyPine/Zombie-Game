@@ -29,3 +29,6 @@ using std::string;
 	void bullets(Player* p1);
 	sf::Vector2f doorCollision(Door& door, sf::Vector2f pos, int type, bool& collided);
 	sf::Vector2f checkCollision(sf::FloatRect& thisWall, sf::Vector2f pos, int type, bool& collided); // 0 = zombie 1 = player
+
+
+	
