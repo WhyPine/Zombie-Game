@@ -37,13 +37,16 @@ The player begins the game in the city, and as gameplay progresses, the player w
 4. Testing collisions by printing what side of a wall the player was touching
 
 ## Remaining Tasks
+### Essential For Assignment
+- [ ] Video demonstration of gameplay
+- [ ] Putting player controls in the main menu/game
+- [ ] Discrete test cases
+- [ ] Dying
+
+### Not Essential for Assignment but still have to work on
 - [ ] Developing more zombie types (runners, bigbois, etc.)
 - [ ] Move buy boxes around
 - [ ] Tweak main menu
-- [ ] Dying
 - [ ] Skill updating
-- [ ] Video demo for turn in (This is the most important out of all of these)
-- [ ] Actual test cases and not just printing stuff to the console
 - [ ] Save system
 - [ ] Skill system
-- [ ] Add description of player controls to the menu
