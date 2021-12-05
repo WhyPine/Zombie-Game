@@ -9,5 +9,11 @@ public:
     void fire(sf::Vector2f go);
     int getReload();
     int getMaxReload();
+    void run(sf::Vector2f pos, float rotation);
+
+protected:
+    bool fired;
+    int lastShot;
+    int numShots
 };
 

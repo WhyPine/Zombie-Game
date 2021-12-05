@@ -18,7 +18,7 @@ Player::Player(int health, double speed, double damageP, sf::Vector2u newSize) {
     this->sprite.setTextureRect(sf::IntRect(39, 39, 250, 200));
     this->sprite.setOrigin(this->sprite.getLocalBounds().width / 2, this->sprite.getLocalBounds().height / 2);
     this->sprite.setScale((float)size.x / 6400, (float)size.y / 3600);
-    this->gun = new RPG(this->sprite.getPosition(), size); 
+    this->gun = new Gun(this->sprite.getPosition(), size); 
     this->regenTimer = 0;
     this->regenDelay = 3;
     this->money = 10000;
