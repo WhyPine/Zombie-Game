@@ -27,7 +27,7 @@ void BurstRifle::fire(sf::Vector2f go, bool bottomelessClip)
 		}
 		shottimer = 0;
 
-		this->shots->push_back(new Bullet(v, go, this->size, this->power, this->bulletTexture));
+		this->shots->push_back(new Bullet(v, go, this->size, this->power, this->bulletTexture, 1 + this->bulletHealth, 15));
 		this->reload--;
 		v -= spacing;
 		shottimer = 0;
@@ -60,7 +60,7 @@ void BurstRifle::run(sf::Vector2f pos, float rotation)
 		if (clock() - lastShot > 100)
 		{
 			numShots--;
-			this->shots->push_back(new Bullet(v, go, this->size, this->power, this->bulletTexture));
+			this->shots->push_back(new Bullet(newVector, go, this->size, this->power, this->bulletTexture));
 			lastShot = clock();
 		}
 	}

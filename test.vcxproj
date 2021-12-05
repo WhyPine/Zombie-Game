@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="bigboi.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="BurstRifle.cpp" />
     <ClCompile Include="buyBox.cpp" />
@@ -168,6 +169,7 @@
     <ClCompile Include="Zombie.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="bigboi.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="BurstRifle.h" />
     <ClInclude Include="buyBox.h" />

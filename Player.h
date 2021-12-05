@@ -26,6 +26,7 @@ private:
 	int bulletHealth;
 	bool bottomlessClip;
 	bool duringReload;
+	int regenDelay;
 public:
 	int getBulletHealth();
 	int getMaxHealth();

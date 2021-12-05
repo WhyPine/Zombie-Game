@@ -16,6 +16,6 @@ public:
 protected:
     bool fired;
     int lastShot;
-    int numShots
+    int numShots;
 };
 
