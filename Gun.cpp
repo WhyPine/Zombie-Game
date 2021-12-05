@@ -3,7 +3,7 @@
 Gun::Gun(sf::Vector2f pos, sf::Vector2u size, int newBulletHealth) {
     this->reloadDelay = 750; //1 second reload for pistol
     this->bulletHealth = newBulletHealth;
-	this->power = 7;
+	this->power = 8;
 	this->projS = 10;
     this->size = size;
     this->reload = 12;

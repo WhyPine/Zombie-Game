@@ -749,8 +749,8 @@ void run(sf::RenderWindow& window, sf::View& view){
     sf::Vector2f v;
     v.x = 32*1.f;
     v.y = 32*1.f;
-    zombies.push_back(new Zombie(20, 1, 1, window.getSize(), v));
-    Player* p1 = new Player(100, 2, 0.5, window.getSize(), 100, 0.5); 
+    zombies.push_back(new Zombie(15, 1, 1, window.getSize(), v));
+    Player* p1 = new Player(20, 1, 1, window.getSize(), 0, 1); 
     loadWalls();
     //Loading Font
     sf::Font font;
@@ -764,8 +764,6 @@ void run(sf::RenderWindow& window, sf::View& view){
 
     int lastSpawnTime = 0;
     int zombiesSpawned = 0;
-    bool spawnZombies = false;
-    int hordeCounter = 0;
 
     //special round variables
     int zombiesPerSpawn = 1;
@@ -795,7 +793,38 @@ void run(sf::RenderWindow& window, sf::View& view){
         else if (p1->getPosition().x < 1280 && p1->getPosition().y < 720) {
             view.setCenter(640, 360);
         }
-        
+
+        window.setView(view);
+
+        if (!roundComplete) {
+            int spawnCount = 3 * rounds + 5;
+            if (horde) spawnCount *= 3;
+            if (rounds == 0) zombiesSpawned = spawnCount;
+            if (zombiesSpawned < spawnCount) {
+                int delay = 300;
+                for (int i = 0; i < zombies.size() / (10 + rounds / 5); i++) delay += delay;
+                std::cout << "Time: " << clock() << "  Last Spawn: " << lastSpawnTime << "  Delay: " << zombieSpawnMultiplier * delay << std::endl;
+                if (clock() - lastSpawnTime > zombieSpawnMultiplier * delay) { //if enough time has passed
+                    sf::Vector2f spawnLocation = getZombieSpawn(p1);
+                    //
+                    //in here put code to spawn big boi: if zombiesSpawned %6 = 1
+                    if (rounds > 15 && zombiesSpawned % 3 == 2) {
+                        zombies.push_back(new RunnerZombie(15 + rounds / 5, 1, 1, p1->getSize(), spawnLocation));
+                    }
+                    else {
+                        zombies.push_back(new Zombie(15 + rounds / 5, 1, 1, p1->getSize(), spawnLocation));
+                    }
+                    lastSpawnTime = clock();
+                    zombiesSpawned++;
+                }
+            }
+            else if (zombiesSpawned == spawnCount) { //if all of the zombies in the round have been spawned
+                if (zombies.size() == 0) { //if all of the zombies have been killed
+                    roundComplete = true;
+                }
+            }
+        }
+
         //std::thread bull(bullets, p1);
         //bull.join();
         bullets(p1);
@@ -806,7 +835,7 @@ void run(sf::RenderWindow& window, sf::View& view){
         //std::thread draw(drawing, std::ref(window), p1, std::ref(font));
         //draw.join();
 
-        window.setView(view);
+        
 
         movement(window, p1);
 
@@ -818,63 +847,37 @@ void run(sf::RenderWindow& window, sf::View& view){
         if (horde) p1->setBottomlessClip(true);
 
         //spawn zombies 
-        if (spawnZombies && rounds > 0 && zombiesSpawned < 3 * rounds + 5) {
-            int delay = 300;
-            for (int i = 0; i < zombies.size() / (10 + rounds / 5); i++) delay += delay;
-            std::cout << "Time: " << clock() << "  Last Spawn: " << lastSpawnTime << "  Delay: " << zombieSpawnMultiplier * delay << std::endl;
-            if (clock() - lastSpawnTime > zombieSpawnMultiplier * delay) { //if enough time has passed
-                lastSpawnTime = clock();
-                sf::Vector2f spawnLocation = getZombieSpawn(p1);
-                if (rounds <= 15) {
-                    zombies.push_back(new Zombie(20 + rounds / 4, 1, 1, p1->getSize(), spawnLocation));
-                }
-                else if (rounds > 15) {
-                    if (zombiesSpawned % 3 == 2) {
-                        zombies.push_back(new RunnerZombie(20 + rounds / 4, 1, 1, p1->getSize(), spawnLocation));
-                        //std::cout << "New Runner" << std::endl;
-                    }
-                    else {
-                        zombies.push_back(new Zombie(20 + rounds / 4, 1, 1, p1->getSize(), spawnLocation));
-                    }
-                }
-                if (zombiesPerSpawn == 3) {
-                    hordeCounter++;
-                    if (hordeCounter % 3 == 0) zombiesSpawned++;
-                }
-                else zombiesSpawned++;
-            }
-        }
+        
 
-        if (zombies.size() == 0 && (zombiesSpawned == 3 * rounds + 5 || rounds == 0)) { // rounds == initial value of rounds
-            std::cout << "zombiesSpawned = " << 3 * rounds + 5 << std::endl;
-            if (clock() - checkComplete > 1000) {
-                roundComplete = true;
-            }
-        }
-        else if(spawnZombies) {
-            roundComplete = false;
-            checkComplete = clock();
-        }
+        //if (zombies.size() == 0 && (zombiesSpawned == 3 * rounds + 5 || rounds == 0)) { // rounds == initial value of rounds
+        //    std::cout << "zombiesSpawned = " << 3 * rounds + 5 << std::endl;
+        //    if (clock() - checkComplete > 1000) {
+        //        roundComplete = true;
+        //    }
+        //}
+        //else if(spawnZombies) {
+        //    roundComplete = false;
+        //    checkComplete = clock();
+        //}
 
         //Round counter & advancer
         if (roundComplete)
         {
             //advances rou
-            if (displayMenu && (clock() - roundCountTimer) > 1000) {
+            if (displayMenu && (clock() - roundCountTimer) > 1000) { //change displaymenu variable to round Complete
                 roundCountTimer = clock();
-                spawnZombies = false;
                 displayMenu = false;
                 rounds++;
 
                 //specials rounds
+                int picker = rand() % 100 + 1;
+                if (picker % 50 == 0) goldRush = true; //2% chance for 2x money each round
                 if (rounds % 5 == 0 && rounds % 10 != 0) {
                     if (!horde && !goldRush && !ambush && !megaZombie && !siege) {
-                        int picker = rand() % 100 + 1;
                         if (picker < 25) horde = true;
                         else if (picker >= 25 && picker < 50) ambush = true;
                         else if (picker >= 50 && picker < 75) siege = true;
-                        else if (picker >= 75) megaZombie = true;
-                        if (picker % 5 == 0) goldRush = true;
+                        else if (picker >= 75) ambush = true; //replace with megaZombie when that is done
                     }
                 }
                 else {
@@ -929,10 +932,10 @@ void run(sf::RenderWindow& window, sf::View& view){
                 //if (megaZombie) zombiesPerSpawn = -1;
                 //std::thread t1(spawnZombies, window.getSize(), p1, zombiesPerSpawn, zombieSpawnMultiplier);
                 //t1.detach();
-                spawnZombies = true;
                 displayMenu = true;
                 roundCountTimer = clock();
                 zombiesSpawned = 0;
+                roundComplete = false;
             }
         }
         //DEATH MESSAGE
