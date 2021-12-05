@@ -11,5 +11,11 @@ public:
     int getMaxReload();
     int getReloadTime();
     bool canShoot();
+    void run(sf::Vector2f pos, float rotation);
+
+protected:
+    bool fired;
+    int lastShot;
+    int numShots
 };
 
