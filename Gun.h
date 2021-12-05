@@ -23,7 +23,8 @@ protected:
 	sf::Texture bulletTexture;
 public:
 	//virtual void fire(sf::Vector2f go, bool canShoot) = 0;
-	virtual void run(sf::Vector2f pos, float rotation, bool hold) {};;
+	virtual void run(sf::Vector2f pos, float rotation, bool hold) {};
+	virtual void run(sf::Vector2f pos, float rotation, sf::Vector2f bulletDirection) {};
 	virtual void mainHit(int zombieId) {};
 	virtual int getMaxReload();
 	Gun(sf::Vector2f pos, sf::Vector2u size, int newBulletHealth);

@@ -25,12 +25,13 @@ Player::Player(int newHealth, double newSpeedMultiplier, double newReloadMultipl
     this->regenMultiplier = newRegenMultiplier;
     this->money = 10000;
     this->bottomlessClip = false;
+    this->initialReload = 0;
 }
 
 void Player::checkMove(sf::Vector2i gP) {
     canshoot = true;
     if (duringReload || !this->gun->canShoot()) canshoot = false; //if on shot cooldown or reloading
-    if (!duringReload && this->gun->getMaxReload() == 30) canshoot = true; //if not reloading and using auto rifle
+    if ((!duringReload && this->gun->getMaxReload() == 30) || this->bottomlessClip) canshoot = true; //if not reloading and using auto rifle
     if (!this->gun->getReload()) canshoot = false; //if out of ammo 
 
     sf::Vector2f v = this->sprite.getPosition();
@@ -86,12 +87,16 @@ void Player::checkMove(sf::Vector2i gP) {
     if (this->gun->getMaxReload() == 2) {
         this->gun->run(this->sprite.getPosition(), this->sprite.getRotation(), sf::Mouse::isButtonPressed(sf::Mouse::Left));
     }
+    else if (this->gun->getMaxReload() == 36) {
+        this->gun->run(this->sprite.getPosition(), this->sprite.getRotation(), p);
+    }
     else {
         this->gun->run(this->sprite.getPosition(), this->sprite.getRotation());
     }
     if (this->gun->getReload() > 0 && !duringReload) {
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-            if ((this->gun->getMaxReload() == 12 || this->gun->getMaxReload() == 4) && !bottomlessClip) { //is pistol or sniper
+            int maxReloadCheck = this->gun->getMaxReload();
+            if ((maxReloadCheck == 12 || maxReloadCheck == 4 || maxReloadCheck == 36 || maxReloadCheck == 6 || maxReloadCheck == 2) && !bottomlessClip) { //is pistol or sniper or burst or shotgun or rocket
                 if (semiAuto == true) {
                     this->gun->fire(p, bottomlessClip);
                     semiAuto = false;
@@ -115,6 +120,13 @@ void Player::checkMove(sf::Vector2i gP) {
             this->regenTimer = clock();
         }
         if (this->health > this->maxHealth) this->health = this->maxHealth;
+    }
+
+    //if reloading && enough time has passed
+    if (duringReload && clock() - initialReload > this->gun->getReloadTime())
+    {
+        duringReload = false;
+        this->gun->changeReload(this->gun->getMaxReload());
     }
 }
 
@@ -143,11 +155,9 @@ void Player::setHealth(int health) {
     this->regenTimer = clock();
 }
 
-void Player::reload(Gun* myGun) {
+void Player::reload() {
     this->duringReload = true;
-    Sleep(myGun->getReloadTime());
-    this->gun->changeReload(this->gun->getMaxReload());
-    this->duringReload = false;
+    this->initialReload = clock();
 }
 
 int Player::getMaxHealth() {
@@ -171,18 +181,6 @@ void Player::setMaxHealth(int newMaxHealth) {
     this->maxHealth = newMaxHealth;
 }
 
-//double Player::getStrength() {
-//    return this->damageP;
-//}
-//void Player::setStrength(double newStrength) {
-//    this->damageP = newStrength;
-//}
-//double Player::getSpeed() {
-//    return this->speedMultiplier;
-//}
-//void Player::setSpeed(double newSpeed) {
-//    this->speed = newSpeed;
-//}
 bool Player::setGun(Gun* newGun) {
     bool result = false;
     if (newGun->getMaxReload() != this->gun->getMaxReload()) {

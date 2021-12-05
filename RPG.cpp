@@ -29,7 +29,7 @@ RPG::RPG(sf::Vector2f pos, sf::Vector2u size, int newBulletHealth) : Gun(pos, si
 };
 
 void RPG::run(sf::Vector2f pos, float rotation, bool hold) {
-    this->power = 5;
+    this->power = 10;
     this->explode = !hold; //explode = true if mouse left is let go
     this->shottimer++;
     this->sprite.setRotation(rotation);
@@ -94,7 +94,7 @@ void RPG::fire(sf::Vector2f go, bool bottomlessClip)
     if (this->shottimer > 60 && this->shotbull == nullptr) { //if 60 frames since last shot and there isnt already been a shot
         this->fired = true; //fired
         sf::Vector2f v = this->sprite.getPosition();
-        this->shotbull = new Bullet(v, thisGo, this->size, this->power*4, this->rocketTexture, 1, 7); //setting shotbull pointer to the rocket
+        this->shotbull = new Bullet(v, thisGo, this->size, this->power*4, this->rocketTexture, 2, 10); //setting shotbull pointer to the rocket
         this->shots->push_back(this->shotbull); //sending the rocket out
         if(!bottomlessClip) this->reload--;
         shottimer = 0;

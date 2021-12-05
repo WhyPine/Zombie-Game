@@ -18,7 +18,6 @@ void BurstRifle::fire(sf::Vector2f go, bool bottomelessClip)
 {
 	if (this->shottimer > 40)
 	{
-		this->direction = go;
 		this->fired = true; //the gun has been fired
 		this->shottimer = 0;
 		this->numShots = 4;
@@ -44,10 +43,9 @@ How to do run:
 when fired = true
 for each shot decrease an iterator by 1 four times as well as setting fired to false
 */
-void BurstRifle::run(sf::Vector2f pos, float rotation)
+void BurstRifle::run(sf::Vector2f pos, float rotation, sf::Vector2f bulletDirection)
 {
 	this->shottimer++;
-	sprite.setRotation(rotation);
 	if (rotation < 0) rotation += 360;
 	rotation += 30;
 	sf::Vector2f newVector(pos.x + cos((3.141592653 / 180) * rotation) * 12, pos.y + sin((3.141592653 / 180) * rotation) * 12);
@@ -62,7 +60,7 @@ void BurstRifle::run(sf::Vector2f pos, float rotation)
 		if (clock() - lastShot > 62.5)
 		{
 			this->numShots--;
-			this->shots->push_back(new Bullet(newVector, this->direction, this->size, this->power, this->bulletTexture, 1 + this->bulletHealth, 15));
+			this->shots->push_back(new Bullet(newVector, bulletDirection, this->size, this->power, this->bulletTexture, 1 + this->bulletHealth, 15));
 			std::cout << "BOOM   shotsSize = " << this->shots->size() << std::endl;
 			this->lastShot = clock();
 		}
@@ -85,5 +83,5 @@ int BurstRifle::getReloadTime() {
 }
 
 bool BurstRifle::canShoot() {
-	return this->shottimer > 10; //temp
+	return this->shottimer > 40; //temp
 }

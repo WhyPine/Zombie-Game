@@ -530,8 +530,7 @@ void movement(sf::RenderWindow& window, Player* p1) {
         {
             reloadDelayTimer = clock();
             p1->canshoot = false;
-            std::thread t1(&Player::reload, p1, p1->getGun());
-            t1.detach();
+            p1->reload();
         }
     }
 }

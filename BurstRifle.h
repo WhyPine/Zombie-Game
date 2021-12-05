@@ -11,10 +11,10 @@ public:
     int getMaxReload();
     int getReloadTime();
     bool canShoot();
-    void run(sf::Vector2f pos, float rotation);
+    void run(sf::Vector2f pos, float rotation, sf::Vector2f bulletDirection);
 
 protected:
-    sf::Vector2f direction;
+    //sf::Vector2f direction;
     bool fired;
     int lastShot;
     int numShots;
