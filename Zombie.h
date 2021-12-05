@@ -15,6 +15,7 @@ protected:
 	int id;
 	sf::RectangleShape healthFront;
 	sf::RectangleShape healthBack;
+	bool attackPlayer;
 public:
 	sf::RectangleShape getHealthFront();
 	sf::RectangleShape getHealthBack();

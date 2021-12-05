@@ -26,6 +26,7 @@ private:
 	int bulletHealth;
 	bool bottomlessClip;
 	bool duringReload;
+	int initialReload;
 	int regenDelay;
 public:
 	int getBulletHealth();
@@ -39,7 +40,7 @@ public:
 	Gun*& getGun();
 	int getHealth();
 	void setHealth(int health);
-	void reload(Gun* myGun);
+	void reload();
 	int getMoney();
 	void setMoney(int newMoney);
 	void setMaxHealth(int newMaxHealth);

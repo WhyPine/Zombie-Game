@@ -530,8 +530,7 @@ void movement(sf::RenderWindow& window, Player* p1) {
         {
             reloadDelayTimer = clock();
             p1->canshoot = false;
-            std::thread t1(&Player::reload, p1, p1->getGun());
-            t1.detach();
+            p1->reload();
         }
     }
 }
@@ -729,8 +728,7 @@ void drawing(sf::RenderWindow& window, Player* p1, sf::Font& font) {
     for (int k = 0; k < zombies.size(); k++) {
         if (zombies[k] != nullptr) {
             if (zombies[k]->getSprite().getGlobalBounds().intersects(p1->getSprite().getGlobalBounds()) && zombies[k]->getReload() == 0) {
-                std::thread t2(&Zombie::attack, zombies[k], p1);
-                t2.detach();
+                zombies[k]->attack(p1);
             }
         }
     }
