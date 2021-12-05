@@ -1,10 +1,10 @@
 # CptS 122 PA 9: Zombie Game
 
 ## Collaborators
-- Aidan Gooding (Lab Section 10)
-- Josh Maloy (Lab Section 6)
-- Orion Green (Lab Section 6)
-- Zach Fechko (Lab Section 6)
+- [Aidan Gooding](https://github.com/WhyPine) (Lab Section 10)
+- [Josh Maloy](https://github.com/Jiinja) (Lab Section 6)
+- [Orion Green](https://github.com/oriongreen) (Lab Section 6)
+- [Zach Fechko](https://github.com/zfechko) (Lab Section 6)
 
 ## Game Description
 You are a lone survivor in a zombie apocalypse who has to survive what seems like endless waves of zombies coming to kill you, you must use the weapons you have at your disposal to survive for as many rounds as you can.
