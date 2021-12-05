@@ -5,10 +5,12 @@ class BurstRifle :
     public Gun
 {
 public:
-    BurstRifle(sf::Vector2f pos, sf::Vector2u size);
-    void fire(sf::Vector2f go);
+    BurstRifle(sf::Vector2f pos, sf::Vector2u size, int newBulletHealth);
+    void fire(sf::Vector2f go, bool bottomlessClip);
     int getReload();
     int getMaxReload();
+    int getReloadTime();
+    bool canShoot();
     void run(sf::Vector2f pos, float rotation);
 
 protected:

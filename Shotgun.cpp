@@ -1,8 +1,10 @@
 #include "Shotgun.h"
 #include <iostream>
 
-Shotgun::Shotgun(sf::Vector2f pos, sf::Vector2u size) : Gun(pos, size) {
+Shotgun::Shotgun(sf::Vector2f pos, sf::Vector2u size, int newBulletHealth) : Gun(pos, size, newBulletHealth) {
     this->power = 5;
+    this->bulletHealth = newBulletHealth;
+    this->reloadDelay = 1500;
     if (!texture.loadFromFile("rifle.png"))
     {
         std::cout << "Failed to load shotgun" << std::endl;
@@ -19,7 +21,7 @@ Shotgun::Shotgun(sf::Vector2f pos, sf::Vector2u size) : Gun(pos, size) {
     this->sprite.setOrigin(this->sprite.getLocalBounds().width / 2, this->sprite.getLocalBounds().height / 2);
 }
 
-void Shotgun::fire(sf::Vector2f go)
+void Shotgun::fire(sf::Vector2f go, bool bottomlessClip)
 {
     if (this->shottimer > 30) {
         sf::Vector2f v = this->sprite.getPosition();
@@ -33,11 +35,11 @@ void Shotgun::fire(sf::Vector2f go)
         for (int x = 0; x < 5; x++) {
             go.x = cos(5 * 3.141592653 / 180) * temp.x - sin(5 * 3.141592653 / 180) * temp.y;
             go.y = sin(5 * 3.141592653 / 180) * temp.x + cos(5 * 3.141592653 / 180) * temp.y;
-            this->shots->push_back(new Bullet(v, go, this->size, this->power, this->bulletTexture));
+            this->shots->push_back(new Bullet(v, go, this->size, this->power, this->bulletTexture, 1 + this->bulletHealth, 20));
             temp.x = go.x;
             temp.y = go.y;
         }
-        this->reload--;
+        if (!bottomlessClip) this->reload--;
         this->shottimer = 0;
     }
 }
@@ -50,5 +52,9 @@ int Shotgun::getReload()
 int Shotgun::getMaxReload()
 {
     return 6;
+}
+
+int Shotgun::getReloadTime() {
+    return this->reloadDelay;
 }
 

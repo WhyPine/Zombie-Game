@@ -2,10 +2,10 @@
 #include <iostream>
 #include <math.h>
 
-Bullet::Bullet(sf::Vector2f start, sf::Vector2f newGo, sf::Vector2u size, int newDamage, sf::Texture& newTexture) : texture(newTexture) {
+Bullet::Bullet(sf::Vector2f start, sf::Vector2f newGo, sf::Vector2u size, int newDamage, sf::Texture& newTexture, int newHealth, int newSpeed) : texture(newTexture) {
     this->damage = newDamage;
-    this->projS = 10;
-    this->health = 1;
+    this->projS = newSpeed;
+    this->health = newHealth;
     //this->texture = newTexture;
     //sf::Texture texture;
     //texture.loadFromFile("zombie0.png");  //load texture in gun and then pass it in by reference
@@ -50,4 +50,16 @@ int Bullet::getDamage() {
 
 void Bullet::setHealth(int value) {
     this->health += value;
+}
+
+bool Bullet::hasHit(int zombieId) {
+    bool result = false;
+    for (int x = 0; x < this->zombiesHit.size(); x++) {
+        if (zombieId == this->zombiesHit[x]) result = true;
+    }
+    return result;
+}
+
+void Bullet::hit(int zombieId) {
+    this->zombiesHit.push_back(zombieId);
 }

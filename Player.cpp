@@ -4,27 +4,37 @@
 #include <Windows.h> 
 
 
-Player::Player(int health, double speed, double damageP, sf::Vector2u newSize) {
+Player::Player(int newHealth, double newSpeedMultiplier, double newReloadMultiplier, sf::Vector2u newSize, int newBulletHealth, double newRegenMultiplier) {
+    this->regenTimer = 0;
+    this->bulletHealth = newBulletHealth;
     this->semiAuto = true;
     this->size = newSize;
-    this->health = health;
-    this->maxHealth = health;
-	this->speed = speed;
-	this->damageP = damageP;
+    this->health = newHealth;
+    this->maxHealth = newHealth;
+    this->speedMultiplier = newSpeedMultiplier;
+	this->reloadMultiplier = newReloadMultiplier;
     this->canshoot = true;
+    this->duringReload = false;
     this->sprite.setPosition(15*32.f, 9*32.f);
     this->texture->loadFromFile("survivor-move_handgun_0.png");
     this->sprite.setTexture(*(this->texture));
     this->sprite.setTextureRect(sf::IntRect(39, 39, 250, 200));
     this->sprite.setOrigin(this->sprite.getLocalBounds().width / 2, this->sprite.getLocalBounds().height / 2);
     this->sprite.setScale((float)size.x / 6400, (float)size.y / 3600);
+    this->gun = new Gun(this->sprite.getPosition(), size, bulletHealth); 
+    this->regenMultiplier = newRegenMultiplier;
     this->gun = new Gun(this->sprite.getPosition(), size); 
     this->regenTimer = 0;
     this->regenDelay = 3;
     this->money = 10000;
+    this->bottomlessClip = false;
 }
 
 void Player::checkMove(sf::Vector2i gP) {
+    canshoot = true;
+    if (duringReload || !this->gun->canShoot()) canshoot = false; //if on shot cooldown or reloading
+    if (!duringReload && this->gun->getMaxReload() == 30) canshoot = true; //if not reloading and using auto rifle
+    if (!this->gun->getReload()) canshoot = false; //if out of ammo 
 
     sf::Vector2f v = this->sprite.getPosition();
     sf::Vector2f p;
@@ -58,16 +68,16 @@ void Player::checkMove(sf::Vector2i gP) {
     float moveY = 0;
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
-        moveX += 1;
+        moveX += 1 * this->speedMultiplier;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
-        moveX -= 1;;
+        moveX -= 1 * this->speedMultiplier;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
-        moveY += 1;
+        moveY += 1 * this->speedMultiplier;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
-        moveY -= 1;
+        moveY -= 1 * this->speedMultiplier;
     }
     if (moveX != 0 || moveY != 0) {
         if (moveX != 0 && moveY != 0) {
@@ -76,22 +86,22 @@ void Player::checkMove(sf::Vector2i gP) {
         }
         for (int i = 0; i < 3; i++) this->sprite.move(moveX, moveY);
     }
-    if (this->gun->getMaxReload() == 3) {
+    if (this->gun->getMaxReload() == 2) {
         this->gun->run(this->sprite.getPosition(), this->sprite.getRotation(), sf::Mouse::isButtonPressed(sf::Mouse::Left));
     }
     else {
         this->gun->run(this->sprite.getPosition(), this->sprite.getRotation());
     }
-    if (this->gun->getReload() > 0 && canshoot) {
+    if (this->gun->getReload() > 0 && !duringReload) {
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-            if (this->gun->getMaxReload() == 12) { //is pistol
+            if (this->gun->getMaxReload() == 12 || this->gun->getMaxReload() == 4) { //is pistol or sniper
                 if (semiAuto == true) {
-                    this->gun->fire(p);
+                    this->gun->fire(p, bottomlessClip);
                     semiAuto = false;
                 }
             }
             else {
-                this->gun->fire(p);
+                this->gun->fire(p, this->bottomlessClip);
             }
         }
     }
@@ -103,14 +113,12 @@ void Player::checkMove(sf::Vector2i gP) {
 
     //regenerating health
     if (this->health < this->maxHealth) {
-        if (clock() - this->regenTimer > this->regenDelay * 1000) {
+        if (clock() - this->regenTimer > 3000 * this->regenMultiplier) {
             this->health+=2;
             this->regenTimer = clock();
         }
         if (this->health > this->maxHealth) this->health = this->maxHealth;
     }
-
-
 }
 
 sf::Sprite Player::getSprite() {
@@ -138,10 +146,11 @@ void Player::setHealth(int health) {
     this->regenTimer = clock();
 }
 
-void Player::reload(int value) {
-    Sleep(1500);
+void Player::reload(Gun* myGun) {
+    this->duringReload = true;
+    Sleep(myGun->getReloadTime());
     this->gun->changeReload(this->gun->getMaxReload());
-    this->canshoot = true;
+    this->duringReload = false;
 }
 
 int Player::getMaxHealth() {
@@ -165,18 +174,18 @@ void Player::setMaxHealth(int newMaxHealth) {
     this->maxHealth = newMaxHealth;
 }
 
-double Player::getStrength() {
-    return this->damageP;
-}
-void Player::setStrength(double newStrength) {
-    this->damageP = newStrength;
-}
-double Player::getSpeed() {
-    return this->speed;
-}
-void Player::setSpeed(double newSpeed) {
-    this->speed = newSpeed;
-}
+//double Player::getStrength() {
+//    return this->damageP;
+//}
+//void Player::setStrength(double newStrength) {
+//    this->damageP = newStrength;
+//}
+//double Player::getSpeed() {
+//    return this->speedMultiplier;
+//}
+//void Player::setSpeed(double newSpeed) {
+//    this->speed = newSpeed;
+//}
 bool Player::setGun(Gun* newGun) {
     bool result = false;
     if (newGun->getMaxReload() != this->gun->getMaxReload()) {
@@ -190,4 +199,12 @@ bool Player::setGun(Gun* newGun) {
 
 sf::Vector2u Player::getSize() {
     return this->size;
+}
+
+int Player::getBulletHealth() {
+    return this->bulletHealth;
+}
+
+void Player::setBottomlessClip(bool newValue) {
+    this->bottomlessClip = newValue;
 }

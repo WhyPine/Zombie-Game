@@ -5,6 +5,7 @@
 
 Zombie::Zombie(int health, float speed, int damage, sf::Vector2u size, sf::Vector2f pos) {
     this->health = health;
+    this->maxHealth = health;
     this->speed = speed;
     this->damage = damage;
     this->reload = 0;
@@ -15,6 +16,11 @@ Zombie::Zombie(int health, float speed, int damage, sf::Vector2u size, sf::Vecto
     this->sprite.setScale((float)size.x / 7200, (float)size.y / 4400);
     this->sprite.setOrigin(this->sprite.getLocalBounds().width / 2, this->sprite.getLocalBounds().height / 2);
     this->sprite.setPosition(pos.x + random, pos.y + random);
+    this->id = clock();
+
+    this->healthBack.setSize(sf::Vector2f(32, 5));
+    this->healthBack.setFillColor(sf::Color(0, 0, 0, 127));
+    this->healthFront.setFillColor(sf::Color(230, 45, 45, 127));
 }
 
 Zombie::~Zombie() {
@@ -58,6 +64,10 @@ void Zombie::getMove(Player* p1, sf::Vector2f pos) {
         result = this->sprite.getRotation();
     }
     this->sprite.setRotation(result);
+
+    this->healthFront.setSize((sf::Vector2f(32 * this->health / this->maxHealth, 5)));
+    this->healthBack.setPosition(this->sprite.getPosition().x - 11, this->sprite.getPosition().y + this->sprite.getGlobalBounds().height / 2 - 10);
+    this->healthFront.setPosition(this->sprite.getPosition().x - 11, this->sprite.getPosition().y + this->sprite.getGlobalBounds().height / 2 - 10);
 }
 
 sf::Sprite Zombie::getSprite() {
@@ -72,7 +82,7 @@ int Zombie::getReload() {
     int result = 1;
     if (clock() - reload > 950) {
         result = 0;
-        this->reload = clock();
+        //this->reload = clock();
     }
     return result;
 }
@@ -86,6 +96,7 @@ void Zombie::setHealth(int health) {
 }
 
 void Zombie::attack(Player* p1) {
+    this->reload = clock();
     Sleep(900);
     double size = 0.75;
     //makes the collision box for the player change size by a factor of size
@@ -113,6 +124,7 @@ void Zombie::getOutDaWay(Player* p1, Zombie* z2) //this zombie is moving away fr
     int randomMovement = (rand() % 100) + 1;
 
     //getting distance to player and zombie
+    //std::cout << "before distance calc" << std::endl;
     float pxUnit = this->getSprite().getPosition().x - p1->getPosition().x;
     float pyUnit = this->getSprite().getPosition().y - p1->getPosition().y;
     float zxUnit = this->getSprite().getPosition().x - z2->getSprite().getPosition().x;
@@ -167,3 +179,22 @@ void Zombie::getOutDaWay(Player* p1, Zombie* z2) //this zombie is moving away fr
     }
     this->sprite.setRotation(result);
 }
+
+int Zombie::getId() {
+    return this->id;
+}
+
+int Zombie::getMaxHealth() {
+    return this->maxHealth;
+}
+
+sf::RectangleShape Zombie::getHealthBack() {
+    return this->healthBack;
+}
+    
+sf::RectangleShape Zombie::getHealthFront() {
+    return this->healthFront;
+}
+
+
+

@@ -2,18 +2,18 @@
 #include "Play.h"
 
 clock_t start = 0;
-int roundCountTimer = 0;
 int reloadDelayTimer = 0;
 time_t end = 0;
-int rounds = 45;
+int rounds = 0;
 vector<Zombie*> zombies;
 sf::Vector2f pasPos;
 sf::Sprite backdrop;
-bool displayMenu = true;
 vector<wall*> walls;
 std::mutex mtx;
 vector<Door*> doors;
 vector<buyBox*> buyBoxes;
+
+bool goldRush = false;
 
 void loadWalls() {
     //boundaries
@@ -132,6 +132,7 @@ void loadWalls() {
     buyBoxes.push_back(new buyBox(33 * 32, 21 * 32, 25, 0));
     buyBoxes.push_back(new buyBox(27 * 32, 0 * 32, 25, 1));
     buyBoxes.push_back(new buyBox(33 * 32, 0 * 32, 25, 2));
+    buyBoxes.push_back(new buyBox(61 * 32, 34 * 32, 50, 3));
     
     
 }
@@ -145,103 +146,117 @@ void makeTrue(sf::Vector2i& gP, Player* p1) {
     }
 }
 
-void spawnZombies(sf::Vector2u size, Player* p1) {
+sf::Vector2f getZombieSpawn(Player* p1)
+{
     sf::Vector2f v;
-    for (int i = 0; i < 3 * rounds + 5; i++) {
-
-        int x = rand();
-        if (p1->getPosition().x < 1280 && p1->getPosition().y > 720) { //bottom left
-            //doors 3 or 5 or 2
-            // if any of the doors are open, zombies can spawn in garden
-            //
-            // if the doors are closed, zombies continue to spawn at the last location while the player is on this screen
-            //
-            //
-            if (!doors[3]->isClosed() || !doors[5]->isClosed() || !doors[2]->isClosed()) {
-                if (x % 2 == 0) {
-                    v.x = 1 * 32;
-                    v.y = 41 * 32;
-                }
-                else {
-                    v.x = 33 * 32;
-                    v.y = 41 * 32;
-                }
+    int x = rand();
+    if (p1->getPosition().x < 1280 && p1->getPosition().y > 720) { //bottom left
+        //doors 3 or 5 or 2
+        // if any of the doors are open, zombies can spawn in garden
+        //
+        // if the doors are closed, zombies continue to spawn at the last location while the player is on this screen
+        //
+        //
+        if (!doors[3]->isClosed() || !doors[5]->isClosed() || !doors[2]->isClosed()) {
+            if (x % 2 == 0) {
+                v.x = 1 * 32;
+                v.y = 41 * 32;
+            }
+            else {
+                v.x = 33 * 32;
+                v.y = 41 * 32;
             }
         }
-        else if (p1->getPosition().x > 1280 && p1->getPosition().y < 720) { //top right
-            //door 8 both
-            //door 1 first
-            //door 9 second
-            if (!doors[8]->isClosed()) {
-                if (x % 2 == 0) {
-                    v.x = 56 * 32;
-                    v.y = 2 * 32;
-                }
-
-                else {
-                    v.x = 77 * 32;
-                    v.y = 4 * 32;
-                }
-            }
-            else if (!doors[1]->isClosed()) {
+    }
+    else if (p1->getPosition().x > 1280 && p1->getPosition().y < 720) { //top right
+        //door 8 both
+        //door 1 first
+        //door 9 second
+        if (!doors[8]->isClosed()) {
+            if (x % 2 == 0) {
                 v.x = 56 * 32;
                 v.y = 2 * 32;
             }
-            else if (!doors[9]->isClosed()) {
+
+            else {
                 v.x = 77 * 32;
                 v.y = 4 * 32;
             }
         }
-        else if (p1->getPosition().x >= 1280 && p1->getPosition().y >= 720) { //bottom right
-            //door 6 both
-            //door 4 first
-            if (!doors[6]->isClosed()) {
-                if (x % 2 == 0) {
-                    v.x = 43 * 32;
-                    v.y = 25 * 32;
-                }
-                else {
-                    v.x = 71 * 32;
-                    v.y = 36 * 32;
-                }
-            }
-            else if (!doors[4]->isClosed()) {
+        else if (!doors[1]->isClosed()) {
+            v.x = 56 * 32;
+            v.y = 2 * 32;
+        }
+        else if (!doors[9]->isClosed()) {
+            v.x = 77 * 32;
+            v.y = 4 * 32;
+        }
+    }
+    else if (p1->getPosition().x >= 1280 && p1->getPosition().y >= 720) { //bottom right
+        //door 6 both
+        //door 4 first
+        if (!doors[6]->isClosed()) {
+            if (x % 2 == 0) {
                 v.x = 43 * 32;
                 v.y = 25 * 32;
             }
+            else {
+                v.x = 71 * 32;
+                v.y = 36 * 32;
+            }
+        }
+        else if (!doors[4]->isClosed()) {
+            v.x = 43 * 32;
+            v.y = 25 * 32;
+        }
 
-            
+
+    }
+    else if (p1->getPosition().x <= 1280 && p1->getPosition().y <= 720) { //top left
+        if (x % 2 == 0) {
+            v.x = 15 * 32;
+            v.y = 1 * 32;
         }
-        else if (p1->getPosition().x <= 1280 && p1->getPosition().y <= 720) { //top left
-            if (x % 2 == 0) {
-                v.x = 15 * 32;
-                v.y = 1 * 32;
-            }
-            else {
-                v.x = 1 * 32;
-                v.y = 9 * 32;
-            }
-        }
-        
-        if (rounds <= 15) {
-            zombies.push_back(new Zombie(20, 1, 1, size, v));
-        }
-        else if (rounds > 15) {
-            if (i % 3 == 2) {
-                zombies.push_back(new RunnerZombie(20, 1, 1, size, v));
-                std::cout << "New Runner" << std::endl;
-            }
-            else {
-                zombies.push_back(new Zombie(20, 1, 1, size, v));
-            }
-        }
-        std::cout << (int)(zombies.size() / 15) + 1 << std::endl;
-        for (int i = 0; i < (int)(zombies.size() / 10) + 1; i++) {
-            Sleep(500);
+        else {
+            v.x = 1 * 32;
+            v.y = 9 * 32;
         }
     }
+    return v;
 }
-
+/*
+void spawnZombies(sf::Vector2u size, Player* p1, int horde, float waitMultiplier) { //may need to redo this and unthread it
+    sf::Vector2f v;
+    int health = 20 + rounds/4;
+    if (waitMultiplier == 0.5) health /= 2;
+    if (waitMultiplier == 2.0) health *= 2;
+    for (int i = 0; i < 3 * rounds + 5; i++) {
+        v = getZombieSpawn(p1);       
+       
+        for (int j = 0; j < horde; j++) {
+            if (rounds <= 15) {
+                zombies.push_back(new Zombie(health, 1, 1, size, v));
+            }
+            else if (rounds > 15) {
+                if (i % 3 == 2) {
+                    zombies.push_back(new RunnerZombie(health, 1, 1, size, v));
+                    //std::cout << "New Runner" << std::endl;
+                }
+                else {
+                    zombies.push_back(new Zombie(health, 1, 1, size, v));
+                }
+            }
+        }
+        int delay = 300;
+        int spawnThreshold = zombies.size() / (10 + rounds / 5);
+        for (int i = 0; i < spawnThreshold; i++) {
+            delay += delay;
+        }
+        //std::cout << "Zombies: " << zombies.size() << "  Round: " << rounds << "  Delay: " << delay << std::endl;
+        Sleep(delay * waitMultiplier);
+    }
+}
+*/
 sf::Vector2f doorCollision(Door& door, sf::Vector2f pos, int type, bool& collided) {
     sf::Vector2f result = pos;
     int thisSize = 40;
@@ -411,6 +426,7 @@ void movement(sf::RenderWindow& window, Player* p1) {
     for (int z = 0; z < zombies.size(); z++) {
         sf::FloatRect zbounds;
         float zombieSize = 30;
+        //std::cout << "before zbounds" << std::endl;
         zbounds.top = zombies[z]->getSprite().getPosition().y - zombieSize / 2;
         zbounds.left = zombies[z]->getSprite().getPosition().x - zombieSize / 2;;
         zbounds.width = zombieSize;
@@ -419,6 +435,7 @@ void movement(sf::RenderWindow& window, Player* p1) {
             bool normal = true;
             if (z + 1 < zombies.size()) {
                 sf::FloatRect z2bounds;
+                //std::cout << "before z2bounds" << std::endl;
                 z2bounds.top = zombies[z + 1]->getSprite().getPosition().y - zombieSize / 2;
                 z2bounds.left = zombies[z + 1]->getSprite().getPosition().x - zombieSize / 2;
                 z2bounds.width = zombieSize;
@@ -438,6 +455,7 @@ void movement(sf::RenderWindow& window, Player* p1) {
     for (int x = 0; x < doors.size(); x++) {
         v = doorCollision(*doors[x], p1->getPosition(), 1, collisionCheck);
         if (collisionCheck) p1->setPosition(v);
+        //std::cout << "before door collision" << std::endl;
         for (int i = 0; i < zombies.size(); i++) {
             if (zombies[i] != nullptr) {
                 v = doorCollision(*doors[x], zombies[i]->getSprite().getPosition(), 0, collisionCheck);
@@ -447,7 +465,7 @@ void movement(sf::RenderWindow& window, Player* p1) {
         if (doors[x]->isClosed()) {
             for (int j = 0; j < p1->getGun()->getShots()->size(); j++) {
                 if (doors[x]->getWall().intersects(p1->getGun()->getShots()->at(j)->getSprite().getGlobalBounds())) {
-                    delete p1->getGun()->getShots()->at(j);
+                    //delete p1->getGun()->getShots()->at(j);
                     p1->getGun()->getShots()->erase(p1->getGun()->getShots()->begin() + j);
                 }
             }
@@ -456,15 +474,19 @@ void movement(sf::RenderWindow& window, Player* p1) {
     for (int x = 0; x < walls.size(); x++) { //try unoverlapping corners and see what happens
         v = checkCollision(walls[x]->getWall(), p1->getPosition(), 1, collisionCheck);
         if (collisionCheck) p1->setPosition(v);
+        //std::cout << "before wall collision" << std::endl;
         for (int i = 0; i < zombies.size(); i++) {
             if (zombies[i] != nullptr) {
-                v = checkCollision(walls[x]->getWall(), zombies[i]->getSprite().getPosition(), 0, collisionCheck);
+                Zombie* zombieChecker = zombies[i]; ///zombies[i] exists, but zombieChecker does not sometimes wtf
+                sf::Sprite zombieSprite = zombieChecker->getSprite();
+                sf::Vector2f zombieLocation = zombieSprite.getPosition();
+                v = checkCollision(walls[x]->getWall(), zombieLocation, 0, collisionCheck);
                 if (collisionCheck) zombies[i]->setPosition(v);
             }
         }
         for (int j = 0; j < p1->getGun()->getShots()->size(); j++) {
             if (walls[x]->getWall().intersects(p1->getGun()->getShots()->at(j)->getSprite().getGlobalBounds())) {
-                delete p1->getGun()->getShots()->at(j);
+                //delete p1->getGun()->getShots()->at(j);
                 p1->getGun()->getShots()->erase(p1->getGun()->getShots()->begin() + j);
             }
         }
@@ -472,6 +494,7 @@ void movement(sf::RenderWindow& window, Player* p1) {
     for (int x = 0; x < buyBoxes.size(); x++) {
         v = checkCollision(buyBoxes[x]->getWall(), p1->getPosition(), 1, collisionCheck);
         if (collisionCheck) p1->setPosition(v);
+        //std::cout << "before box collision" << std::endl;
         for (int i = 0; i < zombies.size(); i++) {
             if (zombies[i] != nullptr) {
                 v = checkCollision(buyBoxes[x]->getWall(), zombies[i]->getSprite().getPosition(), 0, collisionCheck);
@@ -480,7 +503,7 @@ void movement(sf::RenderWindow& window, Player* p1) {
         }
         for (int j = 0; j < p1->getGun()->getShots()->size(); j++) {
             if (buyBoxes[x]->getWall().intersects(p1->getGun()->getShots()->at(j)->getSprite().getGlobalBounds())) {
-                delete p1->getGun()->getShots()->at(j);
+                //delete p1->getGun()->getShots()->at(j);
                 p1->getGun()->getShots()->erase(p1->getGun()->getShots()->begin() + j);
             }
         }
@@ -490,22 +513,24 @@ void movement(sf::RenderWindow& window, Player* p1) {
     playerBox.left = p1->getPosition().x - 40 / 2;
     playerBox.width = 40;
     playerBox.height = 40;
+    //std::cout << "before player collision" << std::endl;
     for (int x = 0; x < zombies.size(); x++) {
-        v = checkCollision(playerBox, zombies[x]->getSprite().getPosition(), 1, collisionCheck);
-        if (collisionCheck) zombies[x]->setPosition(v);
+        if (zombies[x] != nullptr && x < zombies.size()) {
+            v = checkCollision(playerBox, zombies[x]->getSprite().getPosition(), 1, collisionCheck);
+                if (collisionCheck) zombies[x]->setPosition(v);
+        }
     }
-
 
     sf::Vector2i gP = sf::Mouse::getPosition(window);
     makeTrue(gP, p1);
     p1->checkMove(gP);
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R))
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R)) //add specific reload delays to guns. multiply time by reloadMultiplier to find how long reload should be
     {
         if (clock() - reloadDelayTimer > 2000 && p1->getGun()->getReload() < p1->getGun()->getMaxReload()) //fixed spam reload bug
         {
             reloadDelayTimer = clock();
             p1->canshoot = false;
-            std::thread t1(&Player::reload, p1, p1->getGun()->getMaxReload());
+            std::thread t1(&Player::reload, p1, p1->getGun());
             t1.detach();
         }
     }
@@ -562,6 +587,7 @@ void displayGUI(Player* p1, sf::RenderWindow& window, sf::Font& font, int zombie
         ammoBack.setFillColor(sf::Color(32, 32, 32, 125));
         ammoBack.setOutlineColor(sf::Color(127, 127, 127, 100));
         ammoBack.setOutlineThickness(1);
+        if (!p1->canshoot) ammoBack.setFillColor(sf::Color(200, 0, 20, 125));
         ammoFront.setFillColor(sf::Color(96, 96, 96, 175));
         ammoFront.setOutlineColor(sf::Color(0, 0, 0, 100));
         ammoFront.setOutlineThickness(1);
@@ -569,8 +595,6 @@ void displayGUI(Player* p1, sf::RenderWindow& window, sf::Font& font, int zombie
         makeTrue(gP, p1);
         ammoBack.setPosition(gP.x - 25, gP.y + 45);
         ammoFront.setPosition(gP.x - 25, gP.y + 45);
-
-
         
         for (int x = 0; x < doors.size(); x++) {
             if (doors[x]->canOpen(*p1) && doors[x]->isClosed()) {
@@ -640,7 +664,8 @@ void displayGUI(Player* p1, sf::RenderWindow& window, sf::Font& font, int zombie
 }
 
 void dropMoney(Player* p1) {
-    int points = rand() % 7 + 1;
+    int points = rand() % 3 + 3;
+    if (goldRush) points *= 2;
     p1->setMoney(p1->getMoney() + points);
 }
 
@@ -653,7 +678,9 @@ void bullets(Player* p1) {
             zombieBox.left = zombies[z]->getSprite().getPosition().x - 30 / 2;
             zombieBox.width = 30;
             zombieBox.height = 30;
-            if (z < zombies.size() && b < p1->getGun()->getShots()->size() && p1->getGun()->getShots()->at(b)->getSprite().getGlobalBounds().intersects(zombieBox)) { //if bullet is touching zombie
+            if (z < zombies.size() && b < p1->getGun()->getShots()->size() && p1->getGun()->getShots()->at(b)->getSprite().getGlobalBounds().intersects(zombieBox) && !p1->getGun()->getShots()->at(b)->hasHit(zombies[z]->getId())) { //if bullet is touching zombie
+                p1->getGun()->getShots()->at(b)->hit(zombies[z]->getId());
+                if (p1->getGun()->getMaxReload() == 2 && p1->getGun()->getShots()->at(b)->getDamage() == 20) p1->getGun()->mainHit(zombies[z]->getId()); //if rpg rocket, make explosion not hit the zombie
                 zombies[z]->setHealth(zombies[z]->getHealth() - p1->getGun()->getShots()->at(b)->getDamage()); //damage the zombie
                 p1->getGun()->getShots()->at(b)->setHealth(-1); //damage the bullet
                 if (zombies[z]->getHealth() < 1) { //if zombie has no more health
@@ -692,8 +719,11 @@ void drawing(sf::RenderWindow& window, Player* p1, sf::Font& font) {
     window.draw(p1->getGunSprite());
     for (int i = 0; i < zombies.size(); i++)
     {
-        if (zombies[i] != nullptr) {
+        //std::cout << "before draw" << std::endl;
+        if (zombies[i] != nullptr && i < zombies.size()) {
             window.draw(zombies[i]->getSprite());
+            window.draw(zombies[i]->getHealthBack());
+            window.draw(zombies[i]->getHealthFront());
         }
     }
     for (int k = 0; k < zombies.size(); k++) {
@@ -717,8 +747,8 @@ void run(sf::RenderWindow& window, sf::View& view){
     sf::Vector2f v;
     v.x = 32*1.f;
     v.y = 32*1.f;
-    zombies.push_back(new Zombie(20, 1, 1, window.getSize(), v));
-    Player* p1 = new Player(20, 1, 1, window.getSize());
+    zombies.push_back(new Zombie(15, 1, 1, window.getSize(), v));
+    Player* p1 = new Player(20, 1, 1, window.getSize(), 0, 1); 
     loadWalls();
     //Loading Font
     sf::Font font;
@@ -728,7 +758,27 @@ void run(sf::RenderWindow& window, sf::View& view){
         std::cout << "Font Read Error" << std::endl;
         loadFont = false;
     }
-    sf::Text textDisplay;
+    sf::Text roundText;
+
+    int lastSpawnTime = 0;
+    int zombiesSpawned = 0;
+    int spawnCount = 0;
+
+    bool nextRound = false;
+    bool displayRound = false;
+    int displayTimer = 0;
+
+    bool loadDeathMessage = false;
+
+    //special round variables
+    int zombiesPerSpawn = 1;
+    float zombieSpawnMultiplier = 1.0;
+    int checkComplete = 0;
+    bool roundComplete = false;
+    bool horde = false;
+    bool ambush = false;
+    bool megaZombie = false;
+    bool siege = false;
     
     while (window.isOpen())
     {
@@ -748,87 +798,141 @@ void run(sf::RenderWindow& window, sf::View& view){
         else if (p1->getPosition().x < 1280 && p1->getPosition().y < 720) {
             view.setCenter(640, 360);
         }
-        
-        //std::thread bull(bullets, p1);
-        //bull.join();
-        bullets(p1);
-
-        //std::thread move(movement, std::ref(window), p1);
-        //move.join();
-
-        //std::thread draw(drawing, std::ref(window), p1, std::ref(font));
-        //draw.join();
-
         window.setView(view);
 
-        movement(window, p1);
+        //zombie management
+        if (!roundComplete) { 
+            //if there are more zombies to spawn
+            if (zombiesSpawned < spawnCount) {
+                //setting up delay between zombie spawns based on how many zombies have already spawned
+                int delay = 300;
+                for (int i = 0; i < zombies.size() / (10 + rounds / 5); i++) delay += delay;
+                //if enough time has passed
+                if (clock() - lastSpawnTime > zombieSpawnMultiplier * delay) { 
+                    //choosing which zombie and spawning
+                    sf::Vector2f spawnLocation = getZombieSpawn(p1);
+                    //
+                    //in here put code to spawn big boi: if zombiesSpawned %6 = 1
+                    if (rounds > 15 && zombiesSpawned % 3 == 2) {
+                        zombies.push_back(new RunnerZombie(15 + rounds / 5, 1, 1, p1->getSize(), spawnLocation));
+                    }
+                    else {
+                        zombies.push_back(new Zombie(15 + rounds / 5, 1, 1, p1->getSize(), spawnLocation));
+                    }
+                    //updating last spawnTime and number of zombies spawned
+                    lastSpawnTime = clock(); 
+                    zombiesSpawned++;
+                }
+            }
+            //if all of the zombies in the round have been spawned
+            else if (zombiesSpawned == spawnCount) { 
+                //if all of the zombies have been killed
+                if (zombies.size() == 0) { 
+                    roundComplete = true;
+                }
+            }
+        }
 
-        //re-draws objects so it looks good      
+        //moving objects
+        bullets(p1);
+        movement(window, p1);   
         drawing(window, p1, font);
 
         //Round counter & advancer
-        if (zombies.size() == 0)
+        if (roundComplete)
         {
-            //advances rou
-            if (displayMenu && (clock() - roundCountTimer) > 1000) {
-                roundCountTimer = clock();
-                displayMenu = false;
+            
+            if(!nextRound) { //setting up next round
+                if (!displayRound) {
+                    //updating player health
+                    p1->setHealth(p1->getHealth() + ((p1->getMaxHealth() - p1->getHealth()) / 2));
+                    if (p1->getHealth() > p1->getMaxHealth()) p1->setHealth(p1->getMaxHealth());
+                    //reseting round modifiers
+                    siege = horde = goldRush = ambush = megaZombie = false;
+                    p1->setBottomlessClip(false);
+                    //setting up next round modifiers
+                    int picker = rand() % 100 + 1;
+                    if (picker % 50 == 0) goldRush = true; //2% chance for 2x money each round
+                    if (rounds % 5 == 0 && rounds % 10 != 0) { //only for 5's rounds - 5 15 25 35...
+                        if (picker < 25) horde = true;
+                        else if (picker >= 25 && picker < 50) ambush = true;
+                        else if (picker >= 50 && picker < 75) siege = true;
+                        else if (picker >= 75) ambush = true; //replace with megaZombie when that is done
+                    }
+                    //setting appropriate values for zombie spawning
+                    zombiesPerSpawn = 1;
+                    zombieSpawnMultiplier = 1;
+                    if (horde) {
+                        zombiesPerSpawn = 3;
+                        zombieSpawnMultiplier = 0.3;
+                    }
+                    if (siege) zombieSpawnMultiplier = 2.0;
+                    if (ambush) zombieSpawnMultiplier = 0.5;
+                    if (horde) p1->setBottomlessClip(true);
+                    spawnCount = 3 * rounds + 5;
+                    if (horde) spawnCount *= 3;
+                    //setting up next round display text
+                    roundText.setFont(font);
+                    string display = "Round " + std::to_string(rounds);
+                    if (horde) display += ": HORDE";
+                    if (siege) display += ": SIEGE";
+                    if (megaZombie) display += ": MEGAZOMBIE";
+                    if (ambush) display += ": AMBUSH";
+                    if (goldRush) display += ": GOLD RUSH";
+                    std::cout << display << std::endl;
+                    roundText.setString(display);
+                    roundText.setCharacterSize(100);
+                    roundText.setFillColor(sf::Color(94, 1, 6));
+                    roundText.setOutlineColor(sf::Color::Black);
+                    roundText.setOutlineThickness(3);
+                    roundText.setOrigin(roundText.getLocalBounds().width / 2, roundText.getLocalBounds().height / 2);
+                    displayTimer = clock();
+                    displayRound = true;
+                }
+                else { //displaying round counter
+                    if (clock() - displayTimer > 1000 && clock() - displayTimer < 4500) { //waits 1 secound then displays for 3.5 seconds
+                        roundText.setPosition(view.getCenter().x, view.getCenter().y - 300);
+                        window.draw(roundText);
+                    }
+                    else if (clock() - displayTimer > 5000) { //after 5 seconds nextRound begins
+                        displayRound = false;
+                        nextRound = true;
+                    }
+                    
+                }
+            }
+            else { //beginning next round
+                nextRound = false;
+                zombiesSpawned = 0;
                 rounds++;
-                p1->setHealth(p1->getHealth() + ((p1->getMaxHealth() - p1->getHealth())/2));
-                if (p1->getHealth() > p1->getMaxHealth()) p1->setHealth(p1->getMaxHealth());
-                textDisplay.setFont(font);
-                string display = "Round " + std::to_string(rounds);
-                textDisplay.setString(display);
-                textDisplay.setCharacterSize(100);
-                textDisplay.setFillColor(sf::Color(94, 1, 6));
-                textDisplay.setOutlineColor(sf::Color::Black);
-                textDisplay.setOutlineThickness(3);
-                textDisplay.setOrigin(textDisplay.getLocalBounds().width / 2, textDisplay.getLocalBounds().height / 2);
-                textDisplay.setPosition(view.getCenter().x, view.getCenter().y - 300);
-            }
-            //displays round counter on screen
-            if (loadFont)
-            {
-                window.draw(textDisplay);
-            }
-            //after 3 seconds, starts next round
-            if (clock() - roundCountTimer > 3000) // 3 seconds
-            {
-                std::thread t1(spawnZombies, window.getSize(), p1);
-                t1.detach();
-                displayMenu = true;
-                std::cout << "Round " << rounds << std::endl;
-                roundCountTimer = clock();
+                roundComplete = false;
             }
         }
-        //DEATH MESSAGE
+        //if player health is below 0
         if (p1->getHealth() < 1)
         {
-            textDisplay.setFont(font);
-            textDisplay.setString("YOU DIED!");
-            textDisplay.setCharacterSize(400);
-            textDisplay.setFillColor(sf::Color(94, 1, 6));
-            textDisplay.setOutlineColor(sf::Color::Black);
-            textDisplay.setOutlineThickness(5);
-            textDisplay.setOrigin(textDisplay.getLocalBounds().width/2, textDisplay.getLocalBounds().height/2);
-            if (p1->getPosition().x < 1280 && p1->getPosition().y > 720) {//bottom left
-                textDisplay.setPosition(1280 / 2, 720 + 720 / 2);
+            //if death message hasn't been loaded, load it
+            if (!loadDeathMessage) {
+                roundText.setFont(font);
+                roundText.setString("YOU DIED!");
+                roundText.setCharacterSize(400);
+                roundText.setFillColor(sf::Color(94, 1, 6));
+                roundText.setOutlineColor(sf::Color::Black);
+                roundText.setOutlineThickness(5);
+                roundText.setOrigin(roundText.getLocalBounds().width / 2, roundText.getLocalBounds().height / 2);
+                loadDeathMessage = true;
             }
-            else if (p1->getPosition().x > 1280 && p1->getPosition().y < 720) {//top right
-                textDisplay.setPosition(1280 + 1280 / 2, 720 / 2);
+            //else set position and draw the text
+            else {
+                roundText.setPosition(view.getCenter().x, view.getCenter().y+100);
+                window.draw(roundText);
             }
-            else if (p1->getPosition().x > 1280 && p1->getPosition().y > 720) {//bottom right
-                textDisplay.setPosition(1280 + 1280 / 2, 720 + 720 / 2);
-            }
-            else if (p1->getPosition().x < 1280 && p1->getPosition().y < 720) {//top left
-                textDisplay.setPosition(1280 / 2, 720 / 2);
-            }
-            window.draw(textDisplay);
-
         }
-        //window.setView(view);
-        //move.join();
-        //draw.join();
+        //if player has health
+        else {
+            //if deathMessage was previously loaded, it must be reloaded
+            if (loadDeathMessage) loadDeathMessage = false;
+        }
         window.display();
     }
 }

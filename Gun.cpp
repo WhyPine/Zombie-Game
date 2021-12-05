@@ -1,7 +1,9 @@
 #include "Gun.h"
 
-Gun::Gun(sf::Vector2f pos, sf::Vector2u size) {
-	this->power = 10;
+Gun::Gun(sf::Vector2f pos, sf::Vector2u size, int newBulletHealth) {
+    this->reloadDelay = 750; //1 second reload for pistol
+    this->bulletHealth = newBulletHealth;
+	this->power = 8;
 	this->projS = 10;
     this->size = size;
     this->reload = 12;
@@ -38,11 +40,11 @@ void Gun::run(sf::Vector2f pos, float rotation) {
      
 }
 
-void Gun::fire(sf::Vector2f go) {
+void Gun::fire(sf::Vector2f go, bool bottomlessClip) {
     if (this->shottimer > 10) {
         sf::Vector2f v = this->sprite.getPosition();
-        this->shots->push_back(new Bullet(v, go, this->size, this->power, this->bulletTexture));
-        this->reload--;
+        this->shots->push_back(new Bullet(v, go, this->size, this->power, this->bulletTexture, 1 + this->bulletHealth, 10));
+        if(!bottomlessClip) this->reload--;
         shottimer = 0;
     }
 }
@@ -70,4 +72,12 @@ void Gun::setReload(int value) {
 int Gun::getMaxReload()
 {
     return this->maxReload;
+}
+
+int Gun::getReloadTime() {
+    return this->reloadDelay;
+}
+
+bool Gun::canShoot() {
+    return this->shottimer > 10;
 }

@@ -163,6 +163,7 @@
     <ClCompile Include="Rifle.cpp" />
     <ClCompile Include="RunnerZombie.cpp" />
     <ClCompile Include="Shotgun.cpp" />
+    <ClCompile Include="Sniper.cpp" />
     <ClCompile Include="wall.cpp" />
     <ClCompile Include="Zombie.cpp" />
   </ItemGroup>
@@ -177,11 +178,13 @@
     <ClInclude Include="RPG.h" />
     <ClInclude Include="Rifle.h" />
     <ClInclude Include="RunnerZombie.h" />
+    <ClInclude Include="Sniper.h" />
     <ClInclude Include="wall.h" />
     <ClInclude Include="Shotgun.h" />
     <ClInclude Include="Zombie.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\..\..\..\WSU\Sophomore\Semester 1\CptS122\zombie2\rpgsprite.png" />
     <Image Include="Door.png" />
     <Image Include="Door2.png" />
     <Image Include="dragonFrames.png" />
