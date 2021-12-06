@@ -23,8 +23,20 @@ buyBox::buyBox(float x, float y, int newPrice, int newType) : wall(x, y, 64, 32)
 	}
 	else if (this->type == 3) {
 		this->name = "HellFire Launcher";
-		if (!boxTexture.loadFromFile("shotgunbox.png")) {
+		if (!boxTexture.loadFromFile("RPGBox.png")) {
 			std::cout << "Hell Fire Launcher box texture failed to load" << std::endl;
+		}
+	}
+	else if (this->type == 4) {
+		this->name = "Burst Rifle";
+		if (!boxTexture.loadFromFile("BurstRifleBox.png")) {
+			std::cout << "Burst Rifle box texture failed to load" << std::endl;
+		}
+	}
+	else if (this->type == 5) {
+		this->name = "Sniper";
+		if (!boxTexture.loadFromFile("SniperBox.png")) {
+			std::cout << "Sniper box texture failed to load" << std::endl;
 		}
 	}
 	else if (this->type == 11) {
@@ -92,8 +104,19 @@ bool buyBox::canBuy(Player& p1) {
 				result = false; //rocket
 			}
 		}
-		//if (this->type == 4) if (p1.getGun()->getMaxReload() == 36 || p1.getGun()->getMaxReload() == 72) result = false; //burst
-		//if (this->type == 5) if (p1.getGun()->getMaxReload() == 4 || p1.getGun()->getMaxReload() == 10) result = false; //sniper
+		else if (this->type == 4) {
+			std::cout << "Type 4" << std::endl;
+			if (p1.getGun()->getMaxReload() == 36 || p1.getGun()->getMaxReload() == 72) {
+				result = false; //burst
+			}
+		}
+		else if (this->type == 5) {
+			std::cout << "Type 5" << std::endl;
+			if (p1.getGun()->getMaxReload() == 4 || p1.getGun()->getMaxReload() == 10) {
+				result = false; //sniper
+			}
+		}
+		
 		else if (this->type == 11) {
 			if (p1.getSecondWind()) {
 				result = false;
@@ -140,6 +163,21 @@ void buyBox::buy(Player& p1) {
 	}
 	else if (this->type == 3) {
 		if (p1.setGun(new RPG(p1.getPosition(), p1.getSize(), p1.getBulletHealth()))) {
+			p1.setMoney(p1.getMoney() - this->boxPrice);
+		}
+	}
+	else if (this->type == 4) {
+		if (p1.setGun(new BurstRifle(p1.getPosition(), p1.getSize(), p1.getBulletHealth()))) {
+			p1.setMoney(p1.getMoney() - this->boxPrice);
+		}
+	}
+	else if (this->type == 5) {
+		if (p1.setGun(new Sniper(p1.getPosition(), p1.getSize(), p1.getBulletHealth()))) {
+			p1.setMoney(p1.getMoney() - this->boxPrice);
+		}
+	}
+	else if (this->type == 3) {
+		if (p1.setGun(new Sniper(p1.getPosition(), p1.getSize(), p1.getBulletHealth()))) {
 			p1.setMoney(p1.getMoney() - this->boxPrice);
 		}
 	}
