@@ -1,5 +1,5 @@
 #include "Play.h"
-
+#include "savefiles.h"
 
 int main()
 {
@@ -34,6 +34,7 @@ int main()
     //playbutton.setScale(Menu.getSize().x / 1600, Menu.getSize().y / 900);
     //playbutton.setOrigin(playbutton.get)
     playbutton.setPosition(Menu.getSize().x / 2, Menu.getSize().y / 2);
+    savefiles r1;
     while (Menu.isOpen()) {
         sf::Event event;
         Menu.pollEvent(event);
@@ -42,16 +43,99 @@ int main()
         background3.move(.8, 0.f);*/
         sf::Vector2i gP = sf::Mouse::getPosition(Menu);
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left) &&  (playbutton.getGlobalBounds().contains(gP.x, gP.y))) {
-            sf::RenderWindow window(sf::VideoMode(1280, 720), "Horde Shooter");
-            sf::View view(sf::Vector2f(window.getSize().x / 2, window.getSize().y / 2), sf::Vector2f(1280.f, 720.f));
-            window.setView(view);
-            window.setFramerateLimit(60);
-            run(window, view);
-            Menu.close();
+            std::cout << "Yes" << std::endl;
+            sf::Sprite save1;
+            sf::Sprite save2;
+            sf::Sprite save3;
+            sf::Texture save1T;
+            save1T.loadFromFile("save1.png");
+            save1.setTexture(save1T);
+            save1.setTextureRect(sf::IntRect(110, 220, 460, 370));
+            save1.setPosition(0.f, 400.f);
+            //save1.setOrigin(save1.getScale().x / 2, save1.getScale().y / 2);
+            sf::Texture save2T;
+            save2T.loadFromFile("save2.png");
+            save2.setTexture(save2T);
+            save2.setTextureRect(sf::IntRect(110, 220, 460, 370));
+            save2.setPosition(200.f, 400.f);
+            //save2.setOrigin(save2.getScale().x / 2, save2.getScale().y / 2);
+            sf::Texture save3T;
+            save3T.loadFromFile("save3.png");
+            save3.setTexture(save1T);
+            save3.setTextureRect(sf::IntRect(110, 220, 460, 370));
+            save3.setPosition(400.f, 400.f);
+            //save3.setOrigin(save3.getScale().x / 2, save3.getScale().y / 2);
+            int choice = 3;
+            while (Menu.isOpen()) {
+                //std::cout << "Yes" << std::endl;
+                sf::Vector2i gB = sf::Mouse::getPosition(Menu);
+                if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (save1.getGlobalBounds().contains(gB.x, gB.y))) {
+                    choice = 0;
+                }
+                else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (save2.getGlobalBounds().contains(gB.x, gB.y))) {
+                    choice = 1;
+                }
+                else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (save3.getGlobalBounds().contains(gB.x, gB.y))) {
+                    choice = 2;
+                }
+                if (choice != 3) {
+                    std::cout << "yeppers";
+                    while (Menu.isOpen()) {
+                        int n = 0;
+                        sf::Sprite launch;
+                        sf::Sprite store;
+                        sf::Sprite settings;
+                        sf::Texture launchT;
+                        launchT.loadFromFile("launch.png");
+                        launch.setTexture(launchT);
+                        launch.setTextureRect(sf::IntRect(40, 90, 400, 200));
+                        launch.setPosition(0.f, 200.f);
+                        sf::Texture storeT;
+                        storeT.loadFromFile("store.png");
+                        store.setTexture(storeT);
+                        store.setTextureRect(sf::IntRect(40, 90, 400, 200));
+                        store.setPosition(0.f, 400.f);
+                        sf::Texture settingsT;
+                        settingsT.loadFromFile("settings.png");
+                        settings.setTexture(settingsT);
+                        settings.setTextureRect(sf::IntRect(40, 90, 400, 200));
+                        settings.setPosition(0.f, 600.f);
+                        sf::Vector2i gC = sf::Mouse::getPosition(Menu);
+                        if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (launch.getGlobalBounds().contains(gC.x, gC.y))) {
+                            sf::RenderWindow window(sf::VideoMode(1280, 720), "Horde Shooter");
+                            sf::View view(sf::Vector2f(window.getSize().x / 2, window.getSize().y / 2), sf::Vector2f(1280.f, 720.f));
+                            window.setView(view);
+                            window.setFramerateLimit(60);
+                            Menu.close();
+                            run(window, view);
+                        }
+                        /*while (n != 1) {
+
+                        }*/
+                        Menu.clear();
+                        Menu.draw(background1);
+                        Menu.draw(background2);
+                        Menu.draw(background3);
+                        Menu.draw(launch);
+                        Menu.draw(store);
+                        Menu.draw(settings);
+                        Menu.display();
+                    }
+                }
+                Menu.clear();
+                Menu.draw(background1);
+                Menu.draw(background2);
+                Menu.draw(background3);
+                Menu.draw(save1);
+                Menu.draw(save2);
+                Menu.draw(save3);
+                Menu.display();
+            }
         }
         else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (quitbutton.getGlobalBounds().contains(gP.x, gP.y))) {
             Menu.close();
         }
+        //run(window, view);
         Menu.clear();
         Menu.draw(background1);
         Menu.draw(background2);

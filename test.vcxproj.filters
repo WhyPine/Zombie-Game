@@ -104,6 +104,15 @@
     <ClInclude Include="Sniper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="save.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="savefiles.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="submenu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="dragonFrames.png">
@@ -168,5 +177,16 @@
     <Font Include="shlop rg.ttf">
       <Filter>Resource Files</Filter>
     </Font>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="save1.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="save2.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="save3.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

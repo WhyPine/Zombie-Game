@@ -178,7 +178,10 @@
     <ClInclude Include="RPG.h" />
     <ClInclude Include="Rifle.h" />
     <ClInclude Include="RunnerZombie.h" />
+    <ClInclude Include="save.h" />
+    <ClInclude Include="savefiles.h" />
     <ClInclude Include="Sniper.h" />
+    <ClInclude Include="submenu.h" />
     <ClInclude Include="wall.h" />
     <ClInclude Include="Shotgun.h" />
     <ClInclude Include="Zombie.h" />
@@ -206,6 +209,11 @@
   </ItemGroup>
   <ItemGroup>
     <Font Include="shlop rg.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="save1.txt" />
+    <Text Include="save2.txt" />
+    <Text Include="save3.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
