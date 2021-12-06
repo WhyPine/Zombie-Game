@@ -2,7 +2,7 @@
 #include <iostream>
 
 Shotgun::Shotgun(sf::Vector2f pos, sf::Vector2u size, int newBulletHealth) : Gun(pos, size, newBulletHealth) {
-    this->power = 5;
+    this->power = 8;
     this->bulletHealth = newBulletHealth;
     this->reloadDelay = 1500;
     if (!texture.loadFromFile("rifle.png"))
@@ -21,8 +21,12 @@ Shotgun::Shotgun(sf::Vector2f pos, sf::Vector2u size, int newBulletHealth) : Gun
     this->sprite.setOrigin(this->sprite.getLocalBounds().width / 2, this->sprite.getLocalBounds().height / 2);
 }
 
-void Shotgun::fire(sf::Vector2f go, bool bottomlessClip)
+void Shotgun::fire(sf::Vector2f go, bool bottomlessClip, bool doubleDamage, bool doubleMag)
 {
+    if (doubleDamage && this->power == 8) this->power = 16;
+    else if (!doubleDamage && this->power != 8) this->power = 8;
+    if (doubleMag && this->maxReload == 6) this->maxReload = 12;
+    else if (!doubleMag && this->maxReload != 6) this->maxReload = 6;
     if (this->shottimer > 30) {
         sf::Vector2f v = this->sprite.getPosition();
         sf::Vector2f temp;
@@ -51,7 +55,7 @@ int Shotgun::getReload()
 
 int Shotgun::getMaxReload()
 {
-    return 6;
+    return this->maxReload;
 }
 
 int Shotgun::getReloadTime() {

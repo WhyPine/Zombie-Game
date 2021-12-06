@@ -56,5 +56,13 @@ public:
 	bool setGun(Gun* newGun);
 	sf::Vector2u getSize();
 	void setBottomlessClip(bool newValue);
+	void setDoubleDamage(bool newValue);
+	bool getDoubleDamage();
+	void setDoubleMag(bool newValue);
+	bool getDoubleMag();
+	void setReloadBoom(bool newValue);
+	bool getReloadBoom();
+	void setSecondWind(bool newValue);
+	bool getSecondWind();
 };
 

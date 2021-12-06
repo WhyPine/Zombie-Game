@@ -40,7 +40,11 @@ void Gun::run(sf::Vector2f pos, float rotation) {
      
 }
 
-void Gun::fire(sf::Vector2f go, bool bottomlessClip) {
+void Gun::fire(sf::Vector2f go, bool bottomlessClip, bool doubleDamage, bool doubleMag) {
+    if (doubleDamage && this->power == 8) this->power = 16;
+    else if (!doubleDamage && this->power != 8) this->power = 8;
+    if (doubleMag && this->maxReload == 12) this->maxReload = 24;
+    else if (!doubleMag && this->maxReload != 12) this->maxReload = 12;
     if (this->shottimer > 10) {
         sf::Vector2f v = this->sprite.getPosition();
         this->shots->push_back(new Bullet(v, go, this->size, this->power, this->bulletTexture, 1 + this->bulletHealth, 10));

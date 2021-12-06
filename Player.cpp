@@ -90,11 +90,11 @@ void Player::checkMove(sf::Vector2i gP) {
         for (int i = 0; i < 3; i++) this->sprite.move(moveX, moveY);
     }
     //if rpg
-    if (this->gun->getMaxReload() == 2) {
+    if (this->gun->getMaxReload() == 2 || this->gun->getMaxReload() == 5) {
         this->gun->run(this->sprite.getPosition(), this->sprite.getRotation(), sf::Mouse::isButtonPressed(sf::Mouse::Left));
     }
     //if burst fire
-    else if (this->gun->getMaxReload() == 36) {
+    else if (this->gun->getMaxReload()%36 == 0) {
         this->gun->run(this->sprite.getPosition(), this->sprite.getRotation(), p);
     }
     //if all other guns
@@ -106,12 +106,12 @@ void Player::checkMove(sf::Vector2i gP) {
             int maxReloadCheck = this->gun->getMaxReload();
             if ((maxReloadCheck == 12 || maxReloadCheck == 4 || maxReloadCheck == 36 || maxReloadCheck == 6 || maxReloadCheck == 2) && !bottomlessClip) { //is pistol or sniper or burst or shotgun or rocket
                 if (semiAuto == true) {
-                    this->gun->fire(p, bottomlessClip);
+                    this->gun->fire(p, bottomlessClip, this->doubleDamage, this->extendedMag);
                     semiAuto = false;
                 }
             }
             else {
-                this->gun->fire(p, this->bottomlessClip);
+                this->gun->fire(p, this->bottomlessClip, this->doubleDamage, this->extendedMag);
             }
         }
     }
@@ -223,4 +223,36 @@ int Player::getBulletHealth() {
 
 void Player::setBottomlessClip(bool newValue) {
     this->bottomlessClip = newValue;
+}
+
+void Player::setDoubleDamage(bool newValue) {
+    this->doubleDamage = newValue;
+}
+
+bool Player::getDoubleDamage() {
+    return this->doubleDamage;
+}
+
+void Player::setDoubleMag(bool newValue) {
+    this->extendedMag = newValue;
+}
+
+bool Player::getDoubleMag() {
+    return this->extendedMag;
+}
+
+void Player::setReloadBoom(bool newValue) {
+    this->contingencyResponse = newValue;
+}
+
+bool Player::getReloadBoom() {
+    return this->contingencyResponse;
+}
+
+void Player::setSecondWind(bool newValue) {
+    this->secondWind = newValue;
+}
+
+bool Player::getSecondWind() {
+    return this->secondWind;
 }

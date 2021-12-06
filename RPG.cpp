@@ -33,7 +33,6 @@ void RPG::run(sf::Vector2f pos, float rotation, bool hold) {
     this->explode = !hold; //explode = true if mouse left is let go
     this->shottimer++;
     this->sprite.setRotation(rotation);
-    double xPos, yPos;
     if (rotation < 0) rotation += 360;
     rotation += 30;
     sf::Vector2f newVector(pos.x + cos((3.141592653 / 180) * rotation) * 12, pos.y + sin((3.141592653 / 180) * rotation) * 12);
@@ -88,9 +87,13 @@ void RPG::run(sf::Vector2f pos, float rotation, bool hold) {
     }
 }
 
-void RPG::fire(sf::Vector2f go, bool bottomlessClip)
+void RPG::fire(sf::Vector2f go, bool bottomlessClip, bool doubleDamage, bool doubleMag)
 {
     this->thisGo = go;
+    if (doubleDamage && this->power == 10) this->power = 20;
+    else if (!doubleDamage && this->power != 10) this->power = 10;
+    if (doubleMag && this->maxReload == 2) this->maxReload = 5;
+    else if (!doubleMag && this->maxReload != 2) this->maxReload = 2;
     if (this->shottimer > 60 && this->shotbull == nullptr) { //if 60 frames since last shot and there isnt already been a shot
         this->fired = true; //fired
         sf::Vector2f v = this->sprite.getPosition();

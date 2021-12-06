@@ -8,33 +8,27 @@ BurstRifle::BurstRifle(sf::Vector2f pos, sf::Vector2u size, int newBulletHealth)
 	this->fired = false;
 	this->lastShot = 0;
 	this->numShots = 4;
+	this->power = 5;
 	if (!this->bulletTexture.loadFromFile("rifleshot.png"))
 	{
 		std::cout << "Failed to load Burst Rifle shot" << std::endl;
 	}
 }
 
-void BurstRifle::fire(sf::Vector2f go, bool bottomelessClip)
+void BurstRifle::fire(sf::Vector2f go, bool bottomelessClip, bool doubleDamage, bool doubleMag)
 {
+	if (doubleDamage && this->power == 5) this->power = 10;
+	else if (!doubleDamage && this->power != 5) this->power = 10;
+	if (doubleMag && this->maxReload == 36) this->maxReload = 72;
+	else if (!doubleMag && this->maxReload != 36) this->maxReload = 36;
+
 	if (this->shottimer > 40)
 	{
+		std::cout << "Updating fired to true" << std::endl;
 		this->fired = true; //the gun has been fired
 		this->shottimer = 0;
 		this->numShots = 4;
 		if (!bottomelessClip) this->reload -= 4;
-		//sf::Vector2f spacing(go.x * 24 / sqrtf(go.x * go.x + go.y * go.y), go.y * 24 / sqrtf(go.x * go.x + go.y * go.y));
-		//for (int i = 0; i < 4; ++i)
-		//{
-		//	this->shots->push_back(new Bullet(v, go, this->size, this->power, this->bulletTexture, 1 + this->bulletHealth, 15));
-		//	this->reload--;
-		//	v -= spacing;
-		//}
-		//shottimer = 0;
-
-		//this->shots->push_back(new Bullet(v, go, this->size, this->power, this->bulletTexture, bulletHealth, 15));
-		//this->reload--;
-		//v -= spacing;
-		//shottimer = 0;
 	}
 }
 
@@ -55,8 +49,10 @@ void BurstRifle::run(sf::Vector2f pos, float rotation, sf::Vector2f bulletDirect
 			(*it)->updatePosition(); //moving all the bullets
 		}
 	}
+	std::cout << "fired = " << fired << "  numShots = " << numShots << std::endl;
 	if (this->fired)
 	{
+		std::cout << "in fired" << std::endl;
 		if (clock() - lastShot > 62.5)
 		{
 			this->numShots--;
