@@ -25,7 +25,7 @@ void Shotgun::fire(sf::Vector2f go, bool bottomlessClip, bool doubleDamage, bool
 {
     if (doubleDamage && this->power == 8) this->power = 16;
     else if (!doubleDamage && this->power != 8) this->power = 8;
-    if (doubleMag && this->maxReload == 6) this->maxReload = 12;
+    if (doubleMag && this->maxReload == 6) this->maxReload = 14;
     else if (!doubleMag && this->maxReload != 6) this->maxReload = 6;
     if (this->shottimer > 30) {
         sf::Vector2f v = this->sprite.getPosition();
