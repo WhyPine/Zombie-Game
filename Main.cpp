@@ -34,6 +34,17 @@ int main()
     //playbutton.setScale(Menu.getSize().x / 1600, Menu.getSize().y / 900);
     //playbutton.setOrigin(playbutton.get)
     playbutton.setPosition(Menu.getSize().x / 2, Menu.getSize().y / 2);
+    sf::Texture quitTex;
+    quitTex.loadFromFile("quit.png");
+    quitbutton.setTexture(quitTex);
+    quitbutton.setTextureRect(sf::IntRect(15, 10, 585, 185));
+    quitbutton.setOrigin(quitbutton.getScale().x / 2, quitbutton.getScale().y / 2);
+    //quitbutton.setScale(Menu.getSize().x / 1600, Menu.getSize().y / 900);
+    //quitbutton.setOrigin(quitbutton.get)
+    quitbutton.setPosition(Menu.getSize().x / 2, Menu.getSize().y / 2);
+
+
+
     savefiles r1;
     bool releasedMouse;
     while (Menu.isOpen()) {
@@ -44,6 +55,7 @@ int main()
         background3.move(.8, 0.f);*/
         sf::Vector2i gP = sf::Mouse::getPosition(Menu);
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left) &&  (playbutton.getGlobalBounds().contains(gP.x, gP.y))) {
+            releasedMouse = false;
             std::cout << "Yes" << std::endl;
             sf::Sprite save1;
             sf::Sprite save2;
@@ -69,19 +81,25 @@ int main()
             
             int choice = 3;
             while (Menu.isOpen()) {
+                if (!sf::Mouse::isButtonPressed(sf::Mouse::Left)) releasedMouse = true;
                 //std::cout << "Yes" << std::endl;
                 sf::Vector2i gB = sf::Mouse::getPosition(Menu);
-                if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (save1.getGlobalBounds().contains(gB.x, gB.y))) {
-                    choice = 0;
-                    releasedMouse = false;
-                }
-                else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (save2.getGlobalBounds().contains(gB.x, gB.y))) {
-                    choice = 1;
-                    releasedMouse = false;
-                }
-                else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (save3.getGlobalBounds().contains(gB.x, gB.y))) {
-                    choice = 2;
-                    releasedMouse = false;
+                if (releasedMouse) {
+                    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (save1.getGlobalBounds().contains(gB.x, gB.y))) {
+                        choice = 0;
+                        releasedMouse = false;
+                    }
+                    else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (save2.getGlobalBounds().contains(gB.x, gB.y))) {
+                        choice = 1;
+                        releasedMouse = false;
+                    }
+                    else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (save3.getGlobalBounds().contains(gB.x, gB.y))) {
+                        choice = 2;
+                        releasedMouse = false;
+                    }
+                    else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (quitbutton.getGlobalBounds().contains(gB.x, gB.y))) {
+                        Menu.close();
+                    }
                 }
                 if (choice != 3) {
                     std::cout << "yeppers";
@@ -107,13 +125,18 @@ int main()
                         settings.setTextureRect(sf::IntRect(0, 0, 340, 135));
                         settings.setPosition(50.f, 502.5);
                         sf::Vector2i gC = sf::Mouse::getPosition(Menu);
-                        if (releasedMouse && sf::Mouse::isButtonPressed(sf::Mouse::Left) && (launch.getGlobalBounds().contains(gC.x, gC.y))) {
-                            sf::RenderWindow window(sf::VideoMode(1280, 720), "Horde Shooter");
-                            sf::View view(sf::Vector2f(window.getSize().x / 2, window.getSize().y / 2), sf::Vector2f(1280.f, 720.f));
-                            window.setView(view);
-                            window.setFramerateLimit(60);
-                            Menu.close();
-                            run(window, view);
+                        if (releasedMouse) {
+                            if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (launch.getGlobalBounds().contains(gC.x, gC.y))) {
+                                sf::RenderWindow window(sf::VideoMode(1280, 720), "Horde Shooter");
+                                sf::View view(sf::Vector2f(window.getSize().x / 2, window.getSize().y / 2), sf::Vector2f(1280.f, 720.f));
+                                window.setView(view);
+                                window.setFramerateLimit(60);
+                                Menu.close();
+                                run(window, view);
+                            }
+                            else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (quitbutton.getGlobalBounds().contains(gC.x, gC.y))) {
+                                Menu.close();
+                            }
                         }
                         /*while (n != 1) {
 
@@ -122,6 +145,7 @@ int main()
                         Menu.draw(background1);
                         Menu.draw(background2);
                         Menu.draw(background3);
+                        Menu.draw(quitbutton);
                         Menu.draw(launch);
                         Menu.draw(store);
                         Menu.draw(settings);
@@ -132,6 +156,7 @@ int main()
                 Menu.draw(background1);
                 Menu.draw(background2);
                 Menu.draw(background3);
+                Menu.draw(quitbutton);
                 Menu.draw(save1);
                 Menu.draw(save2);
                 Menu.draw(save3);
