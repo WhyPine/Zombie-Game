@@ -35,6 +35,7 @@ int main()
     //playbutton.setOrigin(playbutton.get)
     playbutton.setPosition(Menu.getSize().x / 2, Menu.getSize().y / 2);
     savefiles r1;
+    bool releasedMouse;
     while (Menu.isOpen()) {
         sf::Event event;
         Menu.pollEvent(event);
@@ -50,37 +51,42 @@ int main()
             sf::Texture save1T;
             save1T.loadFromFile("save1.png");
             save1.setTexture(save1T);
-            save1.setTextureRect(sf::IntRect(110, 220, 460, 370));
-            save1.setPosition(0.f, 400.f);
+            save1.setTextureRect(sf::IntRect(0, 0, 340, 135));
+            save1.setPosition(50.f, 82.5);
             //save1.setOrigin(save1.getScale().x / 2, save1.getScale().y / 2);
             sf::Texture save2T;
             save2T.loadFromFile("save2.png");
             save2.setTexture(save2T);
-            save2.setTextureRect(sf::IntRect(110, 220, 460, 370));
-            save2.setPosition(200.f, 400.f);
+            save2.setTextureRect(sf::IntRect(0, 0, 340, 135));
+            save2.setPosition(50.f, 292.5);
             //save2.setOrigin(save2.getScale().x / 2, save2.getScale().y / 2);
             sf::Texture save3T;
             save3T.loadFromFile("save3.png");
-            save3.setTexture(save1T);
-            save3.setTextureRect(sf::IntRect(110, 220, 460, 370));
-            save3.setPosition(400.f, 400.f);
+            save3.setTexture(save3T);
+            save3.setTextureRect(sf::IntRect(0, 0, 340, 135));
+            save3.setPosition(50.f, 502.5);
             //save3.setOrigin(save3.getScale().x / 2, save3.getScale().y / 2);
+            
             int choice = 3;
             while (Menu.isOpen()) {
                 //std::cout << "Yes" << std::endl;
                 sf::Vector2i gB = sf::Mouse::getPosition(Menu);
                 if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (save1.getGlobalBounds().contains(gB.x, gB.y))) {
                     choice = 0;
+                    releasedMouse = false;
                 }
                 else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (save2.getGlobalBounds().contains(gB.x, gB.y))) {
                     choice = 1;
+                    releasedMouse = false;
                 }
                 else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (save3.getGlobalBounds().contains(gB.x, gB.y))) {
                     choice = 2;
+                    releasedMouse = false;
                 }
                 if (choice != 3) {
                     std::cout << "yeppers";
                     while (Menu.isOpen()) {
+                        if (!sf::Mouse::isButtonPressed(sf::Mouse::Left)) releasedMouse = true;
                         int n = 0;
                         sf::Sprite launch;
                         sf::Sprite store;
@@ -88,20 +94,20 @@ int main()
                         sf::Texture launchT;
                         launchT.loadFromFile("launch.png");
                         launch.setTexture(launchT);
-                        launch.setTextureRect(sf::IntRect(40, 90, 400, 200));
-                        launch.setPosition(0.f, 200.f);
+                        launch.setTextureRect(sf::IntRect(0, 0, 340, 135));
+                        launch.setPosition(50.f, 82.5);
                         sf::Texture storeT;
                         storeT.loadFromFile("store.png");
                         store.setTexture(storeT);
-                        store.setTextureRect(sf::IntRect(40, 90, 400, 200));
-                        store.setPosition(0.f, 400.f);
+                        store.setTextureRect(sf::IntRect(0, 0, 340, 135));
+                        store.setPosition(50.f, 292.5);
                         sf::Texture settingsT;
                         settingsT.loadFromFile("settings.png");
                         settings.setTexture(settingsT);
-                        settings.setTextureRect(sf::IntRect(40, 90, 400, 200));
-                        settings.setPosition(0.f, 600.f);
+                        settings.setTextureRect(sf::IntRect(0, 0, 340, 135));
+                        settings.setPosition(50.f, 502.5);
                         sf::Vector2i gC = sf::Mouse::getPosition(Menu);
-                        if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (launch.getGlobalBounds().contains(gC.x, gC.y))) {
+                        if (releasedMouse && sf::Mouse::isButtonPressed(sf::Mouse::Left) && (launch.getGlobalBounds().contains(gC.x, gC.y))) {
                             sf::RenderWindow window(sf::VideoMode(1280, 720), "Horde Shooter");
                             sf::View view(sf::Vector2f(window.getSize().x / 2, window.getSize().y / 2), sf::Vector2f(1280.f, 720.f));
                             window.setView(view);

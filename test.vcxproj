@@ -200,6 +200,7 @@
     <Image Include="doubleMagBadge.png" />
     <Image Include="dragonFrames.png" />
     <Image Include="healthbtn.png" />
+    <Image Include="launch.png" />
     <Image Include="pistolshot.png" />
     <Image Include="play.png" />
     <Image Include="rbBox.png" />
@@ -211,6 +212,9 @@
     <Image Include="rpgmainshot.png" />
     <Image Include="rpgshot.png" />
     <Image Include="RPGSprite.png" />
+    <Image Include="save1.png" />
+    <Image Include="save2.png" />
+    <Image Include="save3.png" />
     <Image Include="secondWindBadge.png" />
     <Image Include="shotgunshot.png" />
     <Image Include="skeleton-attack_0.png" />

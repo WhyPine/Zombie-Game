@@ -217,6 +217,18 @@
     <Image Include="bigboi.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="save1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="save2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="save3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="launch.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Font Include="shlop rg.ttf">
