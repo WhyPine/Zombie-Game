@@ -60,6 +60,9 @@
     <ClCompile Include="Sniper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="bigboi.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player.h">
@@ -102,6 +105,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Sniper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bigboi.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="save.h">
@@ -170,6 +176,45 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="..\..\..\..\..\WSU\Sophomore\Semester 1\CptS122\zombie2\rpgsprite.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="secondWindBadge.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="reloadBoomBadge.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="doubleDamageBadge.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="doubleMagBadge.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="ddBox.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="dmBox.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="rbBox.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="swBox.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="RPGBox.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="SniperBox.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="BurstRifleBox.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="RPGSprite.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="bigboi.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

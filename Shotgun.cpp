@@ -2,7 +2,7 @@
 #include <iostream>
 
 Shotgun::Shotgun(sf::Vector2f pos, sf::Vector2u size, int newBulletHealth) : Gun(pos, size, newBulletHealth) {
-    this->power = 5;
+    this->power = 8;
     this->bulletHealth = newBulletHealth;
     this->reloadDelay = 1500;
     if (!texture.loadFromFile("rifle.png"))
@@ -21,8 +21,12 @@ Shotgun::Shotgun(sf::Vector2f pos, sf::Vector2u size, int newBulletHealth) : Gun
     this->sprite.setOrigin(this->sprite.getLocalBounds().width / 2, this->sprite.getLocalBounds().height / 2);
 }
 
-void Shotgun::fire(sf::Vector2f go)
+void Shotgun::fire(sf::Vector2f go, bool bottomlessClip, bool doubleDamage, bool doubleMag)
 {
+    if (doubleDamage && this->power == 8) this->power = 16;
+    else if (!doubleDamage && this->power != 8) this->power = 8;
+    if (doubleMag && this->maxReload == 6) this->maxReload = 14;
+    else if (!doubleMag && this->maxReload != 6) this->maxReload = 6;
     if (this->shottimer > 30) {
         sf::Vector2f v = this->sprite.getPosition();
         sf::Vector2f temp;
@@ -35,11 +39,11 @@ void Shotgun::fire(sf::Vector2f go)
         for (int x = 0; x < 5; x++) {
             go.x = cos(5 * 3.141592653 / 180) * temp.x - sin(5 * 3.141592653 / 180) * temp.y;
             go.y = sin(5 * 3.141592653 / 180) * temp.x + cos(5 * 3.141592653 / 180) * temp.y;
-            this->shots->push_back(new Bullet(v, go, this->size, this->power, this->bulletTexture, 1 + this->bulletHealth));
+            this->shots->push_back(new Bullet(v, go, this->size, this->power, this->bulletTexture, 2 + this->bulletHealth, 20));
             temp.x = go.x;
             temp.y = go.y;
         }
-        this->reload--;
+        if (!bottomlessClip) this->reload--;
         this->shottimer = 0;
     }
 }
@@ -51,7 +55,7 @@ int Shotgun::getReload()
 
 int Shotgun::getMaxReload()
 {
-    return 6;
+    return this->maxReload;
 }
 
 int Shotgun::getReloadTime() {

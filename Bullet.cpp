@@ -2,9 +2,9 @@
 #include <iostream>
 #include <math.h>
 
-Bullet::Bullet(sf::Vector2f start, sf::Vector2f newGo, sf::Vector2u size, int newDamage, sf::Texture& newTexture, int newHealth) : texture(newTexture) {
+Bullet::Bullet(sf::Vector2f start, sf::Vector2f newGo, sf::Vector2u size, int newDamage, sf::Texture& newTexture, int newHealth, int newSpeed) : texture(newTexture) {
     this->damage = newDamage;
-    this->projS = 10;
+    this->projS = newSpeed;
     this->health = newHealth;
     //this->texture = newTexture;
     //sf::Texture texture;

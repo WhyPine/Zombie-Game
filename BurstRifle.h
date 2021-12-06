@@ -6,9 +6,17 @@ class BurstRifle :
 {
 public:
     BurstRifle(sf::Vector2f pos, sf::Vector2u size, int newBulletHealth);
-    void fire(sf::Vector2f go);
+    void fire(sf::Vector2f go, bool bottomlessClip, bool doubleDamage, bool doubleMag);
     int getReload();
     int getMaxReload();
     int getReloadTime();
+    bool canShoot();
+    void run(sf::Vector2f pos, float rotation, sf::Vector2f bulletDirection);
+
+protected:
+    //sf::Vector2f direction;
+    bool fired;
+    int lastShot;
+    int numShots;
 };
 

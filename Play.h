@@ -12,11 +12,13 @@
 #include <mutex>
 #include "buyBox.h"
 #include "Sniper.h"
+#include "bigboi.h"
 
 using std::vector;
 using std::string;
 
-	void spawnZombies(sf::Vector2u size, Player* p1);
+	//void spawnZombies(sf::Vector2u size, Player* p1, int horde, float waitMultiplier);
+	sf::Vector2f getZombieSpawn(Player* p1);
 	void run(sf::RenderWindow& window, sf::View& view);
 	void movement(sf::RenderWindow& window, Player* p1);
 	void drawing(sf::RenderWindow& window, Player* p1, sf::Font& font);
@@ -28,3 +30,6 @@ using std::string;
 	void bullets(Player* p1);
 	sf::Vector2f doorCollision(Door& door, sf::Vector2f pos, int type, bool& collided);
 	sf::Vector2f checkCollision(sf::FloatRect& thisWall, sf::Vector2f pos, int type, bool& collided); // 0 = zombie 1 = player
+
+
+	

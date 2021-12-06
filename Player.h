@@ -11,6 +11,10 @@
 class Player : public sf::CircleShape, sf::Sprite
 {
 private:
+	bool doubleDamage;
+	bool extendedMag;
+	bool secondWind;
+	bool contingencyResponse;
 	bool semiAuto; //used for making pistol semi automatic
 	sf::Vector2u size; 
 	int health;
@@ -23,7 +27,11 @@ private:
 	sf::Sprite sprite; 
 	Gun* gun; 
 	sf::Texture* texture = new sf::Texture;
+	sf::Texture explosionTexture;
 	int bulletHealth;
+	bool bottomlessClip;
+	bool duringReload;
+	int initialReload;
 public:
 	int getBulletHealth();
 	int getMaxHealth();
@@ -36,7 +44,7 @@ public:
 	Gun*& getGun();
 	int getHealth();
 	void setHealth(int health);
-	void reload(Gun* myGun);
+	void reload();
 	int getMoney();
 	void setMoney(int newMoney);
 	void setMaxHealth(int newMaxHealth);
@@ -47,5 +55,14 @@ public:
 	void setPosition(sf::Vector2f v);
 	bool setGun(Gun* newGun);
 	sf::Vector2u getSize();
+	void setBottomlessClip(bool newValue);
+	void setDoubleDamage(bool newValue);
+	bool getDoubleDamage();
+	void setDoubleMag(bool newValue);
+	bool getDoubleMag();
+	void setReloadBoom(bool newValue);
+	bool getReloadBoom();
+	void setSecondWind(bool newValue);
+	bool getSecondWind();
 };
 

@@ -7,12 +7,12 @@ public:
     RPG(sf::Vector2f pos, sf::Vector2u size, int newBulletHealth);
 
     void run(sf::Vector2f pos, float rotation, bool hold);
-    void fire(sf::Vector2f go);
+    void fire(sf::Vector2f go, bool bottomlessClip, bool doubleDamage, bool doubleMag);
     int getReload();
     int getMaxReload();
     void mainHit(int zombieId);
     int getReloadTime();
-    
+    bool canShoot();
 protected:
     int zombieXploded;
     sf::Vector2f thisGo;

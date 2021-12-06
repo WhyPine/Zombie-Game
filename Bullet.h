@@ -12,7 +12,7 @@ private:
 	sf::Texture& texture;
 	std::vector<int> zombiesHit;
 public:
-	Bullet(sf::Vector2f start, sf::Vector2f newGo, sf::Vector2u size, int newDamage, sf::Texture& newTexture, int newHealth);
+	Bullet(sf::Vector2f start, sf::Vector2f newGo, sf::Vector2u size, int newDamage, sf::Texture& newTexture, int newHealth, int newSpeed);
 	~Bullet();
 	void updatePosition();
 	sf::Sprite& getSprite();

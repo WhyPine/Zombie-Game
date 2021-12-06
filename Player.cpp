@@ -14,8 +14,10 @@ Player::Player(int newHealth, double newSpeedMultiplier, double newReloadMultipl
     this->speedMultiplier = newSpeedMultiplier;
 	this->reloadMultiplier = newReloadMultiplier;
     this->canshoot = true;
+    this->duringReload = false;
     this->sprite.setPosition(15*32.f, 9*32.f);
     this->texture->loadFromFile("survivor-move_handgun_0.png");
+    this->explosionTexture.loadFromFile("rpgshot.png");
     this->sprite.setTexture(*(this->texture));
     this->sprite.setTextureRect(sf::IntRect(39, 39, 250, 200));
     this->sprite.setOrigin(this->sprite.getLocalBounds().width / 2, this->sprite.getLocalBounds().height / 2);
@@ -23,9 +25,19 @@ Player::Player(int newHealth, double newSpeedMultiplier, double newReloadMultipl
     this->gun = new Sniper(this->sprite.getPosition(), size, bulletHealth); 
     this->regenMultiplier = newRegenMultiplier;
     this->money = 10000;
+    this->bottomlessClip = false;
+    this->initialReload = 0;
+    this->doubleDamage = false;
+    this->extendedMag = false;
+    this->secondWind = false;
+    this->contingencyResponse = false;
 }
 
 void Player::checkMove(sf::Vector2i gP) {
+    canshoot = true;
+    if (duringReload || !this->gun->canShoot()) canshoot = false; //if on shot cooldown or reloading
+    if ((!duringReload && this->gun->getMaxReload() == 30) || this->bottomlessClip) canshoot = true; //if not reloading and using auto rifle
+    if (!this->gun->getReload()) canshoot = false; //if out of ammo 
 
     sf::Vector2f v = this->sprite.getPosition();
     sf::Vector2f p;
@@ -72,27 +84,34 @@ void Player::checkMove(sf::Vector2i gP) {
     }
     if (moveX != 0 || moveY != 0) {
         if (moveX != 0 && moveY != 0) {
-            moveX *= 0.71 * this->speedMultiplier;
-            moveY *= 0.71 * this->speedMultiplier;
+            moveX *= 0.71;
+            moveY *= 0.71;
         }
         for (int i = 0; i < 3; i++) this->sprite.move(moveX, moveY);
     }
-    if (this->gun->getMaxReload() == 3) {
+    //if rpg
+    if (this->gun->getMaxReload() == 2 || this->gun->getMaxReload() == 5) {
         this->gun->run(this->sprite.getPosition(), this->sprite.getRotation(), sf::Mouse::isButtonPressed(sf::Mouse::Left));
     }
+    //if burst fire
+    else if (this->gun->getMaxReload()%36 == 0) {
+        this->gun->run(this->sprite.getPosition(), this->sprite.getRotation(), p);
+    }
+    //if all other guns
     else {
         this->gun->run(this->sprite.getPosition(), this->sprite.getRotation());
     }
-    if (this->gun->getReload() > 0 && canshoot) {
+    if (this->gun->getReload() > 0 && !duringReload) {
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-            if (this->gun->getMaxReload() == 12 || this->gun->getMaxReload() == 4) { //is pistol or sniper
+            int maxReloadCheck = this->gun->getMaxReload();
+            if ((maxReloadCheck == 12 || maxReloadCheck == 4 || maxReloadCheck == 36 || maxReloadCheck == 6 || maxReloadCheck == 2 || maxReloadCheck == 5 || maxReloadCheck == 10 || maxReloadCheck == 72) && !bottomlessClip) { //is pistol or sniper or burst or shotgun or rocket
                 if (semiAuto == true) {
-                    this->gun->fire(p);
+                    this->gun->fire(p, bottomlessClip, this->doubleDamage, this->extendedMag);
                     semiAuto = false;
                 }
             }
             else {
-                this->gun->fire(p);
+                this->gun->fire(p, this->bottomlessClip, this->doubleDamage, this->extendedMag);
             }
         }
     }
@@ -111,7 +130,12 @@ void Player::checkMove(sf::Vector2i gP) {
         if (this->health > this->maxHealth) this->health = this->maxHealth;
     }
 
-
+    //if reloading && enough time has passed
+    if (duringReload && clock() - initialReload > this->gun->getReloadTime())
+    {
+        duringReload = false;
+        this->gun->changeReload(this->gun->getMaxReload());
+    }
 }
 
 sf::Sprite Player::getSprite() {
@@ -139,10 +163,22 @@ void Player::setHealth(int health) {
     this->regenTimer = clock();
 }
 
-void Player::reload(Gun* myGun) {
-    Sleep(myGun->getReloadTime());
-    this->gun->changeReload(this->gun->getMaxReload());
-    this->canshoot = true;
+void Player::reload() {
+    this->duringReload = true;
+    this->initialReload = clock();
+    if (contingencyResponse && this->gun->getReload() == 0) {
+        sf::Vector2f temp = this->sprite.getPosition();
+        sf::Vector2f thisGo(1, 0);
+        for (int x = 0; x < 10; x++) { //18 shots * 20 degrees apart = 360 degrees
+            thisGo.x = cos(36 * 3.141592653 / 180) * temp.x - sin(36 * 3.141592653 / 180) * temp.y;
+            thisGo.y = sin(36 * 3.141592653 / 180) * temp.x + cos(36 * 3.141592653 / 180) * temp.y;
+            //adding the explosion bullets to the vector at boomspot + the opposite direction 
+            Bullet* explosion = new Bullet(this->sprite.getPosition(), thisGo, this->size, 10, this->explosionTexture, 2 + this->bulletHealth, 15);
+            this->gun->getShots()->push_back(explosion);
+            temp.x = thisGo.x;
+            temp.y = thisGo.y;
+        }
+    }
 }
 
 int Player::getMaxHealth() {
@@ -166,18 +202,6 @@ void Player::setMaxHealth(int newMaxHealth) {
     this->maxHealth = newMaxHealth;
 }
 
-//double Player::getStrength() {
-//    return this->damageP;
-//}
-//void Player::setStrength(double newStrength) {
-//    this->damageP = newStrength;
-//}
-//double Player::getSpeed() {
-//    return this->speedMultiplier;
-//}
-//void Player::setSpeed(double newSpeed) {
-//    this->speed = newSpeed;
-//}
 bool Player::setGun(Gun* newGun) {
     bool result = false;
     if (newGun->getMaxReload() != this->gun->getMaxReload()) {
@@ -195,4 +219,40 @@ sf::Vector2u Player::getSize() {
 
 int Player::getBulletHealth() {
     return this->bulletHealth;
+}
+
+void Player::setBottomlessClip(bool newValue) {
+    this->bottomlessClip = newValue;
+}
+
+void Player::setDoubleDamage(bool newValue) {
+    this->doubleDamage = newValue;
+}
+
+bool Player::getDoubleDamage() {
+    return this->doubleDamage;
+}
+
+void Player::setDoubleMag(bool newValue) {
+    this->extendedMag = newValue;
+}
+
+bool Player::getDoubleMag() {
+    return this->extendedMag;
+}
+
+void Player::setReloadBoom(bool newValue) {
+    this->contingencyResponse = newValue;
+}
+
+bool Player::getReloadBoom() {
+    return this->contingencyResponse;
+}
+
+void Player::setSecondWind(bool newValue) {
+    this->secondWind = newValue;
+}
+
+bool Player::getSecondWind() {
+    return this->secondWind;
 }
