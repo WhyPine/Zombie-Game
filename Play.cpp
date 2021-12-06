@@ -130,12 +130,14 @@ void loadWalls() {
     //buy boxes
     // x coord, y coord, price, type
     //
-    // 0 = pistol   1 = rifle   2 = shotgun   
+    // 0 = pistol   1 = rifle   2 = shotgun   3 = RPG   4 = Burst Rifle   5 = Sniper
     // 11 = second wind    12 = reload boom   13 = double damage   14 = double mag
     
     buyBoxes.push_back(new buyBox(27 * 32, 0 * 32, 25, 1));
     buyBoxes.push_back(new buyBox(33 * 32, 0 * 32, 25, 2));
     buyBoxes.push_back(new buyBox(62 * 32, 23 * 32, 50, 3));
+    buyBoxes.push_back(new buyBox(71 * 32 , 19 * 32, 40, 4));
+    buyBoxes.push_back(new buyBox(0 * 32, 35 * 32, 50, 5));
 
     buyBoxes.push_back(new buyBox(20 * 32, 21 * 32, 25, 13));
     buyBoxes.push_back(new buyBox(27 * 32, 33 * 32, 25, 14));
