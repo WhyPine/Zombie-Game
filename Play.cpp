@@ -10,7 +10,6 @@ vector<Zombie*> zombies;
 sf::Vector2f pasPos;
 sf::Sprite backdrop;
 vector<wall*> walls;
-std::mutex mtx;
 vector<Door*> doors;
 vector<buyBox*> buyBoxes;
 
@@ -722,7 +721,7 @@ void drawing(sf::RenderWindow& window, Player* p1, sf::Font& font) {
     displayGUI(p1, window, font, zombies.size());
 }
 
-void run(sf::RenderWindow& window, sf::View& view){
+void run(sf::RenderWindow& window, sf::View& view, save& saveFile){
     sf::Texture tex;
     tex.loadFromFile("mapv2.png");
     backdrop.setTexture(tex);
@@ -730,7 +729,7 @@ void run(sf::RenderWindow& window, sf::View& view){
     v.x = 32*1.f;
     v.y = 32*1.f;
     zombies.push_back(new Zombie(15, 1, 1, window.getSize(), v));
-    Player* p1 = new Player(20, 1, 1, window.getSize(), 0, 1); 
+    Player* p1 = new Player(saveFile.health, saveFile.speedM, saveFile.damageP, window.getSize(), saveFile.bulletAdd, saveFile.regenM); 
     loadWalls();
     //Loading Font
     sf::Font font;
@@ -754,6 +753,7 @@ void run(sf::RenderWindow& window, sf::View& view){
     int lastSpawnTime = 0;
     int zombiesSpawned = 0;
     int spawnCount = 0;
+    int bossSpawns = 0;
     int bossCount = 0;
 
     bool nextRound = false;
@@ -761,6 +761,8 @@ void run(sf::RenderWindow& window, sf::View& view){
     int displayTimer = 0;
 
     int secondWindCounter = 0;
+    int deathTimer = 0;
+    int skillPointsEarned = 0;
 
     //special round variables
     float zombieSpawnMultiplier = 1.0;
@@ -830,9 +832,9 @@ void run(sf::RenderWindow& window, sf::View& view){
                         //choosing which zombie and spawning
                         sf::Vector2f spawnLocation = getZombieSpawn(p1);
                         //checking if bosses need to be spawned
-                        if (zombiesSpawned > (spawnCount / 2) && bossCount) {
+                        if (zombiesSpawned > (spawnCount / 2) && bossSpawns < bossCount) {
                             //if more than one boss to spawn, random 
-                            if (bossCount > 1) {
+                            if (bossSpawns == 1) {
                                 if (clock() % 3 == 0) {
                                     zombies.push_back(new heavyZombie((15 + rounds / 5) * 10, 1, 1, sf::Vector2u(p1->getSize().x * 2, p1->getSize().y * 2), spawnLocation));
                                 }
@@ -854,6 +856,7 @@ void run(sf::RenderWindow& window, sf::View& view){
                                 zombies.push_back(new RunnerZombie((15 + rounds / 5) * 10, 1, 1, sf::Vector2u(p1->getSize().x * 2, p1->getSize().y * 2), spawnLocation));
                             }
                             bossCount--;
+                            bossSpawns++;
                             spawnCount++;
                         }
                         else if (rounds > 21 && zombiesSpawned % 6 == 1) {
@@ -943,6 +946,10 @@ void run(sf::RenderWindow& window, sf::View& view){
             
             if(!nextRound) { //setting up next round
                 if (!displayRound) {
+                    //if you completed the round, updates skill point counter
+                    skillPointsEarned += bossCount;
+                    bossCount = 0;
+                    bossSpawns = 0;
                     //updating player health
                     p1->setHealth(p1->getHealth() + ((p1->getMaxHealth() - p1->getHealth()) / 2));
                     if (p1->getHealth() > p1->getMaxHealth()) p1->setHealth(p1->getMaxHealth());
@@ -1014,8 +1021,23 @@ void run(sf::RenderWindow& window, sf::View& view){
         //if player health is below 0 & they dont have second wind perk
         if (p1->getHealth() < 1 && !p1->getSecondWind())
         {
-            deathText.setPosition(view.getCenter().x, view.getCenter().y + 100);
-            window.draw(deathText);
+            p1->setHealth(-1000);
+            //begin timer
+            if (!deathTimer) {
+                deathTimer = clock();
+            }
+            //after 2 seconds
+            else if (clock() - deathTimer > 2000) {
+                saveFile.skillPoints += skillPointsEarned;
+                rounds = 1;
+                zombies.clear();
+                window.close();
+            }
+            //display YOU DIED for 2 seconds
+            else {
+                deathText.setPosition(view.getCenter().x, view.getCenter().y + 100);
+                window.draw(deathText);
+            }
         }
         //if player dies with second wind perk
         else if (p1->getHealth() < 1 && p1->getSecondWind()) {

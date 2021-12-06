@@ -116,9 +116,6 @@
     <ClInclude Include="savefiles.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="submenu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="dragonFrames.png">

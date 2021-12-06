@@ -1,5 +1,5 @@
 #include "Play.h"
-#include "savefiles.h"
+//#include "savefiles.h"
 
 int main()
 {
@@ -103,7 +103,8 @@ int main()
                 }
                 if (choice != 3) {
                     std::cout << "yeppers";
-                    while (Menu.isOpen()) {
+                    bool returnToMenu = false;
+                    while (!returnToMenu && Menu.isOpen()) {
                         if (!sf::Mouse::isButtonPressed(sf::Mouse::Left)) releasedMouse = true;
                         int n = 0;
                         sf::Sprite launch;
@@ -131,8 +132,10 @@ int main()
                                 sf::View view(sf::Vector2f(window.getSize().x / 2, window.getSize().y / 2), sf::Vector2f(1280.f, 720.f));
                                 window.setView(view);
                                 window.setFramerateLimit(60);
-                                Menu.close();
-                                run(window, view);
+                                Menu.setVisible(false);
+                                run(window, view, r1.files[choice]);
+                                Menu.setVisible(true);
+                                returnToMenu = true;
                             }
                             else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (quitbutton.getGlobalBounds().contains(gC.x, gC.y))) {
                                 Menu.close();

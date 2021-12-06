@@ -183,7 +183,6 @@
     <ClInclude Include="save.h" />
     <ClInclude Include="savefiles.h" />
     <ClInclude Include="Sniper.h" />
-    <ClInclude Include="submenu.h" />
     <ClInclude Include="wall.h" />
     <ClInclude Include="Shotgun.h" />
     <ClInclude Include="Zombie.h" />
