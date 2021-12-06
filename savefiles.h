@@ -80,5 +80,35 @@ public:
 		files[2] = save3;
 		file.close();
 	}
+	void saveToFile() {
+		std::fstream file;
+		file.open("save1.txt", std::ios::in);
+		file << files[0].newPlayer << std::endl;
+		file << files[0].damageP << std::endl;
+		file << files[0].health << std::endl;
+		file << files[0].speedM << std::endl;
+		file << files[0].bulletAdd << std::endl;
+		file << files[0].regenM << std::endl;
+		file << files[0].skillPoints;
+		file.close();
+		file.open("save2.txt", std::ios::in);
+		file << files[1].newPlayer << std::endl;
+		file << files[1].damageP << std::endl;
+		file << files[1].health << std::endl;
+		file << files[1].speedM << std::endl;
+		file << files[1].bulletAdd << std::endl;
+		file << files[1].regenM << std::endl;
+		file << files[1].skillPoints;
+		file.close();
+		file.open("save3.txt", std::ios::in);
+		file << files[2].newPlayer << std::endl;
+		file << files[2].damageP << std::endl;
+		file << files[2].health << std::endl;
+		file << files[2].speedM << std::endl;
+		file << files[2].bulletAdd << std::endl;
+		file << files[2].regenM << std::endl;
+		file << files[2].skillPoints;
+		file.close(); 
+	}
 };
 

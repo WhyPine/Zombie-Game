@@ -855,7 +855,6 @@ void run(sf::RenderWindow& window, sf::View& view, save& saveFile){
                             else if (rounds - 1 % 30 == 20) {
                                 zombies.push_back(new RunnerZombie((15 + rounds / 5) * 10, 1, 1, sf::Vector2u(p1->getSize().x * 2, p1->getSize().y * 2), spawnLocation));
                             }
-                            bossCount--;
                             bossSpawns++;
                             spawnCount++;
                         }

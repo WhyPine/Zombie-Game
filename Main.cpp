@@ -3,6 +3,7 @@
 
 int main()
 {
+    bool returnToMenu = false;
     srand(time(NULL));
     sf::RenderWindow Menu(sf::VideoMode(1280, 720), "Horde Shooter Main Menu");
     //Menu.setFramerateLimit(60);
@@ -102,8 +103,12 @@ int main()
                     }
                 }
                 if (choice != 3) {
+                    //if just closed, then save to files
+                    if (returnToMenu) {
+                        returnToMenu = false;
+                        r1.saveToFile();
+                    }
                     std::cout << "yeppers";
-                    bool returnToMenu = false;
                     while (!returnToMenu && Menu.isOpen()) {
                         if (!sf::Mouse::isButtonPressed(sf::Mouse::Left)) releasedMouse = true;
                         int n = 0;
