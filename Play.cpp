@@ -741,6 +741,14 @@ void run(sf::RenderWindow& window, sf::View& view){
         loadFont = false;
     }
     sf::Text roundText;
+    sf::Text deathText;
+    deathText.setFont(font);
+    deathText.setString("YOU DIED!");
+    deathText.setCharacterSize(400);
+    deathText.setFillColor(sf::Color(94, 1, 6));
+    deathText.setOutlineColor(sf::Color::Black);
+    deathText.setOutlineThickness(5);
+    deathText.setOrigin(deathText.getLocalBounds().width / 2, deathText.getLocalBounds().height / 2);
 
     std::vector<megaZombieManager> mzManager;
     int lastSpawnTime = 0;
@@ -752,7 +760,6 @@ void run(sf::RenderWindow& window, sf::View& view){
     bool displayRound = false;
     int displayTimer = 0;
 
-    bool loadDeathMessage = false;
     int secondWindCounter = 0;
 
     //special round variables
@@ -946,7 +953,7 @@ void run(sf::RenderWindow& window, sf::View& view){
                     int picker = rand() % 100 + 1;
                     if (picker % 50 == 0) goldRush = true; //2% chance for 2x money each round
                     if (rounds % 10 == 0) {
-                        bossCount = (rounds % 30) + 1;
+                        bossCount = (rounds / 30) + 1;
                     }
                     else if (rounds % 5 == 0) { //only for 5's rounds - 5 15 25 35...
                         if (picker < 25) horde = true;
@@ -1007,30 +1014,15 @@ void run(sf::RenderWindow& window, sf::View& view){
         //if player health is below 0 & they dont have second wind perk
         if (p1->getHealth() < 1 && !p1->getSecondWind())
         {
-            //if death message hasn't been loaded, load it
-            if (!loadDeathMessage) {
-                roundText.setFont(font);
-                roundText.setString("YOU DIED!");
-                roundText.setCharacterSize(400);
-                roundText.setFillColor(sf::Color(94, 1, 6));
-                roundText.setOutlineColor(sf::Color::Black);
-                roundText.setOutlineThickness(5);
-                roundText.setOrigin(roundText.getLocalBounds().width / 2, roundText.getLocalBounds().height / 2);
-                loadDeathMessage = true;
-            }
-            //else set position and draw the text
-            else {
-                roundText.setPosition(view.getCenter().x, view.getCenter().y+100);
-                window.draw(roundText);
-            }
+            deathText.setPosition(view.getCenter().x, view.getCenter().y + 100);
+            window.draw(deathText);
         }
         //if player dies with second wind perk
         else if (p1->getHealth() < 1 && p1->getSecondWind()) {
-            loadDeathMessage = false; //going to change it so we have to
             roundText.setString("Second Wind");
-            roundText.setCharacterSize(150);
-            roundText.setFillColor(sf::Color(94, 1, 6, 127));
-            roundText.setOutlineColor(sf::Color(0, 0, 0, 127));
+            roundText.setCharacterSize(100);
+            roundText.setFillColor(sf::Color(94, 1, 6));
+            roundText.setOutlineColor(sf::Color(0, 0, 0));
             roundText.setOutlineThickness(2);
             roundText.setOrigin(roundText.getLocalBounds().width / 2, roundText.getLocalBounds().height / 2);
             secondWindCounter = clock();
@@ -1046,11 +1038,6 @@ void run(sf::RenderWindow& window, sf::View& view){
                 window.draw(roundText);
             }
             else secondWindCounter = 0;
-        }
-        //if player has health
-        else {
-            //if deathMessage was previously loaded, it must be reloaded
-            if (loadDeathMessage) loadDeathMessage = false;
         }
         int xPos = 1120;
         int yPos = 695;
