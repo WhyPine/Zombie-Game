@@ -24,7 +24,6 @@ void BurstRifle::fire(sf::Vector2f go, bool bottomelessClip, bool doubleDamage, 
 
 	if (this->shottimer > 40)
 	{
-		std::cout << "Updating fired to true" << std::endl;
 		this->fired = true; //the gun has been fired
 		this->shottimer = 0;
 		this->numShots = 4;
@@ -49,15 +48,12 @@ void BurstRifle::run(sf::Vector2f pos, float rotation, sf::Vector2f bulletDirect
 			(*it)->updatePosition(); //moving all the bullets
 		}
 	}
-	std::cout << "fired = " << fired << "  numShots = " << numShots << std::endl;
 	if (this->fired)
 	{
-		std::cout << "in fired" << std::endl;
 		if (clock() - lastShot > 62.5)
 		{
 			this->numShots--;
 			this->shots->push_back(new Bullet(newVector, bulletDirection, this->size, this->power, this->bulletTexture, 1 + this->bulletHealth, 15));
-			std::cout << "BOOM   shotsSize = " << this->shots->size() << std::endl;
 			this->lastShot = clock();
 		}
 	}
