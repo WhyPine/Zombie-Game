@@ -206,6 +206,7 @@
     <Image Include="RPGBox.png" />
     <Image Include="rpgmainshot.png" />
     <Image Include="rpgshot.png" />
+    <Image Include="RPGSprite.png" />
     <Image Include="secondWindBadge.png" />
     <Image Include="shotgunshot.png" />
     <Image Include="skeleton-attack_0.png" />

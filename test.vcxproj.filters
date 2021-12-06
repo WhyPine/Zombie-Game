@@ -202,6 +202,9 @@
     <Image Include="BurstRifleBox.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="RPGSprite.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Font Include="shlop rg.ttf">
