@@ -11,6 +11,10 @@
 class Player : public sf::CircleShape, sf::Sprite
 {
 private:
+	bool doubleDamage;
+	bool extendedMag;
+	bool secondWind;
+	bool contingencyResponse;
 	bool semiAuto; //used for making pistol semi automatic
 	sf::Vector2u size; 
 	int health;
@@ -23,11 +27,11 @@ private:
 	sf::Sprite sprite; 
 	Gun* gun; 
 	sf::Texture* texture = new sf::Texture;
+	sf::Texture explosionTexture;
 	int bulletHealth;
 	bool bottomlessClip;
 	bool duringReload;
 	int initialReload;
-	int regenDelay;
 public:
 	int getBulletHealth();
 	int getMaxHealth();

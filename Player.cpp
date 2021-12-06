@@ -17,6 +17,7 @@ Player::Player(int newHealth, double newSpeedMultiplier, double newReloadMultipl
     this->duringReload = false;
     this->sprite.setPosition(15*32.f, 9*32.f);
     this->texture->loadFromFile("survivor-move_handgun_0.png");
+    this->explosionTexture.loadFromFile("rpgshot.png");
     this->sprite.setTexture(*(this->texture));
     this->sprite.setTextureRect(sf::IntRect(39, 39, 250, 200));
     this->sprite.setOrigin(this->sprite.getLocalBounds().width / 2, this->sprite.getLocalBounds().height / 2);
@@ -26,6 +27,10 @@ Player::Player(int newHealth, double newSpeedMultiplier, double newReloadMultipl
     this->money = 10000;
     this->bottomlessClip = false;
     this->initialReload = 0;
+    this->doubleDamage = false;
+    this->extendedMag = false;
+    this->secondWind = false;
+    this->contingencyResponse = true;
 }
 
 void Player::checkMove(sf::Vector2i gP) {
@@ -84,12 +89,15 @@ void Player::checkMove(sf::Vector2i gP) {
         }
         for (int i = 0; i < 3; i++) this->sprite.move(moveX, moveY);
     }
+    //if rpg
     if (this->gun->getMaxReload() == 2) {
         this->gun->run(this->sprite.getPosition(), this->sprite.getRotation(), sf::Mouse::isButtonPressed(sf::Mouse::Left));
     }
+    //if burst fire
     else if (this->gun->getMaxReload() == 36) {
         this->gun->run(this->sprite.getPosition(), this->sprite.getRotation(), p);
     }
+    //if all other guns
     else {
         this->gun->run(this->sprite.getPosition(), this->sprite.getRotation());
     }
@@ -158,6 +166,19 @@ void Player::setHealth(int health) {
 void Player::reload() {
     this->duringReload = true;
     this->initialReload = clock();
+    if (contingencyResponse && this->gun->getReload() == 0) {
+        sf::Vector2f temp = this->sprite.getPosition();
+        sf::Vector2f thisGo(1, 0);
+        for (int x = 0; x < 10; x++) { //18 shots * 20 degrees apart = 360 degrees
+            thisGo.x = cos(36 * 3.141592653 / 180) * temp.x - sin(36 * 3.141592653 / 180) * temp.y;
+            thisGo.y = sin(36 * 3.141592653 / 180) * temp.x + cos(36 * 3.141592653 / 180) * temp.y;
+            //adding the explosion bullets to the vector at boomspot + the opposite direction 
+            Bullet* explosion = new Bullet(this->sprite.getPosition(), thisGo, this->size, 10, this->explosionTexture, 2 + this->bulletHealth, 15);
+            this->gun->getShots()->push_back(explosion);
+            temp.x = thisGo.x;
+            temp.y = thisGo.y;
+        }
+    }
 }
 
 int Player::getMaxHealth() {
