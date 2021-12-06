@@ -121,19 +121,26 @@ void loadWalls() {
 
     doors.push_back(new Door(51*32, 34*32, false, 100)); //hospital left 6
     doors.push_back(new Door(59*32, 30*32, true, 100)); //hospital right 7
+    doors.push_back(new Door(52*32, 26*32, true, 100)); //hospital top left 8
+    doors.push_back(new Door(71*32, 26*32, true, 100)); //hospital top right 9
 
-    doors.push_back(new Door(66 * 32, 1 * 32, false, 100)); //lab upper 8
-    doors.push_back(new Door(76 * 32, 22 * 32, true, 100)); //lab lower 9
+    doors.push_back(new Door(66 * 32, 1 * 32, false, 100)); //lab upper 10
+    doors.push_back(new Door(76 * 32, 22 * 32, true, 100)); //lab lower 11
 
     //buy boxes
     // x coord, y coord, price, type
     //
     // 0 = pistol   1 = rifle   2 = shotgun   
-    //
-    buyBoxes.push_back(new buyBox(33 * 32, 21 * 32, 25, 0));
+    // 11 = second wind    12 = reload boom   13 = double damage   14 = double mag
+    
     buyBoxes.push_back(new buyBox(27 * 32, 0 * 32, 25, 1));
     buyBoxes.push_back(new buyBox(33 * 32, 0 * 32, 25, 2));
-    buyBoxes.push_back(new buyBox(61 * 32, 34 * 32, 50, 3));
+    buyBoxes.push_back(new buyBox(62 * 32, 23 * 32, 50, 3));
+
+    buyBoxes.push_back(new buyBox(20 * 32, 21 * 32, 25, 13));
+    buyBoxes.push_back(new buyBox(27 * 32, 33 * 32, 25, 14));
+    buyBoxes.push_back(new buyBox(61 * 32, 34 * 32, 25, 11));
+    buyBoxes.push_back(new buyBox(48 * 32, 1 * 32, 25, 12));
     
     
 }
@@ -225,39 +232,7 @@ sf::Vector2f getZombieSpawn(Player* p1)
     }
     return v;
 }
-/*
-void spawnZombies(sf::Vector2u size, Player* p1, int horde, float waitMultiplier) { //may need to redo this and unthread it
-    sf::Vector2f v;
-    int health = 20 + rounds/4;
-    if (waitMultiplier == 0.5) health /= 2;
-    if (waitMultiplier == 2.0) health *= 2;
-    for (int i = 0; i < 3 * rounds + 5; i++) {
-        v = getZombieSpawn(p1);       
-       
-        for (int j = 0; j < horde; j++) {
-            if (rounds <= 15) {
-                zombies.push_back(new Zombie(health, 1, 1, size, v));
-            }
-            else if (rounds > 15) {
-                if (i % 3 == 2) {
-                    zombies.push_back(new RunnerZombie(health, 1, 1, size, v));
-                    //std::cout << "New Runner" << std::endl;
-                }
-                else {
-                    zombies.push_back(new Zombie(health, 1, 1, size, v));
-                }
-            }
-        }
-        int delay = 300;
-        int spawnThreshold = zombies.size() / (10 + rounds / 5);
-        for (int i = 0; i < spawnThreshold; i++) {
-            delay += delay;
-        }
-        //std::cout << "Zombies: " << zombies.size() << "  Round: " << rounds << "  Delay: " << delay << std::endl;
-        Sleep(delay * waitMultiplier);
-    }
-}
-*/
+
 sf::Vector2f doorCollision(Door& door, sf::Vector2f pos, int type, bool& collided) {
     sf::Vector2f result = pos;
     int thisSize = 40;

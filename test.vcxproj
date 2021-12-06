@@ -187,6 +187,8 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\..\..\WSU\Sophomore\Semester 1\CptS122\zombie2\rpgsprite.png" />
+    <Image Include="ddBox.png" />
+    <Image Include="dmBox.png" />
     <Image Include="Door.png" />
     <Image Include="Door2.png" />
     <Image Include="doubleDamageBadge.png" />
@@ -195,6 +197,7 @@
     <Image Include="healthbtn.png" />
     <Image Include="pistolshot.png" />
     <Image Include="play.png" />
+    <Image Include="rbBox.png" />
     <Image Include="reloadBoomBadge.png" />
     <Image Include="rifle.png" />
     <Image Include="riflebox.png" />
@@ -206,6 +209,7 @@
     <Image Include="skeleton-attack_0.png" />
     <Image Include="speedbtn.png" />
     <Image Include="strengthbutton.png" />
+    <Image Include="swBox.png" />
     <Image Include="zombie0.png" />
     <Image Include="survivor\Top_Down_Survivor\handgun\move\survivor-move_handgun_0.png" />
     <Image Include="zombie2.png" />

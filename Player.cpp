@@ -104,7 +104,7 @@ void Player::checkMove(sf::Vector2i gP) {
     if (this->gun->getReload() > 0 && !duringReload) {
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
             int maxReloadCheck = this->gun->getMaxReload();
-            if ((maxReloadCheck == 12 || maxReloadCheck == 4 || maxReloadCheck == 36 || maxReloadCheck == 6 || maxReloadCheck == 2) && !bottomlessClip) { //is pistol or sniper or burst or shotgun or rocket
+            if ((maxReloadCheck == 12 || maxReloadCheck == 4 || maxReloadCheck == 36 || maxReloadCheck == 6 || maxReloadCheck == 2 || maxReloadCheck == 5 || maxReloadCheck == 10 || maxReloadCheck == 72) && !bottomlessClip) { //is pistol or sniper or burst or shotgun or rocket
                 if (semiAuto == true) {
                     this->gun->fire(p, bottomlessClip, this->doubleDamage, this->extendedMag);
                     semiAuto = false;

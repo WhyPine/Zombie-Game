@@ -35,6 +35,30 @@ void buyBox::buy(Player& p1) {
 			p1.setMoney(p1.getMoney() - this->boxPrice);
 		}
 	}
+	else if (this->type == 11) {
+		if (!p1.getSecondWind()) {
+			p1.setSecondWind(true);
+			p1.setMoney(p1.getMoney() - this->boxPrice);
+		}
+	}
+	else if (this->type == 12) {
+		if (!p1.getReloadBoom()) {
+			p1.setReloadBoom(true);
+			p1.setMoney(p1.getMoney() - this->boxPrice);
+		}
+	}
+	else if (this->type == 13) {
+		if (!p1.getDoubleDamage()) {
+			p1.setDoubleDamage(true);
+			p1.setMoney(p1.getMoney() - this->boxPrice);
+		}
+	}
+	else if (this->type == 14) {
+		if (!p1.getDoubleMag()) {
+			p1.setDoubleMag(true);
+			p1.setMoney(p1.getMoney() - this->boxPrice);
+		}
+	}
 	lastBought = clock();
 
 }

@@ -181,6 +181,18 @@
     <Image Include="doubleMagBadge.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="ddBox.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="dmBox.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="rbBox.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="swBox.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Font Include="shlop rg.ttf">

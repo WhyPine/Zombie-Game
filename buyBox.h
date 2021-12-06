@@ -30,7 +30,31 @@ public:
         else if (this->type == 3) {
             this->name = "HellFire Launcher";
             if (!boxTexture.loadFromFile("shotgunbox.png")) {
-                std::cout << "Hell Fire Launcher texture failed to load" << std::endl;
+                std::cout << "Hell Fire Launcher box texture failed to load" << std::endl;
+            }
+        }
+        else if (this->type == 11) {
+            this->name = "Second Wind";
+            if (!boxTexture.loadFromFile("swBox.png")) {
+                std::cout << "Second Wind box texture failed to load";
+            }
+        }
+        else if (this->type == 12) {
+            this->name = "Contingency Response";
+            if (!boxTexture.loadFromFile("rbBox.png")) {
+                std::cout << "Contingenct Response box texture failed to load";
+            }
+        }
+        else if (this->type == 13) {
+            this->name = "Hollow Point Rounds";
+            if (!boxTexture.loadFromFile("ddBox.png")) {
+                std::cout << "Hollow Point box texture failed to load";
+            }
+        }
+        else if (this->type == 14) {
+            this->name = "Extended Mag";
+            if (!boxTexture.loadFromFile("dmBox.png")) {
+                std::cout << "Extended Mag box texture failed to load";
             }
         }
         
