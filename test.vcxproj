@@ -187,6 +187,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\..\..\WSU\Sophomore\Semester 1\CptS122\zombie2\rpgsprite.png" />
+    <Image Include="bigboi.png" />
     <Image Include="ddBox.png" />
     <Image Include="dmBox.png" />
     <Image Include="Door.png" />

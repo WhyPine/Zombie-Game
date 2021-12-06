@@ -744,6 +744,7 @@ void run(sf::RenderWindow& window, sf::View& view){
     int lastSpawnTime = 0;
     int zombiesSpawned = 0;
     int spawnCount = 0;
+    int bossCount = 0;
 
     bool nextRound = false;
     bool displayRound = false;
@@ -819,14 +820,39 @@ void run(sf::RenderWindow& window, sf::View& view){
                     if (clock() - lastSpawnTime > zombieSpawnMultiplier * delay) {
                         //choosing which zombie and spawning
                         sf::Vector2f spawnLocation = getZombieSpawn(p1);
-                        //
-                        //in here put code to spawn big boi: if zombiesSpawned %6 = 1
-                        if (zombiesSpawned % 6 == 1)
-                        {
+                        //checking if bosses need to be spawned
+                        if (zombiesSpawned > (spawnCount / 2) && bossCount) {
+                            //if more than one boss to spawn, random 
+                            if (bossCount > 1) {
+                                if (clock() % 3 == 0) {
+                                    zombies.push_back(new heavyZombie((15 + rounds / 5) * 10, 1, 1, sf::Vector2u(p1->getSize().x * 2, p1->getSize().y * 2), spawnLocation));
+                                }
+                                else if (clock() % 3 == 1) {
+                                    zombies.push_back(new RunnerZombie((15 + rounds / 5) * 10, 1, 1, sf::Vector2u(p1->getSize().x * 2, p1->getSize().y * 2), spawnLocation));
+                                }
+                                else {
+                                    zombies.push_back(new Zombie((15 + rounds / 5) * 10, 1, 1, sf::Vector2u(p1->getSize().x * 2, p1->getSize().y * 2), spawnLocation));
+                                }
+                            }
+                            //if one boss to spawn, pick the correct one
+                            else if (rounds - 1 % 30 == 0) {
+                                zombies.push_back(new heavyZombie((15 + rounds/5) * 10, 1, 1, sf::Vector2u(p1->getSize().x * 2, p1->getSize().y * 2), spawnLocation));
+                            }
+                            else if (rounds - 1 % 30 == 10) {
+                                zombies.push_back(new Zombie((15 + rounds / 5) * 10, 1, 1, sf::Vector2u(p1->getSize().x * 2, p1->getSize().y * 2), spawnLocation));
+                            }
+                            else if (rounds - 1 % 30 == 20) {
+                                zombies.push_back(new RunnerZombie((15 + rounds / 5) * 10, 1, 1, sf::Vector2u(p1->getSize().x * 2, p1->getSize().y * 2), spawnLocation));
+                            }
+                            bossCount--;
+                            spawnCount++;
+                        }
+                        else if (rounds > 21 && zombiesSpawned % 6 == 1) {
                             zombies.push_back(new heavyZombie(15 + rounds / 5, 1, 1, p1->getSize(), spawnLocation));
                             std::cout << "New heavy zombie spawned" << std::endl;
                         }
-                        if (rounds > 15 && zombiesSpawned % 3 == 2) {
+                        else if (rounds > 11 && zombiesSpawned % 3 == 2) {
+                            std::cout << "Round: " << rounds << std::endl;
                             zombies.push_back(new RunnerZombie(15 + rounds / 5, 1, 1, p1->getSize(), spawnLocation));
                         }
                         else {
@@ -917,7 +943,10 @@ void run(sf::RenderWindow& window, sf::View& view){
                     //setting up next round modifiers
                     int picker = rand() % 100 + 1;
                     if (picker % 50 == 0) goldRush = true; //2% chance for 2x money each round
-                    if (rounds % 5 == 0 && rounds % 10 != 0) { //only for 5's rounds - 5 15 25 35...
+                    if (rounds % 10 == 0) {
+                        bossCount = (rounds % 30) + 1;
+                    }
+                    else if (rounds % 5 == 0) { //only for 5's rounds - 5 15 25 35...
                         if (picker < 25) horde = true;
                         else if (picker >= 25 && picker < 50) ambush = true;
                         else if (picker >= 50 && picker < 75) siege = true;
@@ -969,7 +998,7 @@ void run(sf::RenderWindow& window, sf::View& view){
             else { //beginning next round
                 nextRound = false;
                 zombiesSpawned = 0;
-                rounds++;
+                rounds ++;
                 roundComplete = false;
             }
         }

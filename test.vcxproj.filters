@@ -193,6 +193,9 @@
     <Image Include="swBox.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="bigboi.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Font Include="shlop rg.ttf">
