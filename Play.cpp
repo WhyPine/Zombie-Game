@@ -1,6 +1,7 @@
 
 #include "Play.h"
 
+
 clock_t start = 0;
 int reloadDelayTimer = 0;
 time_t end = 0;
@@ -814,6 +815,11 @@ void run(sf::RenderWindow& window, sf::View& view){
                         sf::Vector2f spawnLocation = getZombieSpawn(p1);
                         //
                         //in here put code to spawn big boi: if zombiesSpawned %6 = 1
+                        if (zombiesSpawned % 6 == 1)
+                        {
+                            zombies.push_back(new heavyZombie(15 + rounds / 5, 1, 1, p1->getSize(), spawnLocation));
+                            std::cout << "New heavy zombie spawned" << std::endl;
+                        }
                         if (rounds > 15 && zombiesSpawned % 3 == 2) {
                             zombies.push_back(new RunnerZombie(15 + rounds / 5, 1, 1, p1->getSize(), spawnLocation));
                         }
