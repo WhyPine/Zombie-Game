@@ -1027,9 +1027,6 @@ void run(sf::RenderWindow& window, sf::View& view, save& saveFile){
             }
             //after 2 seconds
             else if (clock() - deathTimer > 2000) {
-                saveFile.skillPoints += skillPointsEarned;
-                rounds = 1;
-                zombies.clear();
                 window.close();
             }
             //display YOU DIED for 2 seconds
@@ -1085,4 +1082,11 @@ void run(sf::RenderWindow& window, sf::View& view, save& saveFile){
         }
         window.display();
     }
+    saveFile.skillPoints += skillPointsEarned;
+    rounds = 1;
+    zombies.clear();
+    window.close();
+    walls.clear();
+    walls.clear();
+    buyBoxes.clear();
 }
