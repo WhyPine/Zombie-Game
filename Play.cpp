@@ -539,6 +539,7 @@ void movement(sf::RenderWindow& window, Player* p1) {
 void displayGUI(Player* p1, sf::RenderWindow& window, sf::Font& font, int zombies)
 {
     if (p1->getHealth() > 0) {
+        //health bar
         sf::RectangleShape healthBack(sf::Vector2f(300, 30));
         healthBack.setFillColor(sf::Color(50, 50, 50));
         sf::RectangleShape healthFront(sf::Vector2f(300 * p1->getHealth() / p1->getMaxHealth(), 30));
@@ -549,7 +550,7 @@ void displayGUI(Player* p1, sf::RenderWindow& window, sf::Font& font, int zombie
         if (p1->getPosition().y >= 720) yPos += 720;
         healthBack.setPosition(xPos, yPos);
         healthFront.setPosition(xPos, yPos);
-
+        //ammo count
         sf::Text ammoCount;
         ammoCount.setFont(font);
         string ammo = std::to_string(p1->getGun()->getReload()) + "/" + std::to_string(p1->getGun()->getMaxReload());
@@ -559,7 +560,7 @@ void displayGUI(Player* p1, sf::RenderWindow& window, sf::Font& font, int zombie
         ammoCount.setPosition(xPos + 1150, yPos-10);
         ammoCount.setOutlineColor(sf::Color::Black);
         ammoCount.setOutlineThickness(3);
-
+        //cash display
         sf::Text moneyCount;
         string moneyString = "Money $: " + std::to_string(p1->getMoney());
         moneyCount.setFont(font);
@@ -569,7 +570,7 @@ void displayGUI(Player* p1, sf::RenderWindow& window, sf::Font& font, int zombie
         moneyCount.setPosition(xPos + 10, yPos - 40);
         moneyCount.setOutlineColor(sf::Color::Black);
         moneyCount.setOutlineThickness(3);
-
+        //zombie counter
         sf::Text zombieCount;
         string zombieString = std::to_string(zombies) + " Left";
         zombieCount.setFont(font);
@@ -580,10 +581,9 @@ void displayGUI(Player* p1, sf::RenderWindow& window, sf::Font& font, int zombie
         zombieCount.setOutlineColor(sf::Color::Black);
         zombieCount.setOutlineThickness(3);
 
+        //code for ammo indicator on mouse
         sf::RectangleShape ammoBack(sf::Vector2f(15, -45));
         sf::RectangleShape ammoFront(sf::Vector2f(15, -45* ((float)p1->getGun()->getReload()/ (float)p1->getGun()->getMaxReload())));
-        //ammoBack.setOrigin(ammoBack.getPosition().x, ammoBack.getPosition().y + 45);
-        //ammoFront.setOrigin(ammoFront.getPosition().x, ammoFront.getPosition().y + 45);
         ammoBack.setFillColor(sf::Color(32, 32, 32, 125));
         ammoBack.setOutlineColor(sf::Color(127, 127, 127, 100));
         ammoBack.setOutlineThickness(1);
@@ -595,7 +595,7 @@ void displayGUI(Player* p1, sf::RenderWindow& window, sf::Font& font, int zombie
         makeTrue(gP, p1);
         ammoBack.setPosition(gP.x - 25, gP.y + 45);
         ammoFront.setPosition(gP.x - 25, gP.y + 45);
-        
+        //purchasing indicator for doors
         for (int x = 0; x < doors.size(); x++) {
             if (doors[x]->canOpen(*p1) && doors[x]->isClosed()) {
                 sf::Text doorText;
@@ -618,6 +618,7 @@ void displayGUI(Player* p1, sf::RenderWindow& window, sf::Font& font, int zombie
                 }
             }
         }
+        //purchasing indicator for buyboxes
         for (int x = 0; x < buyBoxes.size(); x++) {
             if (buyBoxes[x]->canBuy(*p1)) {
                 sf::Text doorText;
@@ -640,7 +641,7 @@ void displayGUI(Player* p1, sf::RenderWindow& window, sf::Font& font, int zombie
                 }
             }
         }
-
+        //reload indicator
         if ((double)p1->getGun()->getReload() / (double)p1->getGun()->getMaxReload() <= 0.35) {
             sf::Text ammoAlert;
             string alert = "Press R to Reload!";
@@ -653,6 +654,11 @@ void displayGUI(Player* p1, sf::RenderWindow& window, sf::Font& font, int zombie
             ammoAlert.setOutlineThickness(2);
             window.draw(ammoAlert);
         }
+        //perks
+        //setting up variables for perk locations
+        
+
+
         window.draw(zombieCount);
         window.draw(moneyCount);
         window.draw(ammoCount);
@@ -769,6 +775,7 @@ void run(sf::RenderWindow& window, sf::View& view){
     int displayTimer = 0;
 
     bool loadDeathMessage = false;
+    int secondWindCounter = 0;
 
     //special round variables
     float zombieSpawnMultiplier = 1.0;
@@ -779,6 +786,30 @@ void run(sf::RenderWindow& window, sf::View& view){
     bool megaZombie = false;
     int megaZombieHp = 0;
     bool siege = false;
+    //loading badges
+    sf::RectangleShape swBadge(sf::Vector2f(27, 40));
+    sf::Texture* swTexture = new sf::Texture;
+    swTexture->loadFromFile("secondWindBadge.png");
+    swBadge.setOrigin(swBadge.getLocalBounds().width / 2, swBadge.getLocalBounds().height / 2);
+    swBadge.setTexture(swTexture, true);
+
+    sf::RectangleShape cpBadge(sf::Vector2f(27, 40));
+    sf::Texture* cpTexture = new sf::Texture;
+    cpTexture->loadFromFile("reloadBoomBadge.png");
+    cpBadge.setOrigin(cpBadge.getLocalBounds().width / 2, cpBadge.getLocalBounds().height / 2);
+    cpBadge.setTexture(cpTexture, true);
+
+    sf::RectangleShape ddBadge(sf::Vector2f(27, 40));
+    sf::Texture* ddTexture = new sf::Texture;
+    ddTexture->loadFromFile("doubleDamageBadge.png");
+    ddBadge.setOrigin(ddBadge.getLocalBounds().width / 2, ddBadge.getLocalBounds().height / 2);
+    ddBadge.setTexture(ddTexture, true);
+
+    sf::RectangleShape dmBadge(sf::Vector2f(27, 40));
+    sf::Texture* dmTexture = new sf::Texture;
+    dmTexture->loadFromFile("doubleMagBadge.png");
+    dmBadge.setOrigin(dmBadge.getLocalBounds().width / 2, dmBadge.getLocalBounds().height / 2);
+    dmBadge.setTexture(dmTexture, true);
     
     while (window.isOpen())
     {
@@ -967,8 +998,8 @@ void run(sf::RenderWindow& window, sf::View& view){
                 roundComplete = false;
             }
         }
-        //if player health is below 0
-        if (p1->getHealth() < 1)
+        //if player health is below 0 & they dont have second wind perk
+        if (p1->getHealth() < 1 && !p1->getSecondWind())
         {
             //if death message hasn't been loaded, load it
             if (!loadDeathMessage) {
@@ -987,10 +1018,56 @@ void run(sf::RenderWindow& window, sf::View& view){
                 window.draw(roundText);
             }
         }
+        //if player dies with second wind perk
+        else if (p1->getHealth() < 1 && p1->getSecondWind()) {
+            loadDeathMessage = false; //going to change it so we have to
+            roundText.setString("Second Wind");
+            roundText.setCharacterSize(150);
+            roundText.setFillColor(sf::Color(94, 1, 6, 127));
+            roundText.setOutlineColor(sf::Color(0, 0, 0, 127));
+            roundText.setOutlineThickness(2);
+            roundText.setOrigin(roundText.getLocalBounds().width / 2, roundText.getLocalBounds().height / 2);
+            secondWindCounter = clock();
+            p1->setSecondWind(false);
+            p1->setHealth(p1->getMaxHealth());
+            p1->getGun()->setReload(p1->getGun()->getMaxReload());
+        }
+        //if second wind activated
+        if (secondWindCounter) {
+            //display text for 1.5 seconds 
+            if (clock() - secondWindCounter < 1500) {
+                roundText.setPosition(view.getCenter().x, view.getCenter().y+200);
+                window.draw(roundText);
+            }
+            else secondWindCounter = 0;
+        }
         //if player has health
         else {
             //if deathMessage was previously loaded, it must be reloaded
             if (loadDeathMessage) loadDeathMessage = false;
+        }
+        int xPos = 1120;
+        int yPos = 695;
+        if (p1->getPosition().x >= 1280) xPos += 1280;
+        if (p1->getPosition().y >= 720) yPos += 720;
+        if (p1->getSecondWind()) {
+            swBadge.setPosition(xPos, yPos);
+            window.draw(swBadge);
+            xPos -= 40;
+        }
+        if (p1->getReloadBoom()) {
+            cpBadge.setPosition(xPos, yPos);
+            window.draw(cpBadge);
+            xPos -= 40;
+        }
+        if (p1->getDoubleDamage()) {
+            ddBadge.setPosition(xPos, yPos);
+            window.draw(ddBadge);
+            xPos -= 40;
+        }
+        if (p1->getDoubleMag()) {
+            dmBadge.setPosition(xPos, yPos);
+            window.draw(dmBadge);
         }
         window.display();
     }

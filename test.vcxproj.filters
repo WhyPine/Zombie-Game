@@ -169,6 +169,18 @@
     <Image Include="..\..\..\..\..\WSU\Sophomore\Semester 1\CptS122\zombie2\rpgsprite.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="secondWindBadge.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="reloadBoomBadge.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="doubleDamageBadge.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="doubleMagBadge.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Font Include="shlop rg.ttf">

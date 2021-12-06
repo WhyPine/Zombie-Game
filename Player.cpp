@@ -30,7 +30,7 @@ Player::Player(int newHealth, double newSpeedMultiplier, double newReloadMultipl
     this->doubleDamage = false;
     this->extendedMag = false;
     this->secondWind = false;
-    this->contingencyResponse = true;
+    this->contingencyResponse = false;
 }
 
 void Player::checkMove(sf::Vector2i gP) {
