@@ -5,7 +5,7 @@ int main()
 {
     bool returnToMenu = false;
     srand(time(NULL));
-    sf::RenderWindow Menu(sf::VideoMode(1280, 720), "Horde Shooter Main Menu");
+    sf::RenderWindow Menu(sf::VideoMode(1280, 720), "Horde Shooter Main Menu", sf::Style::Titlebar | sf::Style::Close);
     //Menu.setFramerateLimit(60);
     sf::Sprite background1;
     sf::Sprite background2;
@@ -160,7 +160,7 @@ int main()
                         if (releasedMouse) {
                             //launch game button
                             if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (launch.getGlobalBounds().contains(gC.x, gC.y))) {
-                                sf::RenderWindow window(sf::VideoMode(1280, 720), "Horde Shooter");
+                                sf::RenderWindow window(sf::VideoMode(1280, 720), "Horde Shooter", sf::Style::Titlebar | sf::Style::Close);
                                 sf::View view(sf::Vector2f(window.getSize().x / 2, window.getSize().y / 2), sf::Vector2f(1280.f, 720.f));
                                 window.setView(view);
                                 window.setFramerateLimit(60);
