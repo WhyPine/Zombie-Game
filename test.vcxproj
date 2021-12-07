@@ -219,6 +219,7 @@
     <Image Include="skeleton-attack_0.png" />
     <Image Include="SniperBox.png" />
     <Image Include="speedbtn.png" />
+    <Image Include="storeSaveAndExit.png" />
     <Image Include="strengthbutton.png" />
     <Image Include="swBox.png" />
     <Image Include="zombie0.png" />

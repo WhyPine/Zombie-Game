@@ -22,8 +22,6 @@ int main()
     background1.setTexture(backTex);
     background2.setTexture(backTex2);
     background3.setTexture(backTex3);
-    //background.setTextureRect(sf::IntRect(640, 360, 1920, 1080));
-    //background.setPosition(0, 0);
     background1.setPosition(-2560, 0);
     background2.setPosition(-6400, 0);
     background3.setPosition(-8960, 0);
@@ -32,18 +30,46 @@ int main()
     playbutton.setTexture(playTex);
     playbutton.setTextureRect(sf::IntRect(15, 10, 585, 185));
     playbutton.setOrigin(playbutton.getScale().x / 2, playbutton.getScale().y / 2);
-    //playbutton.setScale(Menu.getSize().x / 1600, Menu.getSize().y / 900);
-    //playbutton.setOrigin(playbutton.get)
     playbutton.setPosition(Menu.getSize().x / 2, Menu.getSize().y / 2);
     sf::Texture quitTex;
     quitTex.loadFromFile("quit.png");
     quitbutton.setTexture(quitTex);
     quitbutton.setTextureRect(sf::IntRect(15, 10, 585, 185));
     quitbutton.setOrigin(quitbutton.getScale().x / 2, quitbutton.getScale().y / 2);
-    //quitbutton.setScale(Menu.getSize().x / 1600, Menu.getSize().y / 900);
-    //quitbutton.setOrigin(quitbutton.get)
     quitbutton.setPosition(Menu.getSize().x / 2, Menu.getSize().y / 2);
 
+    //store menu buttons
+    sf::Sprite storeSaveExit;
+    sf::Sprite storeReset;
+    sf::Sprite storePoints;
+    sf::Sprite storeMenu;
+    sf::Texture saveT;
+    sf::Texture resetT;
+    sf::Texture pointsT;
+    sf::Texture menuT;
+    saveT.loadFromFile("storeSaveAndExit.png");
+    resetT.loadFromFile("storeResetPoints.png");
+    pointsT.loadFromFile("storePoints.png");
+    menuT.loadFromFile("storeMenu.png");
+    storeSaveExit.setTexture(saveT);
+    storeReset.setTexture(resetT);
+    storePoints.setTexture(pointsT);
+    storeMenu.setTexture(menuT);
+    storeSaveExit.setTextureRect(sf::IntRect(0, 0, 340, 135));
+    storeReset.setTextureRect(sf::IntRect(0, 0, 340, 135));
+    storePoints.setTextureRect(sf::IntRect(0, 0, 340, 135));
+    storeMenu.setTextureRect(sf::IntRect(0, 0, 850, 390));
+    storeSaveExit.setPosition(65, 65);
+    storeReset.setPosition(875, 65);
+    storePoints.setPosition(470, 65);
+    storeMenu.setPosition(215, 265);
+
+    sf::Font upgradeFont;
+    upgradeFont.loadFromFile("ayar.ttf");
+    sf::Text pointsCount;
+    pointsCount.setFont(upgradeFont);
+    pointsCount.setCharacterSize(40);
+    pointsCount.setFillColor(sf::Color::Black);
 
 
     savefiles r1;
@@ -57,7 +83,6 @@ int main()
         sf::Vector2i gP = sf::Mouse::getPosition(Menu);
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left) &&  (playbutton.getGlobalBounds().contains(gP.x, gP.y))) {
             releasedMouse = false;
-            std::cout << "Yes" << std::endl;
             sf::Sprite save1;
             sf::Sprite save2;
             sf::Sprite save3;
@@ -82,6 +107,7 @@ int main()
             
             int choice = 3;
             while (Menu.isOpen()) {
+                Menu.pollEvent(event);
                 if (!sf::Mouse::isButtonPressed(sf::Mouse::Left)) releasedMouse = true;
                 //std::cout << "Yes" << std::endl;
                 sf::Vector2i gB = sf::Mouse::getPosition(Menu);
@@ -108,8 +134,8 @@ int main()
                         returnToMenu = false;
                         r1.saveToFile();
                     }
-                    std::cout << "yeppers";
                     while (!returnToMenu && Menu.isOpen()) {
+                        Menu.pollEvent(event);
                         if (!sf::Mouse::isButtonPressed(sf::Mouse::Left)) releasedMouse = true;
                         int n = 0;
                         sf::Sprite launch;
@@ -132,6 +158,7 @@ int main()
                         settings.setPosition(50.f, 502.5);
                         sf::Vector2i gC = sf::Mouse::getPosition(Menu);
                         if (releasedMouse) {
+                            //launch game button
                             if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (launch.getGlobalBounds().contains(gC.x, gC.y))) {
                                 sf::RenderWindow window(sf::VideoMode(1280, 720), "Horde Shooter");
                                 sf::View view(sf::Vector2f(window.getSize().x / 2, window.getSize().y / 2), sf::Vector2f(1280.f, 720.f));
@@ -141,6 +168,48 @@ int main()
                                 run(window, view, r1.files[choice]);
                                 Menu.setVisible(true);
                                 returnToMenu = true;
+                            }
+                            //open store button
+                            else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (store.getGlobalBounds().contains(gC.x, gC.y))) {
+                                releasedMouse = false;
+                                bool inStore = true;
+                                string points;
+                                while (inStore) {
+                                    Menu.pollEvent(event);
+                                    if (!sf::Mouse::isButtonPressed(sf::Mouse::Left)) releasedMouse = true;
+                                    if (releasedMouse) {
+                                        sf::Vector2i gD = sf::Mouse::getPosition(Menu);
+                                        //save and exit
+                                        if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && storeSaveExit.getGlobalBounds().contains(gD.x, gD.y)) {
+                                            r1.saveToFile();
+                                            releasedMouse = false;
+                                            inStore = false;
+                                        }
+                                        //set all perks to normal and give all skill points back
+                                        else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && storeReset.getGlobalBounds().contains(gD.x, gD.y)) {
+                                            //r1.files[choice].resetSkillPoints();
+                                        }
+                                        //else if each upgrade button
+                                    }
+                                    points = "Points: " + std::to_string(r1.files[choice].skillPoints);
+                                    pointsCount.setString(points);
+                                    pointsCount.setPosition(storePoints.getGlobalBounds().left + storePoints.getGlobalBounds().width / 2 - pointsCount.getLocalBounds().width / 2,
+                                        (storePoints.getGlobalBounds().top + storePoints.getGlobalBounds().height / 2 - pointsCount.getLocalBounds().height / 2) - 15);
+
+
+
+                                    //make sure to draw all the buttons
+                                    Menu.clear();
+                                    Menu.draw(background1);
+                                    Menu.draw(background2);
+                                    Menu.draw(background3);
+                                    Menu.draw(storeSaveExit);
+                                    Menu.draw(storeReset);
+                                    Menu.draw(storePoints);
+                                    Menu.draw(pointsCount);
+                                    Menu.draw(storeMenu);
+                                    Menu.display();
+                                }
                             }
                             else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (quitbutton.getGlobalBounds().contains(gC.x, gC.y))) {
                                 Menu.close();

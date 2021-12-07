@@ -226,6 +226,9 @@
     <Image Include="launch.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="storeSaveAndExit.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Font Include="shlop rg.ttf">

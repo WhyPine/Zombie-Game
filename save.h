@@ -15,7 +15,7 @@ public:
 	save() {
 		this->newPlayer = false;
 		this->damageP = 1.0;
-		this->health = 1;
+		this->health = 20;
 		this->bulletAdd = 0;
 		this->regenM = 1.0;
 		this->speedM = 1.0;

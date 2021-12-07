@@ -81,37 +81,31 @@ bool buyBox::canBuy(Player& p1) {
 		result = true;
 		//checking if the player already has the item being sold
 		if (this->type == 0) {
-			std::cout << "Type 0" << std::endl;
 			if (p1.getGun()->getMaxReload() == 12 || p1.getGun()->getMaxReload() == 24) {
 				result = false; //pistol
 			}
 		}
 		else if (this->type == 1) {
-			std::cout << "Type 1" << std::endl;
 			if (p1.getGun()->getMaxReload() == 30 || p1.getGun()->getMaxReload() == 60) {
 				result = false; //rifle
 			}
 		}
 		else if (this->type == 2) {
-			std::cout << "Type 2" << std::endl;
 			if (p1.getGun()->getMaxReload() == 6 || p1.getGun()->getMaxReload() == 14) {
 				result = false; //shotgun
 			}
 		}
 		else if (this->type == 3) {
-			std::cout << "Type 3" << std::endl;
 			if (p1.getGun()->getMaxReload() == 2 || p1.getGun()->getMaxReload() == 5) {
 				result = false; //rocket
 			}
 		}
 		else if (this->type == 4) {
-			std::cout << "Type 4" << std::endl;
 			if (p1.getGun()->getMaxReload() == 36 || p1.getGun()->getMaxReload() == 72) {
 				result = false; //burst
 			}
 		}
 		else if (this->type == 5) {
-			std::cout << "Type 5" << std::endl;
 			if (p1.getGun()->getMaxReload() == 4 || p1.getGun()->getMaxReload() == 10) {
 				result = false; //sniper
 			}
