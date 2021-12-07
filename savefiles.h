@@ -82,7 +82,7 @@ public:
 	}
 	void saveToFile() {
 		std::fstream file;
-		file.open("save1.txt", std::ios::in);
+		file.open("save1.txt", std::ios::out);
 		file << files[0].newPlayer << std::endl;
 		file << files[0].damageP << std::endl;
 		file << files[0].health << std::endl;
@@ -91,7 +91,7 @@ public:
 		file << files[0].regenM << std::endl;
 		file << files[0].skillPoints;
 		file.close();
-		file.open("save2.txt", std::ios::in);
+		file.open("save2.txt", std::ios::out);
 		file << files[1].newPlayer << std::endl;
 		file << files[1].damageP << std::endl;
 		file << files[1].health << std::endl;
@@ -100,7 +100,7 @@ public:
 		file << files[1].regenM << std::endl;
 		file << files[1].skillPoints;
 		file.close();
-		file.open("save3.txt", std::ios::in);
+		file.open("save3.txt", std::ios::out);
 		file << files[2].newPlayer << std::endl;
 		file << files[2].damageP << std::endl;
 		file << files[2].health << std::endl;
