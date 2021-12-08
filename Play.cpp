@@ -859,15 +859,15 @@ void run(sf::RenderWindow& window, sf::View& view, save& saveFile){
                             spawnCount++;
                         }
                         else if (rounds > 21 && zombiesSpawned % 6 == 1) {
-                            zombies.push_back(new heavyZombie(15 + rounds / 5, 1, 1, p1->getSize(), spawnLocation));
+                            zombies.push_back(new heavyZombie((15 + rounds / 5) * zombieSpawnMultiplier, 1, 1, p1->getSize(), spawnLocation));
                             std::cout << "New heavy zombie spawned" << std::endl;
                         }
                         else if (rounds > 11 && zombiesSpawned % 3 == 2) {
                             std::cout << "Round: " << rounds << std::endl;
-                            zombies.push_back(new RunnerZombie(15 + rounds / 5, 1, 1, p1->getSize(), spawnLocation));
+                            zombies.push_back(new RunnerZombie((15 + rounds / 5) * zombieSpawnMultiplier, 1, 1, p1->getSize(), spawnLocation));
                         }
                         else {
-                            zombies.push_back(new Zombie(15 + rounds / 5, 1, 1, p1->getSize(), spawnLocation));
+                            zombies.push_back(new Zombie((15 + rounds / 5) * zombieSpawnMultiplier, 1, 1, p1->getSize(), spawnLocation));
                         }
                         //updating last spawnTime and number of zombies spawned
                         lastSpawnTime = clock();

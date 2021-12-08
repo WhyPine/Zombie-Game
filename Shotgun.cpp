@@ -5,7 +5,7 @@ Shotgun::Shotgun(sf::Vector2f pos, sf::Vector2u size, int newBulletHealth) : Gun
     this->power = 8;
     this->bulletHealth = newBulletHealth;
     this->reloadDelay = 1500;
-    if (!texture.loadFromFile("rifle.png"))
+    if (!texture.loadFromFile("shotgun.png"))
     {
         std::cout << "Failed to load shotgun" << std::endl;
     }

@@ -7,6 +7,10 @@ Sniper::Sniper(sf::Vector2f pos, sf::Vector2u size, int newBulletHealth) : Gun(p
 	this->maxReload = 4;
 	this->shottimer = 0;
     this->power = 30;
+    if (!this->texture.loadFromFile("sniper.png"))
+    {
+        std::cout << "Failed to load sniper" << std::endl;
+    }
     if (!this->bulletTexture.loadFromFile("rifleshot.png"))
     {
         std::cout << "Failed to load rifleshot" << std::endl;

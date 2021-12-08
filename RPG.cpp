@@ -10,7 +10,7 @@ RPG::RPG(sf::Vector2f pos, sf::Vector2u size, int newBulletHealth) : Gun(pos, si
     this->explode = false;
     this->fired = false;
     this->zombieXploded = 0;
-    if (!this->texture.loadFromFile("RPGSprite.png")) //explosion
+    if (!this->texture.loadFromFile("rpg.png")) //the gun
     {
         std::cout << "Failed to load rpgsprite" << std::endl;
     }
@@ -23,8 +23,9 @@ RPG::RPG(sf::Vector2f pos, sf::Vector2u size, int newBulletHealth) : Gun(pos, si
         std::cout << "Failed to load rpgmainshot" << std::endl;
     }
     this->sprite.setTexture(texture);
-    this->sprite.setTextureRect(sf::IntRect(0, 0, 256, 32));
+    this->sprite.setTextureRect(sf::IntRect(0, 0, 256, 64));
     this->sprite.setPosition(pos);
+    this->sprite.setScale((float)size.x / 3600, (float)size.y / 3600);
     this->sprite.setOrigin(this->sprite.getLocalBounds().width / 2, this->sprite.getLocalBounds().height / 2);
 };
 

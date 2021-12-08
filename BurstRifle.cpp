@@ -9,10 +9,18 @@ BurstRifle::BurstRifle(sf::Vector2f pos, sf::Vector2u size, int newBulletHealth)
 	this->lastShot = 0;
 	this->numShots = 4;
 	this->power = 5;
+	if (!this->texture.loadFromFile("rifle.png"))
+	{
+		std::cout << "Failed to load rifle" << std::endl;
+	}
 	if (!this->bulletTexture.loadFromFile("rifleshot.png"))
 	{
 		std::cout << "Failed to load Burst Rifle shot" << std::endl;
 	}
+	this->sprite.setTexture(this->texture);
+	this->sprite.setTextureRect(sf::IntRect(0, 0, 256, 32));
+	this->sprite.setPosition(pos);
+	this->sprite.setOrigin(this->sprite.getLocalBounds().width / 2, this->sprite.getLocalBounds().height / 2);
 }
 
 void BurstRifle::fire(sf::Vector2f go, bool bottomelessClip, bool doubleDamage, bool doubleMag)
@@ -39,6 +47,7 @@ for each shot decrease an iterator by 1 four times as well as setting fired to f
 void BurstRifle::run(sf::Vector2f pos, float rotation, sf::Vector2f bulletDirection)
 {
 	this->shottimer++;
+	this->sprite.setRotation(rotation);
 	if (rotation < 0) rotation += 360;
 	rotation += 30;
 	sf::Vector2f newVector(pos.x + cos((3.141592653 / 180) * rotation) * 12, pos.y + sin((3.141592653 / 180) * rotation) * 12);
