@@ -1082,6 +1082,7 @@ void run(sf::RenderWindow& window, sf::View& view, save& saveFile){
         window.display();
     }
     saveFile.skillPoints += skillPointsEarned;
+    saveFile.totalSkillPoints += skillPointsEarned;
     rounds = 1;
     zombies.clear();
     walls.clear();
