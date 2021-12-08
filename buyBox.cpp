@@ -80,7 +80,8 @@ bool buyBox::canBuy(Player& p1) {
 	if (sqrt(pow(p1.getPosition().x - x1, 2) + pow(p1.getPosition().y - y1, 2)) < 64 && clock() - lastBought > 5000) {
 		result = true;
 		//checking if the player already has the item being sold
-		if (this->type == 0) {
+		if (p1.getMoney() < this->boxPrice) result = false;
+		else if (this->type == 0) {
 			if (p1.getGun()->getMaxReload() == 12 || p1.getGun()->getMaxReload() == 24) {
 				result = false; //pistol
 			}

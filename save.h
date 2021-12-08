@@ -31,5 +31,28 @@ public:
 		this->speedM = speedM;
 		this->skillPoints = skillPoints;
 	}
+
+	void resetSkillPoints() {
+		while (this->damageP != 1.0) {
+			this->damageP += 0.1;
+			this->skillPoints++;
+		}
+		while (this->health != 20) {
+			this->health -= 2;
+			this->skillPoints++;
+		}
+		while (this->bulletAdd != 0) {
+			this->bulletAdd--;
+			this->skillPoints += 2;
+		}
+		while (this->regenM != 1.0) {
+			this->regenM += 0.05;
+			this->skillPoints++;
+		}
+		while (this->speedM != 1.0) {
+			this->speedM -= 0.1;
+			this->skillPoints++;
+		}
+	}
 };
 

@@ -64,6 +64,37 @@ int main()
     storePoints.setPosition(470, 65);
     storeMenu.setPosition(215, 265);
 
+    //upgrade Buttons
+    sf::Sprite storeHealth;
+    sf::Texture HealthT;
+    HealthT.loadFromFile("storeHealth.png");
+    storeHealth.setTexture(HealthT);
+    storeHealth.setTextureRect(sf::IntRect(0, 0, 202, 50));
+    storeHealth.setPosition(242.5, 345);
+    sf::Sprite storeRegen;
+    sf::Texture RegenT;
+    RegenT.loadFromFile("storeRegen.png");
+    storeRegen.setTexture(RegenT);
+    storeRegen.setTextureRect(sf::IntRect(0, 0, 202, 50));
+    storeRegen.setPosition(242.5, 403);
+    sf::Sprite storeSpeed;
+    sf::Texture SpeedT;
+    SpeedT.loadFromFile("storeSpeed.png");
+    storeSpeed.setTexture(SpeedT);
+    storeSpeed.setTextureRect(sf::IntRect(0, 0, 202, 50));
+    storeSpeed.setPosition(242.5, 461);
+    sf::Sprite storeReload;
+    sf::Texture reloadT;
+    reloadT.loadFromFile("storeReload.png");
+    storeReload.setTexture(reloadT);
+    storeReload.setTextureRect(sf::IntRect(0, 0, 202, 50));
+    storeReload.setPosition(242.5, 519);
+    sf::Sprite storeBullet;
+    sf::Texture BulletT;
+    BulletT.loadFromFile("storeBullet.png");
+    storeBullet.setTexture(BulletT);
+    storeBullet.setTextureRect(sf::IntRect(0, 0, 202, 50));
+    storeBullet.setPosition(242.5, 577);
     sf::Font upgradeFont;
     upgradeFont.loadFromFile("ayar.ttf");
     sf::Text pointsCount;
@@ -71,6 +102,40 @@ int main()
     pointsCount.setCharacterSize(40);
     pointsCount.setFillColor(sf::Color::Black);
 
+    //upgradeTexts
+    sf::Text Price1;
+    sf::Text Price2;
+    Price1.setFont(upgradeFont);
+    Price2.setFont(upgradeFont);
+    Price1.setCharacterSize(30);
+    Price2.setCharacterSize(30);
+    Price1.setFillColor(sf::Color::Black);
+    Price2.setFillColor(sf::Color::Black);
+    Price1.setString("1");
+    Price2.setString("2");
+    Price1.setOrigin(Price1.getLocalBounds().width / 2, Price1.getLocalBounds().height / 2);
+    Price2.setOrigin(Price1.getLocalBounds().width / 2, Price1.getLocalBounds().height / 2);
+    Price2.setPosition(sf::Vector2f(545, 592));
+    sf::Text healthText;
+    healthText.setFont(upgradeFont);
+    healthText.setCharacterSize(30);
+    healthText.setFillColor(sf::Color::Black);
+    sf::Text regenText;
+    regenText.setFont(upgradeFont);
+    regenText.setCharacterSize(30);
+    regenText.setFillColor(sf::Color::Black);
+    sf::Text speedText;
+    speedText.setFont(upgradeFont);
+    speedText.setCharacterSize(30);
+    speedText.setFillColor(sf::Color::Black);
+    sf::Text reloadText;
+    reloadText.setFont(upgradeFont);
+    reloadText.setCharacterSize(30);
+    reloadText.setFillColor(sf::Color::Black);
+    sf::Text bulletText;
+    bulletText.setFont(upgradeFont);
+    bulletText.setCharacterSize(30);
+    bulletText.setFillColor(sf::Color::Black);
 
     savefiles r1;
     bool releasedMouse;
@@ -157,6 +222,11 @@ int main()
                         settings.setTextureRect(sf::IntRect(0, 0, 340, 135));
                         settings.setPosition(50.f, 502.5);
                         sf::Vector2i gC = sf::Mouse::getPosition(Menu);
+
+                        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+                            returnToMenu = true;
+                            choice = 3;
+                        }
                         if (releasedMouse) {
                             //launch game button
                             if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (launch.getGlobalBounds().contains(gC.x, gC.y))) {
@@ -187,17 +257,69 @@ int main()
                                         }
                                         //set all perks to normal and give all skill points back
                                         else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && storeReset.getGlobalBounds().contains(gD.x, gD.y)) {
-                                            //r1.files[choice].resetSkillPoints();
+                                            r1.files[choice].resetSkillPoints();
+                                            releasedMouse = false;
                                         }
                                         //else if each upgrade button
+                                        else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && storeHealth.getGlobalBounds().contains(gD.x, gD.y)) {
+                                            if (r1.files[choice].skillPoints > 0) {
+                                                r1.files[choice].skillPoints--;
+                                                r1.files[choice].health += 2;
+                                            }
+                                            releasedMouse = false;
+                                        }
+                                        else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && storeSpeed.getGlobalBounds().contains(gD.x, gD.y)) {
+                                            if (r1.files[choice].skillPoints > 0) {
+                                                r1.files[choice].skillPoints--;
+                                                r1.files[choice].speedM += 0.1;
+                                            }
+                                            releasedMouse = false;
+                                        }
+                                        else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && storeRegen.getGlobalBounds().contains(gD.x, gD.y)) {
+                                            if (r1.files[choice].skillPoints > 0) {
+                                                r1.files[choice].skillPoints--;
+                                                r1.files[choice].regenM -= 0.05;
+                                            }
+                                            releasedMouse = false;
+                                        }
+                                        else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && storeReload.getGlobalBounds().contains(gD.x, gD.y)) {
+                                            if (r1.files[choice].skillPoints > 0) {
+                                                r1.files[choice].skillPoints--;
+                                                r1.files[choice].damageP -= 0.1;
+                                            }
+                                            releasedMouse = false;
+                                        }
+                                        else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && storeBullet.getGlobalBounds().contains(gD.x, gD.y)) {
+                                            if (r1.files[choice].skillPoints > 1) {
+                                                r1.files[choice].skillPoints -= 2;
+                                                r1.files[choice].bulletAdd++;
+                                            }
+                                            releasedMouse = false;
+                                        }
                                     }
                                     points = "Points: " + std::to_string(r1.files[choice].skillPoints);
                                     pointsCount.setString(points);
                                     pointsCount.setPosition(storePoints.getGlobalBounds().left + storePoints.getGlobalBounds().width / 2 - pointsCount.getLocalBounds().width / 2,
                                         (storePoints.getGlobalBounds().top + storePoints.getGlobalBounds().height / 2 - pointsCount.getLocalBounds().height / 2) - 15);
 
+                                    healthText.setString(std::to_string((int)(r1.files[choice].health)));
+                                    regenText.setString(std::to_string((int)(r1.files[choice].regenM * 100)) + "%");
+                                    speedText.setString(std::to_string((int)(r1.files[choice].speedM * 100)) + "%");
+                                    reloadText.setString(std::to_string((int)(r1.files[choice].damageP * 100)) + "%");
+                                    bulletText.setString(std::to_string((int)(r1.files[choice].bulletAdd)));
+                                    healthText.setOrigin(healthText.getLocalBounds().width / 2, healthText.getLocalBounds().height / 2);
+                                    regenText.setOrigin(regenText.getLocalBounds().width / 2, regenText.getLocalBounds().height / 2);
+                                    speedText.setOrigin(speedText.getLocalBounds().width / 2, speedText.getLocalBounds().height / 2);
+                                    reloadText.setOrigin(reloadText.getLocalBounds().width / 2, reloadText.getLocalBounds().height / 2);
+                                    bulletText.setOrigin(bulletText.getLocalBounds().width / 2, bulletText.getLocalBounds().height / 2);
+                                    healthText.setPosition(sf::Vector2f(735, 357));
+                                    regenText.setPosition(sf::Vector2f(735, 415));
+                                    speedText.setPosition(sf::Vector2f(735, 473));
+                                    reloadText.setPosition(sf::Vector2f(735, 531));
+                                    bulletText.setPosition(sf::Vector2f(735, 590));
 
 
+                                    Price1.setPosition(sf::Vector2f(545, 358));
                                     //make sure to draw all the buttons
                                     Menu.clear();
                                     Menu.draw(background1);
@@ -208,6 +330,45 @@ int main()
                                     Menu.draw(storePoints);
                                     Menu.draw(pointsCount);
                                     Menu.draw(storeMenu);
+                                    Menu.draw(storeReload);
+                                    Menu.draw(storeRegen);
+                                    Menu.draw(storeSpeed);
+                                    Menu.draw(storeBullet);
+                                    Menu.draw(storeHealth);
+                                    Menu.draw(Price1);
+                                    Price1.setPosition(sf::Vector2f(545, 416));
+                                    Menu.draw(Price1);
+                                    Price1.setPosition(sf::Vector2f(545, 474));
+                                    Menu.draw(Price1);
+                                    Price1.setPosition(sf::Vector2f(545, 532));
+                                    Menu.draw(Price1);
+                                    Menu.draw(Price2);
+                                    Menu.draw(healthText);
+                                    Menu.draw(reloadText);
+                                    Menu.draw(speedText);
+                                    Menu.draw(regenText);
+                                    Menu.draw(bulletText);
+                                    healthText.setString(std::to_string((int)(r1.files[choice].health) + 2));
+                                    regenText.setString(std::to_string((int)((r1.files[choice].regenM - 0.05) * 100)) + "%");
+                                    speedText.setString(std::to_string((int)((r1.files[choice].speedM + 0.1) * 100)) + "%");
+                                    reloadText.setString(std::to_string((int)((r1.files[choice].damageP - 0.1) * 100)) + "%");
+                                    bulletText.setString(std::to_string((int)(r1.files[choice].bulletAdd) + 1));
+                                    healthText.setOrigin(healthText.getLocalBounds().width / 2, healthText.getLocalBounds().height / 2);
+                                    regenText.setOrigin(regenText.getLocalBounds().width / 2, regenText.getLocalBounds().height / 2);
+                                    speedText.setOrigin(speedText.getLocalBounds().width / 2, speedText.getLocalBounds().height / 2);
+                                    reloadText.setOrigin(reloadText.getLocalBounds().width / 2, reloadText.getLocalBounds().height / 2);
+                                    bulletText.setOrigin(bulletText.getLocalBounds().width / 2, bulletText.getLocalBounds().height / 2);
+                                    healthText.setPosition(sf::Vector2f(925, 357));
+                                    regenText.setPosition(sf::Vector2f(925, 415));
+                                    speedText.setPosition(sf::Vector2f(925, 473));
+                                    reloadText.setPosition(sf::Vector2f(925, 531));
+                                    bulletText.setPosition(sf::Vector2f(925, 590));
+                                    Menu.draw(healthText);
+                                    Menu.draw(reloadText);
+                                    Menu.draw(speedText);
+                                    Menu.draw(regenText);
+                                    Menu.draw(bulletText);
+
                                     Menu.display();
                                 }
                             }

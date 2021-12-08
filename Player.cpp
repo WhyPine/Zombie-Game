@@ -22,9 +22,9 @@ Player::Player(int newHealth, double newSpeedMultiplier, double newReloadMultipl
     this->sprite.setTextureRect(sf::IntRect(39, 39, 250, 200));
     this->sprite.setOrigin(this->sprite.getLocalBounds().width / 2, this->sprite.getLocalBounds().height / 2);
     this->sprite.setScale((float)size.x / 6400, (float)size.y / 3600);
-    this->gun = new Sniper(this->sprite.getPosition(), size, bulletHealth); 
+    this->gun = new Gun(this->sprite.getPosition(), size, bulletHealth); 
     this->regenMultiplier = newRegenMultiplier;
-    this->money = 10000;
+    this->money = 0;
     this->bottomlessClip = false;
     this->initialReload = 0;
     this->doubleDamage = false;

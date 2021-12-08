@@ -110,21 +110,21 @@ void loadWalls() {
     // DOORS 
     // true means horizontal, false means vertical. doors are 32x128
     // only give it the coords of the top right of the door - right number is the cost 
-    doors.push_back(new Door(19 * 32, 13 * 32, true, 100)); //city left 0
-    doors.push_back(new Door(39.5 * 32, 8 * 32, false, 100)); //city right 1
-    doors.push_back(new Door(26 * 32, 22 * 32, true, 100)); //city lower 2
+    doors.push_back(new Door(19 * 32, 13 * 32, true, 150)); //city left 0
+    doors.push_back(new Door(39.5 * 32, 8 * 32, false, 450)); //city right 1
+    doors.push_back(new Door(26 * 32, 22 * 32, true, 300)); //city lower 2
 
-    doors.push_back(new Door(4 * 32, 35 * 32, false, 100)); //garden left 3
-    doors.push_back(new Door(39.5 * 32, 33 * 32, false, 100)); //garden right 4
-    doors.push_back(new Door(39.5 * 32, 41 * 32, false, 100)); //garden lower 5
+    doors.push_back(new Door(4 * 32, 35 * 32, false, 250)); //garden left 3
+    doors.push_back(new Door(39.5 * 32, 33 * 32, false, 500)); //garden right 4
+    doors.push_back(new Door(39.5 * 32, 41 * 32, false, 350)); //garden lower 5
 
-    doors.push_back(new Door(51*32, 34*32, false, 100)); //hospital left 6
-    doors.push_back(new Door(59*32, 30*32, true, 100)); //hospital right 7
-    doors.push_back(new Door(52*32, 26*32, true, 100)); //hospital top left 8
-    doors.push_back(new Door(71*32, 26*32, true, 100)); //hospital top right 9
+    doors.push_back(new Door(51*32, 34*32, false, 250)); //hospital left 6
+    doors.push_back(new Door(59*32, 30*32, true, 250)); //hospital right 7
+    doors.push_back(new Door(52*32, 26*32, true, 350)); //hospital top left 8
+    doors.push_back(new Door(71*32, 26*32, true, 350)); //hospital top right 9
 
-    doors.push_back(new Door(66 * 32, 1 * 32, false, 100)); //lab upper 10
-    doors.push_back(new Door(76 * 32, 22 * 32, true, 100)); //lab lower 11
+    doors.push_back(new Door(66 * 32, 1 * 32, false, 400)); //lab upper 10
+    doors.push_back(new Door(76 * 32, 22 * 32, true, 400)); //lab lower 11
 
     //buy boxes
     // x coord, y coord, price, type
@@ -132,16 +132,16 @@ void loadWalls() {
     // 0 = pistol   1 = rifle   2 = shotgun   3 = RPG   4 = Burst Rifle   5 = Sniper
     // 11 = second wind    12 = reload boom   13 = double damage   14 = double mag
     
-    buyBoxes.push_back(new buyBox(27 * 32, 0 * 32, 25, 1));
-    buyBoxes.push_back(new buyBox(33 * 32, 0 * 32, 25, 2));
-    buyBoxes.push_back(new buyBox(62 * 32, 23 * 32, 50, 3));
-    buyBoxes.push_back(new buyBox(71 * 32 , 19 * 32, 40, 4));
-    buyBoxes.push_back(new buyBox(0 * 32, 35 * 32, 50, 5));
+    buyBoxes.push_back(new buyBox(33 * 32, 0 * 32, 250, 1));
+    buyBoxes.push_back(new buyBox(14 * 32, 38 * 32, 500, 2));
+    buyBoxes.push_back(new buyBox(62 * 32, 23 * 32, 600, 3));
+    buyBoxes.push_back(new buyBox(4 * 32 , 14 * 32, 350, 4));
+    buyBoxes.push_back(new buyBox(78 * 32, 11 * 32, 500, 5));
 
-    buyBoxes.push_back(new buyBox(20 * 32, 21 * 32, 25, 13));
-    buyBoxes.push_back(new buyBox(27 * 32, 33 * 32, 25, 14));
-    buyBoxes.push_back(new buyBox(61 * 32, 34 * 32, 25, 11));
-    buyBoxes.push_back(new buyBox(48 * 32, 1 * 32, 25, 12));
+    buyBoxes.push_back(new buyBox(20 * 32, 21 * 32, 400, 13));
+    buyBoxes.push_back(new buyBox(27 * 32, 33 * 32, 300, 14));
+    buyBoxes.push_back(new buyBox(61 * 32, 34 * 32, 600, 11));
+    buyBoxes.push_back(new buyBox(48 * 32, 1 * 32, 500, 12));
     
     
 }
