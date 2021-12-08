@@ -41,12 +41,12 @@ The player begins the game in the city, and as gameplay progresses, the player w
 - [ ] Video demonstration of gameplay
 - [ ] Putting player controls in the main menu/game
 - [ ] Discrete test cases
-- [ ] Dying
+- [x] Dying
 
 ### Not Essential for Assignment but still have to work on
 - [x] Developing more zombie types (runners, bigbois, etc.)
 - [ ] Move buy boxes around
-- [ ] Tweak main menu
+- [x] Tweak main menu
 - [ ] Skill updating
-- [ ] Save system
+- [x] Save system
 - [ ] Skill system
