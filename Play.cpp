@@ -596,7 +596,7 @@ void displayGUI(Player* p1, sf::RenderWindow& window, sf::Font& font, int zombie
         }
         //purchasing indicator for buyboxes
         for (int x = 0; x < buyBoxes.size(); x++) {
-            if (buyBoxes[x]->canBuy(*p1)) {
+            if (buyBoxes[x]->canBuy(*p1) && p1->getMoney() > buyBoxes[x]->getPrice()) {
                 sf::Text doorText;
                 string openDoor = "Press E to buy " + buyBoxes[x]->getName() + " $" + std::to_string(buyBoxes[x]->getPrice());
                 doorText.setFont(font);
@@ -611,7 +611,6 @@ void displayGUI(Player* p1, sf::RenderWindow& window, sf::Font& font, int zombie
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E)) {
                     if (p1->getMoney() > buyBoxes[x]->getPrice()) {
                         buyBoxes[x]->buy(*p1);
-                        p1->setMoney(p1->getMoney() - buyBoxes[x]->getPrice());
                     }
 
                 }

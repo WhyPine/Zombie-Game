@@ -24,7 +24,7 @@ Player::Player(int newHealth, double newSpeedMultiplier, double newReloadMultipl
     this->sprite.setScale((float)size.x / 6400, (float)size.y / 3600);
     this->gun = new Gun(this->sprite.getPosition(), size, bulletHealth); 
     this->regenMultiplier = newRegenMultiplier;
-    this->money = 0;
+    this->money = 1000;
     this->bottomlessClip = false;
     this->initialReload = 0;
     this->doubleDamage = false;
