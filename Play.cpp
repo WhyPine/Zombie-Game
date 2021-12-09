@@ -720,15 +720,25 @@ void drawing(sf::RenderWindow& window, Player* p1, sf::Font& font) {
     displayGUI(p1, window, font, zombies.size());
 }
 
-void run(sf::RenderWindow& window, sf::View& view, save& saveFile){
+void run(sf::RenderWindow& window, sf::View& view, save& saveFile, bool debug){
+    sf::Texture bulletTexture;
+    bulletTexture.loadFromFile("rifleshot.png");
     sf::Texture tex;
     tex.loadFromFile("mapv2.png");
     backdrop.setTexture(tex);
     sf::Vector2f v;
     v.x = 32*1.f;
     v.y = 32*1.f;
-    zombies.push_back(new Zombie(15, 1, 1, window.getSize(), v));
-    Player* p1 = new Player(saveFile.health, saveFile.speedM, saveFile.damageP, window.getSize(), saveFile.bulletAdd, saveFile.regenM); 
+    Player* p1 = new Player(saveFile.health, saveFile.speedM, saveFile.damageP, window.getSize(), saveFile.bulletAdd, saveFile.regenM);
+    //normal
+    if (!debug) zombies.push_back(new Zombie(15, 1, 1, window.getSize(), v));
+    //if debug spawn zombie in hospital so rounds do not advance
+    else {
+        //zombies.push_back(new Zombie(100000, -10, -10, window.getSize(), sf::Vector2f(32 * 63, 32 * 33)));
+        p1->setMoney(100000);
+        p1->setBottomlessClip(true);
+    }
+    
     loadWalls();
     //Loading Font
     sf::Font font;
@@ -816,6 +826,33 @@ void run(sf::RenderWindow& window, sf::View& view, save& saveFile){
             view.setCenter(640, 360);
         }
         window.setView(view);
+
+        if (debug) {
+            if (clock() < 5000 && zombies.size() == 0) {
+                zombies.push_back(new Zombie(1, 0, 0, window.getSize(), sf::Vector2f(4*32, 3*32)));
+                zombies.at(0)->setPosition(sf::Vector2f(4 * 32, 3 * 32));
+                p1->getGun()->getShots()->push_back(new Bullet(sf::Vector2f(12 * 32, 3 * 32), sf::Vector2f(-1, 0), sf::Vector2u(0,0), 10, bulletTexture, 1, 10));
+                std::cout << "Bullet Collision Test SUCCESS" << std::endl;
+            }
+            else if (clock() < 10000 && zombies.size() == 0) {
+                zombies.push_back(new Zombie(1, 0, 0, window.getSize(), sf::Vector2f(-100, -100)));
+            }
+            else if (clock() < 10000 && zombies.size() == 1) {
+                if (zombies.at(0)->getSprite().getPosition().x > 0 && zombies.at(0)->getSprite().getPosition().y > 0) {
+                    zombies.erase(zombies.begin());
+                    std::cout << "Out of Bounds Test SUCCESS" << std::endl;
+                }
+            }
+            else if (clock() < 15000 && zombies.size() == 0) {
+                zombies.push_back(new Zombie(1, 0, 0, window.getSize(), sf::Vector2f(8 * 32, 6 * 32)));
+            }
+            else if (clock() < 15000 && zombies.size() == 1) {
+                if (zombies.at(0)->getSprite().getPosition().x != 8 * 32 && zombies.at(0)->getSprite().getPosition().y != 6 * 32) {
+                    zombies.erase(zombies.begin());
+                    std::cout << "Wall Collision Test SUCCESS" << std::endl;
+                }
+            }
+        }
 
         //zombie management
         if (!roundComplete) {
@@ -926,7 +963,7 @@ void run(sf::RenderWindow& window, sf::View& view, save& saveFile){
                 }
             }
             //else if all the zombies are dead, round is complete
-            else if (zombies.size() == 0) {
+            else if (zombies.size() == 0 && debug == false) {
                 roundComplete = true;
                 if (megaZombie) mzManager.clear();
             }

@@ -235,7 +235,7 @@ int main()
                                 window.setView(view);
                                 window.setFramerateLimit(60);
                                 Menu.setVisible(false);
-                                run(window, view, r1.files[choice]);
+                                run(window, view, r1.files[choice], false);
                                 Menu.setVisible(true);
                                 returnToMenu = true;
                             }
@@ -372,9 +372,22 @@ int main()
                                     Menu.display();
                                 }
                             }
+                            //quit button
                             else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (quitbutton.getGlobalBounds().contains(gC.x, gC.y))) {
                                 Menu.close();
                             }
+                            //debug mode: f1
+                            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F1)) {
+                            sf::RenderWindow window(sf::VideoMode(1280, 720), "Horde Shooter", sf::Style::Titlebar | sf::Style::Close);
+                            sf::View view(sf::Vector2f(window.getSize().x / 2, window.getSize().y / 2), sf::Vector2f(1280.f, 720.f));
+                            window.setView(view);
+                            window.setFramerateLimit(60);
+                            Menu.setVisible(false);
+                            save debug(false, 0.1, 20000, 100, 0.1, 2.0, 0, 0);
+                            run(window, view, debug, true);
+                            Menu.setVisible(true);
+                            returnToMenu = true;
+                            } 
                         }
                         /*while (n != 1) {
 
