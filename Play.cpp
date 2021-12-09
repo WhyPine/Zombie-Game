@@ -721,6 +721,12 @@ void drawing(sf::RenderWindow& window, Player* p1, sf::Font& font) {
 }
 
 void run(sf::RenderWindow& window, sf::View& view, save& saveFile, bool debug){
+    bool test1 = false;
+    bool test2 = false;
+    bool test3 = false;
+    bool test4 = false;
+    bool test5 = false;
+    bool test5Start = false;
     sf::Texture bulletTexture;
     bulletTexture.loadFromFile("rifleshot.png");
     sf::Texture tex;
@@ -737,6 +743,10 @@ void run(sf::RenderWindow& window, sf::View& view, save& saveFile, bool debug){
         //zombies.push_back(new Zombie(100000, -10, -10, window.getSize(), sf::Vector2f(32 * 63, 32 * 33)));
         p1->setMoney(100000);
         p1->setBottomlessClip(true);
+
+        zombies.push_back(new Zombie(1, 0, 0, window.getSize(), sf::Vector2f(4 * 32, 3 * 32)));
+        zombies.at(0)->setPosition(sf::Vector2f(4 * 32, 3 * 32));
+        p1->getGun()->getShots()->push_back(new Bullet(sf::Vector2f(17 * 32, 3 * 32), sf::Vector2f(-1, 0), sf::Vector2u(0, 0), 10, bulletTexture, 1, 10));
     }
     
     loadWalls();
@@ -828,29 +838,64 @@ void run(sf::RenderWindow& window, sf::View& view, save& saveFile, bool debug){
         window.setView(view);
 
         if (debug) {
-            if (clock() < 5000 && zombies.size() == 0) {
-                zombies.push_back(new Zombie(1, 0, 0, window.getSize(), sf::Vector2f(4*32, 3*32)));
-                zombies.at(0)->setPosition(sf::Vector2f(4 * 32, 3 * 32));
-                p1->getGun()->getShots()->push_back(new Bullet(sf::Vector2f(12 * 32, 3 * 32), sf::Vector2f(-1, 0), sf::Vector2u(0,0), 10, bulletTexture, 1, 10));
-                std::cout << "Bullet Collision Test SUCCESS" << std::endl;
+            //bullet collision test
+            if (!test1) {
+                if (zombies.size() == 0) {
+                    test1 = true;
+                    std::cout << "Bullet Collision Test SUCCESS" << std::endl;
+                }
             }
-            else if (clock() < 10000 && zombies.size() == 0) {
+            //out of bounds test
+            else if (!test2 && clock() > 5000 && zombies.size() == 0) {
                 zombies.push_back(new Zombie(1, 0, 0, window.getSize(), sf::Vector2f(-100, -100)));
             }
-            else if (clock() < 10000 && zombies.size() == 1) {
+            else if (!test2 && clock() > 5000 && zombies.size() == 1) {
                 if (zombies.at(0)->getSprite().getPosition().x > 0 && zombies.at(0)->getSprite().getPosition().y > 0) {
                     zombies.erase(zombies.begin());
+                    test2 = true;
                     std::cout << "Out of Bounds Test SUCCESS" << std::endl;
                 }
             }
-            else if (clock() < 15000 && zombies.size() == 0) {
+            //wall collision test
+            else if (!test3 && clock() > 10000 && zombies.size() == 0) {
                 zombies.push_back(new Zombie(1, 0, 0, window.getSize(), sf::Vector2f(8 * 32, 6 * 32)));
             }
-            else if (clock() < 15000 && zombies.size() == 1) {
-                if (zombies.at(0)->getSprite().getPosition().x != 8 * 32 && zombies.at(0)->getSprite().getPosition().y != 6 * 32) {
+            else if (!test3 && clock() > 10000 && zombies.size() == 1) {
+                //checking if zombie was moved
+                if (zombies.at(0)->getSprite().getPosition().y > 6*32 || zombies.at(0)->getSprite().getPosition().y < 6 * 32) {
                     zombies.erase(zombies.begin());
+                    test3 = true;
                     std::cout << "Wall Collision Test SUCCESS" << std::endl;
                 }
+            }
+            //bullet pass through test
+            else if (!test4 && clock() > 15000 && zombies.size() == 0) {
+                zombies.push_back(new Zombie(1, 0, 0, window.getSize(), sf::Vector2f(4 * 32, 3 * 32)));
+                zombies.at(0)->setPosition(sf::Vector2f(4 * 32, 3 * 32));
+                Bullet* testBullet = new Bullet(sf::Vector2f(17 * 32, 3 * 32), sf::Vector2f(-1, 0), sf::Vector2u(0, 0), 10, bulletTexture, 1, 10);
+                testBullet->hit(zombies.at(0)->getId());
+                p1->getGun()->getShots()->push_back(testBullet);
+            }
+            else if (!test4 && clock() > 17000 && zombies.size() == 1) {
+                std::cout << "Bullet Pass Through Test SUCCESS" << std::endl;
+                zombies.erase(zombies.begin());
+                test4 = true;
+            }
+            //second Wind test
+            else if (!test5Start && clock() > 20000) {
+                test5Start = true;
+                p1->setSecondWind(true);
+                p1->setHealth(0);
+            }
+            else if (!test5 && clock() > 23000) {
+                if (p1->getHealth() != 0) {
+                    std::cout << "Second Wind Test SUCCESS" << std::endl;
+                    test5 = true;
+                }
+            }
+            else if (clock() > 25000 && test1 && test2 && test3 && test4 && test5) {
+                std::cout << "All Tests SUCCESSFUL" << std::endl;
+                window.close();
             }
         }
 
@@ -1073,6 +1118,7 @@ void run(sf::RenderWindow& window, sf::View& view, save& saveFile, bool debug){
         }
         //if player dies with second wind perk
         else if (p1->getHealth() < 1 && p1->getSecondWind()) {
+            roundText.setFont(font);
             roundText.setString("Second Wind");
             roundText.setCharacterSize(100);
             roundText.setFillColor(sf::Color(94, 1, 6));
@@ -1087,11 +1133,13 @@ void run(sf::RenderWindow& window, sf::View& view, save& saveFile, bool debug){
         //if second wind activated
         if (secondWindCounter) {
             //display text for 1.5 seconds 
-            if (clock() - secondWindCounter < 1500) {
-                roundText.setPosition(view.getCenter().x, view.getCenter().y+200);
+            if (clock() - secondWindCounter > 1500) {
+                secondWindCounter = 0;
+            }
+            else {
+                roundText.setPosition(view.getCenter().x, view.getCenter().y + 200);
                 window.draw(roundText);
             }
-            else secondWindCounter = 0;
         }
         int xPos = 1120;
         int yPos = 695;
