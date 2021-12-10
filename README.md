@@ -37,7 +37,7 @@ Once you do this you will be brought into the test environment and the applicati
 1. **Bullet Collision:** The game spawns a zombie and a bullet, if the zombie dies when the bullet touches it the test is a success
 2. **Out of Bounds:** The game spawns a zombie outside of the boundaries of the map, if the zombie gets teleported back in bounds, the test succeeds.
 3. **Wall Collision:**  The game spawns a zombie against a wall and if the collision system prevents movement, the test succeeds
-4. **Bullet Penetration:** Like the first test the game spawns a zombie and a bullet, but the bullet has a boolean that prevents it from doing damage set to true, if the bullet passes through the zombie without doing damage the test succeeds
+4. **Bullet Penetration:** Like the first test the game spawns a zombie and a bullet, on contact the bullet compares the zombie it's in contact with to a list of already hit zombies, if the bullet passes through the zombie without doing damage, the test succeeds.
 5. **Second Wind:** The game gives the player the second wind perk and then kills the player by setting their health to zero, if the player's health refills and their ammo count is reloaded then the perk works as intended
 
 ## Remaining Tasks
