@@ -1,3 +1,10 @@
+/*****************************************************************************************
+* Programmer: Josh Maloy, Aidan Gooding, Orion Green, Zach Fechko                        *
+* Class: CptS 122, Fall 2021				                                             *
+* Programming Assignment: PA9                                                            *
+* Date: December 10, 2021                                                                *
+* Description: This program defines the runnerZombie object and all necessary methods          *
+******************************************************************************************/
 #pragma once
 #include "Zombie.h"
 #include <iostream>

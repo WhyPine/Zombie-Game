@@ -1,3 +1,11 @@
+
+/*****************************************************************************************
+* Programmer: Josh Maloy, Aidan Gooding, Orion Green, Zach Fechko                        *
+* Class: CptS 122, Fall 2021				                                             *
+* Programming Assignment: PA9                                                            *
+* Date: December 10, 2021                                                                *
+* Description: This program implements the burstRifle object and all necessary methods   *
+******************************************************************************************/
 #include "BurstRifle.h"
 
 BurstRifle::BurstRifle(sf::Vector2f pos, sf::Vector2u size, int newBulletHealth) : Gun(pos, size, newBulletHealth) {

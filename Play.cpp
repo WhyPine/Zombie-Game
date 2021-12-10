@@ -1,4 +1,12 @@
 
+/*****************************************************************************************
+* Programmer: Josh Maloy, Aidan Gooding, Orion Green, Zach Fechko                        *
+* Class: CptS 122, Fall 2021				                                             *
+* Programming Assignment: PA9                                                            *
+* Date: December 10, 2021                                                                *
+* Description: This program implements all methods used by the main run method that runs *
+* the game - drawing the map, players, bullets, zombies, etc                             *
+******************************************************************************************/
 #include "Play.h"
 
 
@@ -120,8 +128,8 @@ void loadWalls() {
 
     doors.push_back(new Door(51*32, 34*32, false, 250)); //hospital left 6
     doors.push_back(new Door(59*32, 30*32, true, 250)); //hospital right 7
-    doors.push_back(new Door(52*32, 26*32, true, 350)); //hospital top left 8
-    doors.push_back(new Door(71*32, 26*32, true, 350)); //hospital top right 9
+    //doors.push_back(new Door(52*32, 26*32, true, 350)); //hospital top left 8
+    //doors.push_back(new Door(71*32, 26*32, true, 350)); //hospital top right 9
 
     doors.push_back(new Door(66 * 32, 1 * 32, false, 400)); //lab upper 10
     doors.push_back(new Door(76 * 32, 22 * 32, true, 400)); //lab lower 11
@@ -727,6 +735,7 @@ void run(sf::RenderWindow& window, sf::View& view, save& saveFile, bool debug){
     bool test4 = false;
     bool test5 = false;
     bool test5Start = false;
+    int startTime = clock();
     sf::Texture bulletTexture;
     bulletTexture.loadFromFile("rifleshot.png");
     sf::Texture tex;
@@ -846,10 +855,10 @@ void run(sf::RenderWindow& window, sf::View& view, save& saveFile, bool debug){
                 }
             }
             //out of bounds test
-            else if (!test2 && clock() > 5000 && zombies.size() == 0) {
+            else if (!test2 && (clock() - startTime) > 5000 && zombies.size() == 0) {
                 zombies.push_back(new Zombie(1, 0, 0, window.getSize(), sf::Vector2f(-100, -100)));
             }
-            else if (!test2 && clock() > 5000 && zombies.size() == 1) {
+            else if (!test2 && (clock() - startTime) > 5000 && zombies.size() == 1) {
                 if (zombies.at(0)->getSprite().getPosition().x > 0 && zombies.at(0)->getSprite().getPosition().y > 0) {
                     zombies.erase(zombies.begin());
                     test2 = true;
@@ -857,10 +866,10 @@ void run(sf::RenderWindow& window, sf::View& view, save& saveFile, bool debug){
                 }
             }
             //wall collision test
-            else if (!test3 && clock() > 10000 && zombies.size() == 0) {
+            else if (!test3 && (clock() - startTime) > 10000 && zombies.size() == 0) {
                 zombies.push_back(new Zombie(1, 0, 0, window.getSize(), sf::Vector2f(8 * 32, 6 * 32)));
             }
-            else if (!test3 && clock() > 10000 && zombies.size() == 1) {
+            else if (!test3 && (clock() - startTime) > 10000 && zombies.size() == 1) {
                 //checking if zombie was moved
                 if (zombies.at(0)->getSprite().getPosition().y > 6*32 || zombies.at(0)->getSprite().getPosition().y < 6 * 32) {
                     zombies.erase(zombies.begin());
@@ -869,31 +878,31 @@ void run(sf::RenderWindow& window, sf::View& view, save& saveFile, bool debug){
                 }
             }
             //bullet pass through test
-            else if (!test4 && clock() > 15000 && zombies.size() == 0) {
+            else if (!test4 && (clock() - startTime) > 15000 && zombies.size() == 0) {
                 zombies.push_back(new Zombie(1, 0, 0, window.getSize(), sf::Vector2f(4 * 32, 3 * 32)));
                 zombies.at(0)->setPosition(sf::Vector2f(4 * 32, 3 * 32));
                 Bullet* testBullet = new Bullet(sf::Vector2f(17 * 32, 3 * 32), sf::Vector2f(-1, 0), sf::Vector2u(0, 0), 10, bulletTexture, 1, 10);
                 testBullet->hit(zombies.at(0)->getId());
                 p1->getGun()->getShots()->push_back(testBullet);
             }
-            else if (!test4 && clock() > 17000 && zombies.size() == 1) {
+            else if (!test4 && (clock() - startTime) > 17000 && zombies.size() == 1) {
                 std::cout << "Bullet Pass Through Test SUCCESS" << std::endl;
                 zombies.erase(zombies.begin());
                 test4 = true;
             }
             //second Wind test
-            else if (!test5Start && clock() > 20000) {
+            else if (!test5Start && (clock() - startTime) > 20000) {
                 test5Start = true;
                 p1->setSecondWind(true);
                 p1->setHealth(0);
             }
-            else if (!test5 && clock() > 23000) {
+            else if (!test5 && (clock() - startTime) > 23000) {
                 if (p1->getHealth() != 0) {
                     std::cout << "Second Wind Test SUCCESS" << std::endl;
                     test5 = true;
                 }
             }
-            else if (clock() > 25000 && test1 && test2 && test3 && test4 && test5) {
+            else if (((clock() - startTime) - startTime > 25000 && test1 && test2 && test3 && test4 && test5)) {
                 std::cout << "All Tests SUCCESSFUL" << std::endl;
                 window.close();
             }

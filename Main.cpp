@@ -1,3 +1,11 @@
+/*****************************************************************************************
+* Programmer: Josh Maloy, Aidan Gooding, Orion Green, Zach Fechko                        *
+* Class: CptS 122, Fall 2021				                                             *
+* Programming Assignment: PA9                                                            *
+* Date: December 10, 2021                                                                *
+* Description: This program creates the main menu screen, loads save files, and launches *
+* the game                                                                               *
+******************************************************************************************/
 #include "Play.h"
 //#include "savefiles.h"
 

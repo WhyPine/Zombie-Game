@@ -1,3 +1,10 @@
+/*****************************************************************************************
+* Programmer: Josh Maloy, Aidan Gooding, Orion Green, Zach Fechko                        *
+* Class: CptS 122, Fall 2021				                                             *
+* Programming Assignment: PA9                                                            *
+* Date: December 10, 2021                                                                *
+* Description: This program implements the buybox object and all necessary methods       *
+******************************************************************************************/
 #include "buyBox.h"
 
 buyBox::buyBox(float x, float y, int newPrice, int newType) : wall(x, y, 64, 32) {

@@ -1,3 +1,11 @@
+/*****************************************************************************************
+* Programmer: Josh Maloy, Aidan Gooding, Orion Green, Zach Fechko                        *
+* Class: CptS 122, Fall 2021				                                             *
+* Programming Assignment: PA9                                                            *
+* Date: December 10, 2021                                                                *
+* Description: This program defines all methods used by the main play file that runs the *
+* game and also includes all necessary objects                                           *
+******************************************************************************************/
 #pragma once
 #include "Player.h"
 #include "Zombie.h"
