@@ -30,17 +30,21 @@ The player begins the game in the city, and as gameplay progresses, the player w
 - Move your mouse to aim
 - Left Click to shoot
 
-## Test Cases we Implemented
-1. Testing collision detection by printing "Player touching a wall" to the console if the player is touching a wall
-2. Printing the health of the zombie to the console to verify that it takes damage
-3. Printing the direction vector of a bullet when it was fired from the gun
-4. Testing collisions by printing what side of a wall the player was touching
+## Test Cases
+To access the test environment you select a save and then press F1 once you are at the following screen
+![Menu](readmeImages/Menu.png)
+Once you do this you will be brought into the test environment and the application will automatically run through the following tests
+1. **Bullet Collision:** The game spawns a zombie and a bullet, if the zombie dies when the bullet touches it the test is a success
+2. **Out of Bounds:** The game spawns a zombie outside of the boundaries of the map, if the zombie gets teleported back in bounds, the test succeeds.
+3. **Wall Collision:**  The game spawns a zombie against a wall and if the collision system prevents movement, the test succeeds
+4. **Bullet Penetration:** Like the first test the game spawns a zombie and a bullet, but the bullet has a boolean that prevents it from doing damage set to true, if the bullet passes through the zombie without doing damage the test succeeds
+5. **Second Wind:** The game gives the player the second wind perk and then kills the player by setting their health to zero, if the player's health refills and their ammo count is reloaded then the perk works as intended
 
 ## Remaining Tasks
 ### Essential For Assignment
 - [ ] Video demonstration of gameplay
 - [ ] Putting player controls in the main menu/game
-- [ ] Discrete test cases
+- [x] Discrete test cases
 - [x] Dying
 
 ### Not Essential for Assignment but still have to work on
