@@ -146,7 +146,7 @@ int main()
         background2.move(.8, 0.f);
         background3.move(.8, 0.f);*/
         sf::Vector2i gP = sf::Mouse::getPosition(Menu);
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left) &&  (playbutton.getGlobalBounds().contains(gP.x, gP.y))) {
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (playbutton.getGlobalBounds().contains(gP.x, gP.y))) {
             releasedMouse = false;
             sf::Sprite save1;
             sf::Sprite save2;
@@ -169,7 +169,7 @@ int main()
             save3.setTextureRect(sf::IntRect(0, 0, 340, 135));
             save3.setPosition(50.f, 502.5);
             //save3.setOrigin(save3.getScale().x / 2, save3.getScale().y / 2);
-            
+
             int choice = 3;
             while (Menu.isOpen()) {
                 Menu.pollEvent(event);
@@ -376,18 +376,37 @@ int main()
                             else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (quitbutton.getGlobalBounds().contains(gC.x, gC.y))) {
                                 Menu.close();
                             }
+                            //tutorial button
+                            else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (settings.getGlobalBounds().contains(gC.x, gC.y))) {
+                                releasedMouse == false;
+                                sf::Texture tutorialT;
+                                tutorialT.loadFromFile("tutorialImage.PNG");
+                                sf::Sprite tutorial;
+                                tutorial.setTexture(tutorialT);
+                                tutorial.setTextureRect(sf::IntRect(0, 0, 1280, 720));
+                                tutorial.setPosition(sf::Vector2f(0, 0));
+                                bool showTutorial = true;
+                                int tutorialTimer = clock();
+                                while (showTutorial) {
+                                    if (clock() - tutorialTimer > 5000 && sf::Mouse::isButtonPressed(sf::Mouse::Left)) showTutorial = false;
+                                    Menu.clear();
+                                    Menu.draw(tutorial);
+                                    Menu.display();
+                                }
+                                releasedMouse = false;
+                            }
                             //debug mode: f1
                             else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F1)) {
-                            sf::RenderWindow window(sf::VideoMode(1280, 720), "Horde Shooter", sf::Style::Titlebar | sf::Style::Close);
-                            sf::View view(sf::Vector2f(window.getSize().x / 2, window.getSize().y / 2), sf::Vector2f(1280.f, 720.f));
-                            window.setView(view);
-                            window.setFramerateLimit(60);
-                            Menu.setVisible(false);
-                            save debug(false, 0.1, 20000, 100, 0.1, 2.0, 0, 0);
-                            run(window, view, debug, true);
-                            Menu.setVisible(true);
-                            returnToMenu = true;
-                            } 
+                                sf::RenderWindow window(sf::VideoMode(1280, 720), "Horde Shooter", sf::Style::Titlebar | sf::Style::Close);
+                                sf::View view(sf::Vector2f(window.getSize().x / 2, window.getSize().y / 2), sf::Vector2f(1280.f, 720.f));
+                                window.setView(view);
+                                window.setFramerateLimit(60);
+                                Menu.setVisible(false);
+                                save debug(false, 0.1, 20000, 100, 0.1, 2.0, 0, 0);
+                                run(window, view, debug, true);
+                                Menu.setVisible(true);
+                                returnToMenu = true;
+                            }
                         }
                         /*while (n != 1) {
 
