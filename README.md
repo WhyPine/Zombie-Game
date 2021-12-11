@@ -8,6 +8,9 @@
 
 ## Game Description
 You are a lone survivor in a zombie apocalypse who has to survive what seems like endless waves of zombies coming to kill you, you must use the weapons you have at your disposal to survive for as many rounds as you can.
+Click the image below to watch a video demonstration of our game
+
+[![Video Link](http://img.youtube.com/vi/BzyBYhxT_BY/0.jpg)](https://www.youtube.com/watch?v=BzyBYhxT_BY)
 
 ## The Map
 ![The map](readmeImages/map.png)
@@ -39,18 +42,3 @@ Once you do this you will be brought into the test environment and the applicati
 3. **Wall Collision:**  The game spawns a zombie against a wall and if the collision system prevents movement, the test succeeds
 4. **Bullet Penetration:** Like the first test the game spawns a zombie and a bullet, on contact the bullet compares the zombie it's in contact with to a list of already hit zombies, if the bullet passes through the zombie without doing damage, the test succeeds.
 5. **Second Wind:** The game gives the player the second wind perk and then kills the player by setting their health to zero, if the player's health refills and their ammo count is reloaded then the perk works as intended
-
-## Remaining Tasks
-### Essential For Assignment
-- [ ] Video demonstration of gameplay
-- [ ] Putting player controls in the main menu/game
-- [x] Discrete test cases
-- [x] Dying
-
-### Not Essential for Assignment but still have to work on
-- [x] Developing more zombie types (runners, bigbois, etc.)
-- [ ] Move buy boxes around
-- [x] Tweak main menu
-- [ ] Skill updating
-- [x] Save system
-- [ ] Skill system
